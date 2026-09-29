@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Oora Media — Be Seen Where Life Happens</title>
+<meta name="description" content="Oora Media connects your brand with real customers through screens in the places they already spend their time. Local digital advertising network, Adelaide, Australia.">
+<meta name="theme-color" content="#0A1628">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{
+  --navy:#0A1628; --navy-2:#112240; --navy-3:#1B3059; --navy-line:rgba(255,255,255,.08);
+  --ink:#0A1628; --text:#27324A; --muted:#5E6A80; --line:#E2E7EF;
+  --grey:#F4F6FA; --grey-2:#EAEEF4; --white:#FFFFFF;
+  --amber:#F5B82E; --amber-2:#FFD36B; --amber-deep:#C98A06; --amber-soft:#FFF4D9;
+  --green:#1F9D6B; --green-soft:#E3F6EE; --orange:#D9622B; --orange-soft:#FDEBE2;
+  --red:#D23B3B; --red-soft:#FCE6E6; --blue:#2F6FDB; --blue-soft:#E4EDFC;
+  --display:'Sora',system-ui,sans-serif; --body:'Source Sans 3',system-ui,sans-serif;
+  --r:18px; --r-sm:12px; --shadow:0 10px 30px -12px rgba(10,22,40,.18); --shadow-lg:0 30px 60px -20px rgba(10,22,40,.35);
+  --headh:98px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--body);font-size:17px;color:var(--text);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+h1,h2,h3,h4{font-family:var(--display);color:var(--ink);line-height:1.12;letter-spacing:-.025em;font-weight:700}
+h1{font-size:clamp(2.4rem,6vw,4.4rem)}
+h2{font-size:clamp(1.8rem,4vw,2.8rem)}
+h3{font-size:1.3rem;letter-spacing:-.015em}
+p{max-width:65ch}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.svg-i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.hidden{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- Header ---------- */
+.site-head{position:sticky;top:0;z-index:2000}
+.demo-bar{background:var(--amber);color:var(--navy);font-size:13.5px;font-weight:600;text-align:center;padding:6px 16px;line-height:1.4;height:30px;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.demo-bar b{font-family:var(--display);font-size:11px;letter-spacing:.12em;background:var(--navy);color:var(--amber);padding:2px 7px;border-radius:5px}
+.nav{background:rgba(10,22,40,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--navy-line)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;color:#fff;font-family:var(--display);font-weight:700;font-size:1.2rem;letter-spacing:-.02em}
+.logo-mark{width:34px;height:34px;flex-shrink:0}
+.logo span em{font-style:normal;color:var(--amber)}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-links a{color:rgba(255,255,255,.75);font-size:15px;font-weight:600;padding:8px 11px;border-radius:10px;transition:.2s}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.nav-links a.active{color:var(--amber)}
+.nav-cta{margin-left:8px}
+.burger{display:none;width:44px;height:44px;border-radius:12px;color:#fff;align-items:center;justify-content:center;font-size:24px}
+.burger:hover{background:rgba(255,255,255,.08)}
+@media(max-width:1100px){
+  .burger{display:flex}
+  .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;background:var(--navy);padding:10px 16px 20px;border-bottom:1px solid var(--navy-line);display:none;box-shadow:var(--shadow-lg)}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:14px 12px;font-size:17px}
+  .nav-cta{margin:10px 0 0}
+}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 26px;border-radius:14px;font-family:var(--display);font-weight:600;font-size:15.5px;letter-spacing:-.01em;transition:transform .15s,box-shadow .2s,background .2s,color .2s,border-color .2s;white-space:nowrap;border:2px solid transparent}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--amber);color:var(--navy);box-shadow:0 8px 24px -8px rgba(245,184,46,.6)}
+.btn-primary:hover{background:var(--amber-2);box-shadow:0 12px 30px -8px rgba(245,184,46,.75)}
+.btn-outline{border-color:rgba(255,255,255,.35);color:#fff}
+.btn-outline:hover{border-color:#fff;background:rgba(255,255,255,.06)}
+.btn-dark{background:var(--navy);color:#fff}
+.btn-dark:hover{background:var(--navy-3)}
+.btn-ghost{border-color:var(--line);color:var(--ink);background:#fff}
+.btn-ghost:hover{border-color:var(--ink)}
+.btn-sm{height:40px;padding:0 16px;font-size:14px;border-radius:11px}
+.btn-lg{height:58px;padding:0 32px;font-size:16.5px}
+.btn-block{width:100%}
+.link-arrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;color:var(--ink);font-size:15.5px}
+.link-arrow .svg-i{transition:transform .2s}
+.link-arrow:hover .svg-i{transform:translateX(4px)}
+
+/* ---------- Common sections ---------- */
+.page{display:none;animation:pageIn .45s ease backwards}
+.page.active{display:block}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.section{padding:96px 0}
+.section-sm{padding:64px 0}
+.bg-grey{background:var(--grey)}
+.bg-navy{background:var(--navy);color:rgba(255,255,255,.78)}
+.bg-navy h1,.bg-navy h2,.bg-navy h3{color:#fff}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--amber-deep);margin-bottom:18px}
+.bg-navy .eyebrow,.hero .eyebrow,.page-hero .eyebrow{color:var(--amber)}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 0 4px rgba(245,184,46,.2)}
+.lead{font-size:1.2rem;color:var(--muted)}
+.bg-navy .lead,.page-hero .lead{color:rgba(255,255,255,.72)}
+.section-head{max-width:720px;margin-bottom:52px}
+.section-head.center{text-align:center;margin-left:auto;margin-right:auto}
+.section-head.center p{margin:0 auto}
+.section-head h2{margin-bottom:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:30px;transition:transform .25s,box-shadow .25s,border-color .25s}
+.card-hover:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:transparent}
+.icon-badge{width:52px;height:52px;border-radius:15px;background:var(--amber-soft);color:var(--amber-deep);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px}
+.icon-badge.dark{background:var(--navy);color:var(--amber)}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:900px){.grid-3{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}}
+.note{font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start;background:var(--grey);border-radius:var(--r-sm);padding:14px 16px;line-height:1.5}
+.note .svg-i{font-size:18px;margin-top:1px;color:var(--amber-deep)}
+.bg-navy .note{background:rgba(255,255,255,.05);color:rgba(255,255,255,.65)}
+
+/* ---------- Page hero (inner pages) ---------- */
+.page-hero{background:var(--navy);color:#fff;padding:88px 0 96px;position:relative;overflow:hidden}
+.page-hero::before{content:"";position:absolute;width:700px;height:700px;right:-200px;top:-300px;background:radial-gradient(circle,rgba(245,184,46,.18),transparent 60%);pointer-events:none}
+.page-hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,#000,transparent);-webkit-mask-image:linear-gradient(to bottom,#000,transparent);pointer-events:none}
+.page-hero .container{position:relative;z-index:1}
+.page-hero h1{color:#fff;max-width:17ch;margin-bottom:22px;font-size:clamp(2.2rem,5.2vw,3.8rem)}
+.page-hero .lead{max-width:60ch}
+.page-hero .hero-actions{margin-top:34px}
+
+/* ---------- Home hero ---------- */
+.hero{background:var(--navy);color:#fff;position:relative;overflow:hidden;padding:88px 0 110px}
+.hero::before{content:"";position:absolute;width:900px;height:900px;right:-250px;top:-250px;background:radial-gradient(circle,rgba(245,184,46,.22),transparent 58%);pointer-events:none}
+.hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse at 30% 40%,#000,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 30% 40%,#000,transparent 70%);pointer-events:none}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.hero h1{color:#fff;margin-bottom:18px}
+.hero h1 .glow{color:var(--amber);text-shadow:0 0 40px rgba(245,184,46,.45)}
+.tagline{font-family:var(--display);font-weight:600;font-size:clamp(1.05rem,2vw,1.3rem);color:var(--amber-2);margin-bottom:18px;letter-spacing:-.01em}
+.hero .lead{color:rgba(255,255,255,.75);margin-bottom:36px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px}
+.hero-trust{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:40px;font-size:14.5px;color:rgba(255,255,255,.6)}
+.hero-trust span{display:flex;align-items:center;gap:8px}
+.hero-trust .svg-i{color:var(--amber)}
+@media(max-width:960px){.hero-grid{grid-template-columns:1fr;gap:64px}.hero{padding:64px 0 88px}}
+@media(max-width:560px){.hero-actions .btn{width:100%}}
+
+.device-wrap{position:relative;max-width:560px;margin:0 auto;width:100%}
+.device{position:relative;background:#050B16;border-radius:20px;padding:12px;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 80px -20px rgba(0,0,0,.6),0 0 120px -20px rgba(245,184,46,.35)}
+.device-screen{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#111}
+.slide{position:absolute;inset:0;padding:7% 8%;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(135deg,var(--c1),var(--c2));opacity:0;transform:scale(1.04);transition:opacity .9s ease,transform 1.2s ease}
+.slide.on{opacity:1;transform:none}
+.slide::after{content:"";position:absolute;right:-8%;bottom:-30%;width:55%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.14)}
+.slide .ad-tag{font-family:var(--display);font-size:clamp(9px,1.6vw,11px);font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-bottom:8px}
+.slide h4{font-size:clamp(1.25rem,3.6vw,2.2rem);line-height:1.05;color:inherit;margin-bottom:10px;max-width:14ch}
+.slide p{font-weight:600;font-size:clamp(.8rem,1.8vw,1rem);opacity:.85}
+.slide .ad-cta{position:absolute;right:7%;top:12%;font-family:var(--display);font-size:clamp(9px,1.5vw,11px);font-weight:700;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18);letter-spacing:.06em}
+.device-progress{position:absolute;left:12px;right:12px;bottom:12px;height:3px;background:rgba(255,255,255,.1);border-radius:0 0 10px 10px;overflow:hidden}
+.device-progress i{display:block;height:100%;width:0;background:var(--amber)}
+.device-progress i.run{animation:prog 4.5s linear forwards}
+@keyframes prog{to{width:100%}}
+.device-stand{width:18%;height:34px;margin:0 auto;background:linear-gradient(#0d1627,#060c18)}
+.device-foot{width:40%;height:8px;margin:0 auto;border-radius:6px;background:#0d1627}
+.device-caption{text-align:center;font-size:13.5px;color:rgba(255,255,255,.55);margin-top:14px}
+.device-caption b{color:rgba(255,255,255,.85);font-weight:600}
+.stat-chip{position:absolute;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.97);color:var(--ink);padding:12px 16px;border-radius:16px;box-shadow:var(--shadow-lg);font-size:14px;line-height:1.25;animation:float 6s ease-in-out infinite}
+.stat-chip b{font-family:var(--display);font-size:1.35rem;display:block;letter-spacing:-.02em}
+.stat-chip small{font-size:12px;color:var(--muted);display:block}
+.stat-chip .ic{width:38px;height:38px;border-radius:11px;background:var(--amber-soft);color:var(--amber-deep);display:flex;align-items:center;justify-content:center;font-size:19px}
+.chip-a{left:-28px;bottom:70px}
+.chip-b{right:-22px;top:-26px;animation-delay:-3s}
+.live-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(31,157,107,.6);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(31,157,107,0)}100%{box-shadow:0 0 0 0 rgba(31,157,107,0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@media(max-width:600px){.chip-a{left:-6px;bottom:44px;padding:9px 12px}.chip-b{right:-4px;top:-30px;padding:9px 12px}.stat-chip b{font-size:1.1rem}.stat-chip .ic{display:none}}
+
+.venue-strip{background:var(--navy-2);border-top:1px solid var(--navy-line);padding:22px 0;overflow:hidden}
+.venue-track{display:flex;gap:44px;width:max-content;animation:marquee 40s linear infinite}
+.venue-track span{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.62);font-family:var(--display);font-weight:600;font-size:15px;white-space:nowrap}
+.venue-track span .svg-i{color:var(--amber)}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ---------- How it works toggle ---------- */
+.toggle{display:inline-flex;background:var(--grey-2);border-radius:16px;padding:5px;gap:4px;margin-bottom:44px;flex-wrap:wrap}
+.toggle button{height:46px;padding:0 22px;border-radius:12px;font-family:var(--display);font-weight:600;font-size:15px;color:var(--muted);transition:.25s;display:flex;align-items:center;gap:8px}
+.toggle button.on{background:var(--navy);color:#fff;box-shadow:var(--shadow)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;counter-reset:step}
+.step{position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:34px 30px;animation:pageIn .5s ease both}
+.step:nth-child(2){animation-delay:.08s}.step:nth-child(3){animation-delay:.16s}
+.step-num{position:absolute;top:26px;right:28px;font-family:var(--display);font-size:3.2rem;font-weight:800;color:var(--grey-2);line-height:1}
+.step h3{margin-bottom:10px}
+.step p{color:var(--muted);font-size:16px}
+.step:not(:last-child)::after{content:"";position:absolute;right:-19px;top:50%;width:14px;height:14px;border-top:2px solid var(--amber);border-right:2px solid var(--amber);transform:translateY(-50%) rotate(45deg);z-index:2}
+@media(max-width:900px){.steps{grid-template-columns:1fr}.step:not(:last-child)::after{right:50%;top:auto;bottom:-19px;transform:translateX(50%) rotate(135deg)}}
+
+/* ---------- Map preview on home ---------- */
+.preview-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:center}
+.preview-map-wrap{position:relative;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid var(--navy-line)}
+#previewMap{height:440px;background:#0b1220}
+.preview-badge{position:absolute;left:16px;top:16px;z-index:500;background:rgba(10,22,40,.88);backdrop-filter:blur(8px);color:#fff;border-radius:12px;padding:8px 14px;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px;border:1px solid var(--navy-line)}
+.preview-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0 34px}
+.preview-stats div{background:rgba(255,255,255,.05);border:1px solid var(--navy-line);border-radius:14px;padding:16px}
+.preview-stats b{display:block;font-family:var(--display);font-size:1.7rem;color:#fff;letter-spacing:-.02em}
+.preview-stats small{font-size:13px;color:rgba(255,255,255,.55)}
+@media(max-width:960px){.preview-grid{grid-template-columns:1fr}#previewMap{height:340px}}
+
+/* ---------- Audience callouts ---------- */
+.callout{border-radius:24px;padding:44px;position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:380px}
+.callout h3{font-size:clamp(1.5rem,3vw,2rem);margin-bottom:14px}
+.callout p{margin-bottom:24px}
+.callout ul{list-style:none;margin-bottom:32px;display:grid;gap:10px}
+.callout li{display:flex;gap:10px;align-items:flex-start}
+.callout li .svg-i{margin-top:5px;color:var(--amber-deep)}
+.callout .btn{margin-top:auto;align-self:flex-start}
+.callout-light{background:var(--amber-soft);border:1px solid #F7E3B0}
+.callout-dark{background:var(--navy);color:rgba(255,255,255,.78)}
+.callout-dark h3{color:#fff}
+.callout-dark li .svg-i{color:var(--amber)}
+.callout .icon-badge{width:58px;height:58px}
+@media(max-width:600px){.callout{padding:30px 24px}.callout .btn{width:100%}}
+
+.cta-band{background:linear-gradient(120deg,var(--navy) 0%,var(--navy-3) 100%);border-radius:28px;padding:64px 56px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;position:relative;overflow:hidden}
+.cta-band::before{content:"";position:absolute;right:-120px;top:-160px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(245,184,46,.3),transparent 65%)}
+.cta-band h2{color:#fff;max-width:18ch;position:relative}
+.cta-band p{color:rgba(255,255,255,.7);margin-top:12px;position:relative}
+.cta-band .hero-actions{position:relative}
+@media(max-width:600px){.cta-band{padding:44px 24px}}
+
+/* ---------- Map page ---------- */
+.map-head{background:var(--navy);color:#fff;padding:40px 0 30px}
+.map-head h1{color:#fff;font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:8px}
+.map-head p{color:rgba(255,255,255,.68)}
+.map-head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.demo-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--amber-soft);color:var(--amber-deep);padding:4px 9px;border-radius:7px;border:1px dashed #E7C46E}
+.bg-navy .demo-tag,.map-head .demo-tag{background:rgba(245,184,46,.12);color:var(--amber);border-color:rgba(245,184,46,.4)}
+.map-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--grey-2);border-radius:13px;padding:4px;gap:3px}
+.seg button{height:40px;padding:0 16px;border-radius:10px;font-weight:600;font-size:15px;color:var(--muted);display:flex;align-items:center;gap:8px;transition:.2s}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(10,22,40,.1)}
+.result-count{font-size:15px;color:var(--muted)}
+.result-count b{color:var(--ink);font-family:var(--display)}
+.map-layout{display:grid;grid-template-columns:290px 1fr;gap:20px;padding-bottom:40px}
+.filters{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;align-self:start;position:sticky;top:calc(var(--headh) + 16px)}
+.filters h3{font-size:1.05rem;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.filters .field{margin-bottom:14px}
+.filters .field label{font-size:13.5px;margin-bottom:5px}
+.filters select{height:46px}
+.filter-toggle{display:none}
+.legend{display:grid;gap:8px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:10px}
+.legend i{width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+#map{height:calc(100dvh - var(--headh) - 110px);min-height:500px;border-radius:var(--r);border:1px solid var(--line);z-index:1;background:#e8ecf2}
+.map-stage{position:relative;min-width:0}
+.map-recenter{position:absolute;left:12px;bottom:34px;z-index:500}
+.list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.scard{background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s}
+.scard:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.scard-img{position:relative;aspect-ratio:16/10;background:var(--navy)}
+.scard-img img{width:100%;height:100%;object-fit:cover}
+.scard-img .demo-tag{position:absolute;left:12px;top:12px}
+.scard-img .badge{position:absolute;right:12px;top:12px}
+.scard-body{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1}
+.scard-body h3{font-size:1.1rem;margin-bottom:4px}
+.scard-loc{font-size:14.5px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.meta{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;background:var(--grey);color:var(--text);border-radius:8px;padding:5px 9px}
+.meta .svg-i{color:var(--muted)}
+.scard-body .btn{margin-top:auto}
+.empty{text-align:center;padding:60px 20px;color:var(--muted);background:var(--grey);border-radius:var(--r);grid-column:1/-1}
+.empty .svg-i{font-size:40px;color:var(--amber-deep);margin:0 auto 14px}
+@media(max-width:900px){
+  .map-layout{grid-template-columns:1fr}
+  .filters{position:static;display:none}
+  .filters.open{display:block}
+  .filter-toggle{display:inline-flex}
+  #map{height:62dvh;min-height:420px}
+}
+
+/* Marker pins */
+.pin-wrap{background:none;border:0}
+.pin{position:relative;display:block;width:26px;height:26px;border-radius:50%;background:var(--pc,#F5B82E);border:3px solid #fff;box-shadow:0 4px 12px rgba(10,22,40,.4);transition:transform .2s}
+.pin::after{content:"";position:absolute;inset:5px;border-radius:50%;background:rgba(10,22,40,.85)}
+.pin.pulse::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:2px solid var(--pc);opacity:.7;animation:ring 2.2s ease-out infinite}
+.pin-wrap:hover .pin,.pin.sel{transform:scale(1.25)}
+@keyframes ring{from{transform:scale(.5);opacity:.8}to{transform:scale(1.4);opacity:0}}
+.leaflet-tooltip.ootip{background:var(--navy);color:#fff;border:0;border-radius:10px;padding:8px 12px;font-family:var(--body);font-size:14px;box-shadow:var(--shadow);line-height:1.35}
+.leaflet-tooltip.ootip::before{border-top-color:var(--navy)}
+.leaflet-tooltip.ootip small{color:rgba(255,255,255,.65)}
+.leaflet-control-layers{border-radius:12px!important;border:0!important;box-shadow:var(--shadow)!important;font-family:var(--body);font-size:14px}
+.leaflet-control-layers-expanded{padding:10px 14px!important}
+.leaflet-control-layers label{margin:3px 0}
+.leaflet-bar{border:0!important;box-shadow:var(--shadow)!important;border-radius:12px!important;overflow:hidden}
+.leaflet-bar a{width:38px!important;height:38px!important;line-height:38px!important}
+.leaflet-container{font-family:var(--body)}
+
+/* Map search */
+.map-search{position:relative;flex:1;min-width:240px;max-width:480px}
+.map-search input{width:100%;height:46px;border:1.5px solid var(--line);border-radius:13px;padding:0 44px;font-size:15.5px;background:#fff}
+.map-search input:focus{outline:0;border-color:var(--amber);box-shadow:0 0 0 4px rgba(245,184,46,.2)}
+.map-search > .svg-i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:18px;pointer-events:none}
+.map-search .clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:9px;display:none;align-items:center;justify-content:center;color:var(--muted);font-size:16px}
+.map-search .clear:hover{background:var(--grey)}
+.map-search.has .clear{display:flex}
+.search-drop{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#fff;border-radius:14px;box-shadow:var(--shadow-lg);border:1px solid var(--line);z-index:1500;max-height:380px;overflow-y:auto;display:none;padding:4px 0}
+.search-drop.show{display:block}
+.sd-h{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:10px 14px 4px}
+.sd-item{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:9px 14px;font-size:15px}
+.sd-item:hover,.sd-item.hl{background:var(--grey)}
+.sd-item .ic{width:32px;height:32px;border-radius:9px;background:var(--amber-soft);color:var(--amber-deep);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
+.sd-item b{display:block;color:var(--ink);font-weight:600;line-height:1.25}
+.sd-item small{color:var(--muted);font-size:13px;line-height:1.3;display:block}
+.sd-empty{padding:12px 14px;color:var(--muted);font-size:14.5px}
+@media(max-width:900px){.map-search{order:3;max-width:none;flex-basis:100%}}
+
+/* Landmarks, CBD, search pin, legend */
+.lm-wrap{background:none;border:0}
+.lm{position:relative;width:22px;height:22px;border-radius:7px;background:#fff;border:1.5px solid var(--lc);color:var(--lc);display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:0 2px 6px rgba(10,22,40,.3)}
+.lm .svg-i{stroke-width:2.4}
+.lm span{position:absolute;left:27px;top:50%;transform:translateY(-50%);white-space:nowrap;font-size:12px;font-weight:700;color:#1d2a40;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 4px #fff,0 0 4px #fff;pointer-events:none;font-family:var(--body)}
+.lm-labels-off .lm span{display:none}
+.cbd-label{background:rgba(10,22,40,.85)!important;color:var(--amber)!important;border:0!important;box-shadow:none!important;font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:6px!important;padding:3px 8px!important}
+.cbd-label::before{display:none}
+.drop-pin{display:block;width:30px;height:30px;border-radius:50% 50% 50% 0;background:var(--navy);border:3px solid var(--amber);transform:rotate(-45deg);box-shadow:0 6px 14px rgba(10,22,40,.4)}
+.drop-pin::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--amber)}
+.me-dot{display:block;width:20px;height:20px;border-radius:50%;background:#2F6FDB;border:3px solid #fff;box-shadow:0 0 0 7px rgba(47,111,219,.25),0 2px 6px rgba(0,0,0,.3)}
+.leaflet-popup-content-wrapper{border-radius:16px!important;box-shadow:var(--shadow-lg)!important}
+.leaflet-popup-content{margin:14px 16px!important;font-family:var(--body);font-size:14.5px;line-height:1.45;min-width:220px}
+.pop-h{font-family:var(--display);font-weight:700;color:var(--ink);font-size:14.5px;margin-bottom:2px}
+.pop-sub{color:var(--muted);font-size:13px;margin-bottom:10px}
+.near-btn{display:flex;justify-content:space-between;gap:10px;align-items:center;width:100%;text-align:left;padding:8px 10px;border-radius:10px;background:var(--grey);margin-top:6px;font-size:14px}
+.near-btn:hover{background:var(--amber-soft)}
+.near-btn b{color:var(--ink);font-weight:600;display:block;line-height:1.2}
+.near-btn small{color:var(--muted)}
+.near-btn em{font-style:normal;font-weight:700;color:var(--amber-deep);white-space:nowrap}
+.map-legend{background:rgba(255,255,255,.96);border-radius:12px;box-shadow:var(--shadow);padding:10px 12px;font-size:12.5px;line-height:1.55;color:var(--text)}
+.map-legend b{display:block;font-family:var(--display);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.map-legend div{display:flex;align-items:center;gap:8px}
+.map-legend i{width:10px;height:10px;border-radius:50%;display:inline-block;border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+.map-legend i.sq{border-radius:3px;background:#fff;border:1.5px solid var(--navy-3);box-shadow:none}
+.map-legend i.ring{background:transparent;border:1.5px dashed var(--green);box-shadow:none}
+@media(max-width:600px){.map-legend{display:none}}
+.map-stage.fs{position:fixed;inset:0;z-index:2040;background:#fff}
+.map-stage.fs #map{height:100dvh!important;min-height:0;border-radius:0;border:0}
+.map-hint{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:500;background:rgba(10,22,40,.88);color:#fff;font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .4s}
+.leaflet-bar a.lf-btn{display:flex!important;align-items:center;justify-content:center;font-size:17px;color:var(--ink)}
+.leaflet-bar a.lf-btn.on{color:var(--amber-deep);background:var(--amber-soft)}
+
+/* Panel: nearby */
+.nearby{margin:2px 0 16px}
+.nearby h4{font-family:var(--display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.nearby ul{list-style:none}
+.nearby li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.nearby li:last-child{border-bottom:0}
+.nearby li > span:first-child{display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:500}
+.nearby li .lm{flex-shrink:0}
+.nearby li > span:last-child{color:var(--muted);white-space:nowrap;font-size:14px}
+.ext-links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+
+/* Info panel */
+.panel{position:fixed;z-index:2100;top:calc(var(--headh) + 14px);right:14px;bottom:14px;width:410px;background:#fff;border-radius:22px;box-shadow:var(--shadow-lg);transform:translateX(calc(100% + 30px));transition:transform .4s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;overflow:hidden}
+.panel.open{transform:none}
+.panel-scroll{overflow-y:auto;flex:1;overscroll-behavior:contain}
+.panel-img{position:relative;aspect-ratio:16/10;background:var(--navy)}
+.panel-img img{width:100%;height:100%;object-fit:cover}
+.panel-img .demo-tag{position:absolute;left:14px;top:16px}
+.panel-close{position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:50%;background:rgba(10,22,40,.75);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;backdrop-filter:blur(6px);z-index:2}
+.panel-close:hover{background:var(--navy)}
+.panel-body{padding:22px 24px 8px}
+.panel-body h2{font-size:1.45rem;margin:10px 0 4px}
+.panel-venue{color:var(--muted);font-size:15.5px;margin-bottom:18px}
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.spec{background:var(--grey);border-radius:12px;padding:11px 13px}
+.spec small{display:block;font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.spec b{font-size:15px;color:var(--ink);font-weight:600;line-height:1.3;display:block}
+.spec.full{grid-column:1/-1}
+.dots{display:inline-flex;gap:4px;vertical-align:middle}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--grey-2);border:1px solid #D5DBE5}
+.dots i.on{background:var(--amber);border-color:var(--amber-deep)}
+.panel-desc{font-size:15.5px;color:var(--text);margin-bottom:14px}
+.panel-foot{padding:16px 24px 20px;border-top:1px solid var(--line);background:#fff}
+.panel-foot .fine{font-size:12.5px;color:var(--muted);margin-top:10px;text-align:center}
+.panel-grab{display:none}
+.backdrop{position:fixed;inset:0;background:rgba(10,22,40,.5);z-index:2050;opacity:0;pointer-events:none;transition:opacity .3s}
+.backdrop.show{opacity:1;pointer-events:auto}
+@media(min-width:769px){.backdrop.panel-bd{display:none}}
+@media(max-width:768px){
+  .panel{top:auto;left:0;right:0;bottom:0;width:auto;max-height:86dvh;border-radius:24px 24px 0 0;transform:translateY(105%)}
+  .panel-grab{display:block;position:absolute;top:8px;left:50%;transform:translateX(-50%);width:44px;height:5px;border-radius:5px;background:rgba(255,255,255,.7);z-index:3}
+  .panel-foot{padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;font-family:var(--body)}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.b-available{background:var(--green-soft);color:var(--green)}
+.b-coming{background:var(--amber-soft);color:var(--amber-deep)}
+.b-unavail{background:var(--orange-soft);color:var(--orange)}
+.b-inactive{background:var(--grey-2);color:var(--muted)}
+.b-new{background:var(--blue-soft);color:var(--blue)}
+.b-good{background:var(--green-soft);color:var(--green)}
+.b-mid{background:var(--amber-soft);color:var(--amber-deep)}
+.b-bad{background:var(--red-soft);color:var(--red)}
+
+/* ---------- Forms ---------- */
+.form-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:40px;box-shadow:var(--shadow)}
+.form-card h2{font-size:clamp(1.5rem,3vw,2rem);margin-bottom:8px}
+.form-card > p{color:var(--muted);margin-bottom:28px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px}
+.form-grid .full{grid-column:1/-1}
+.field label{display:block;font-weight:600;font-size:15px;color:var(--ink);margin-bottom:7px}
+.field label .opt{font-weight:400;color:var(--muted);font-size:13.5px}
+.field input,.field select,.field textarea{width:100%;height:52px;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:0 15px;background:#fff;font-size:16px;transition:border-color .2s,box-shadow .2s;appearance:none;-webkit-appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235E6A80' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 15px center;padding-right:40px}
+.field textarea{height:auto;min-height:120px;padding:13px 15px;resize:vertical;line-height:1.5}
+.field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--amber);box-shadow:0 0 0 4px rgba(245,184,46,.2)}
+.field .hint{font-size:13px;color:var(--muted);margin-top:6px}
+.field .err{font-size:13px;color:var(--red);margin-top:6px;display:none}
+.field.invalid input{border-color:var(--red)}
+.field.invalid .err{display:block}
+.upload{display:flex;align-items:center;gap:14px;border:1.5px dashed #CBD3DF;border-radius:var(--r-sm);padding:14px;cursor:pointer;transition:.2s;background:var(--grey)}
+.upload:hover{border-color:var(--amber)}
+.upload .ic{width:48px;height:48px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--amber-deep);flex-shrink:0;overflow:hidden}
+.upload .ic img{width:100%;height:100%;object-fit:cover}
+.upload b{display:block;font-size:15px;color:var(--ink)}
+.upload small{font-size:13px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:40px;padding:0 15px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:14.5px;color:var(--text);transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.chip:hover{border-color:var(--ink)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip.on::before{content:"✓";color:var(--amber);font-weight:800}
+.sel-screens{background:var(--amber-soft);border:1px solid #F3DB9E;border-radius:var(--r-sm);padding:14px 16px}
+.sel-screens h4{font-size:14.5px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sel-screens .chip{background:#fff;height:36px;font-size:14px}
+.sel-screens .chip button{display:inline-flex;font-size:16px;color:var(--muted);margin-left:2px}
+.form-submit{margin-top:28px;display:flex;flex-direction:column;gap:12px}
+.form-submit .fine{font-size:13.5px;color:var(--muted);text-align:center}
+.success{text-align:center;padding:40px 10px}
+.success .ic{width:76px;height:76px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 22px;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+.success h3{font-size:1.6rem;margin-bottom:10px}
+.success p{color:var(--muted);margin:0 auto 26px}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+@media(max-width:700px){.form-card{padding:28px 20px;border-radius:20px}.form-grid{grid-template-columns:1fr}}
+
+/* ---------- Partner / advertiser pages ---------- */
+.benefits{display:grid;grid-template-columns:repeat(6,1fr);gap:22px}
+.benefits .card{grid-column:span 2}
+.benefits .card:nth-child(4){grid-column:2/span 2}
+.benefits .card h3{margin-bottom:10px;font-size:1.2rem}
+.benefits .card p{color:var(--muted);font-size:16px}
+@media(max-width:900px){.benefits{grid-template-columns:1fr}.benefits .card,.benefits .card:nth-child(4){grid-column:auto}}
+.split{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+.split-sticky{position:sticky;top:calc(var(--headh) + 30px)}
+@media(max-width:960px){.split{grid-template-columns:1fr;gap:36px}.split-sticky{position:static}}
+.checklist{list-style:none;display:grid;gap:14px;margin:26px 0}
+.checklist li{display:flex;gap:14px;align-items:flex-start}
+.checklist li .tick{width:28px;height:28px;border-radius:9px;background:var(--amber-soft);color:var(--amber-deep);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;margin-top:1px}
+.checklist li b{display:block;color:var(--ink);font-weight:600}
+.checklist li span{color:var(--muted);font-size:15.5px}
+.feature-row{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.feature-row .card{padding:24px}
+.feature-row h3{font-size:1.05rem;margin-bottom:8px}
+.feature-row p{font-size:15px;color:var(--muted)}
+@media(max-width:1000px){.feature-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.feature-row{grid-template-columns:1fr}}
+.calc-slot:empty{display:none}
+
+/* ---------- Ecosystem flow ---------- */
+.flow{max-width:760px;margin:0 auto;display:grid;gap:0}
+.flow-node{display:grid;grid-template-columns:84px 1fr;gap:26px;align-items:start;position:relative;padding-bottom:44px}
+.flow-node:last-child{padding-bottom:0}
+.flow-node:not(:last-child)::before{content:"";position:absolute;left:41px;top:84px;bottom:0;width:2px;background:linear-gradient(var(--amber),rgba(245,184,46,.15))}
+.flow-icon{width:84px;height:84px;border-radius:24px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:34px;color:var(--amber-deep);box-shadow:var(--shadow);position:relative;z-index:1}
+.flow-node.core .flow-icon{background:var(--navy);color:var(--amber);border-color:var(--navy)}
+.flow-node.rev .flow-icon{background:var(--amber);color:var(--navy);border-color:var(--amber)}
+.flow-card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px 28px}
+.flow-card .step-lbl{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-deep)}
+.flow-card h3{font-size:1.4rem;margin:6px 0 8px}
+.flow-card p{color:var(--muted)}
+@media(max-width:600px){.flow-node{grid-template-columns:60px 1fr;gap:16px}.flow-icon{width:60px;height:60px;font-size:26px;border-radius:18px}.flow-node:not(:last-child)::before{left:29px;top:60px}.flow-card{padding:20px}}
+.faq{max-width:820px;margin:0 auto;display:grid;gap:12px}
+.faq details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:0 22px}
+.faq summary{list-style:none;cursor:pointer;padding:20px 0;font-family:var(--display);font-weight:600;color:var(--ink);display:flex;justify-content:space-between;gap:16px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:24px;color:var(--amber-deep);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding-bottom:20px;color:var(--muted)}
+
+/* ---------- About ---------- */
+.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:40px;position:relative}
+.roadmap::before{content:"";position:absolute;left:8%;right:8%;top:23px;height:2px;background:linear-gradient(90deg,var(--amber),rgba(255,255,255,.15))}
+.rm{text-align:center;padding:0 16px;position:relative}
+.rm i{display:block;width:48px;height:48px;border-radius:50%;margin:0 auto 16px;background:var(--navy-3);border:2px solid rgba(255,255,255,.2)}
+.rm.now i{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 8px rgba(245,184,46,.2)}
+.rm b{display:block;color:#fff;font-family:var(--display);margin-bottom:4px}
+.rm small{color:rgba(255,255,255,.6);font-size:14.5px}
+@media(max-width:700px){.roadmap{grid-template-columns:1fr;gap:28px}.roadmap::before{display:none}}
+
+/* ---------- Contact ---------- */
+.contact-list{display:grid;gap:14px;margin-top:30px}
+.contact-item{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}
+.contact-item .icon-badge{margin:0;width:48px;height:48px;font-size:21px}
+.contact-item small{display:block;font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.contact-item b{color:var(--ink);font-weight:600;font-size:16.5px;word-break:break-word}
+
+/* ---------- Footer ---------- */
+.footer{background:var(--navy);color:rgba(255,255,255,.62);padding:72px 0 30px;font-size:15px}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.footer h4{color:#fff;font-size:14px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+.footer ul{list-style:none;display:grid;gap:9px}
+.footer a:hover{color:var(--amber)}
+.footer .logo{margin-bottom:16px}
+.footer-tag{font-family:var(--display);color:var(--amber);font-weight:600;margin-bottom:10px}
+.footer-bottom{border-top:1px solid var(--navy-line);padding-top:24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13.5px}
+.footer-bottom p{max-width:none}
+@media(max-width:860px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.footer-grid{grid-template-columns:1fr}}
+
+/* ---------- Admin ---------- */
+.admin-login{min-height:calc(100dvh - var(--headh));display:flex;align-items:center;justify-content:center;padding:40px 16px;background:var(--grey)}
+.login-card{background:#fff;border-radius:24px;padding:40px;max-width:420px;width:100%;box-shadow:var(--shadow-lg);text-align:center}
+.login-card .icon-badge{margin:0 auto 20px}
+.login-card h1{font-size:1.7rem;margin-bottom:8px}
+.login-card p{color:var(--muted);margin:0 auto 24px;font-size:15.5px}
+.login-card .field{text-align:left;margin-bottom:14px}
+.login-card .note{text-align:left;margin-top:18px}
+.admin{display:grid;grid-template-columns:250px 1fr;min-height:calc(100dvh - var(--headh));background:var(--grey)}
+.admin-side{background:var(--navy);padding:24px 16px;display:flex;flex-direction:column;gap:4px;position:sticky;top:var(--headh);height:calc(100dvh - var(--headh))}
+.admin-side .side-lbl{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:700;padding:0 12px 10px;font-family:var(--display)}
+.admin-side button{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:rgba(255,255,255,.7);font-weight:600;font-size:15.5px;text-align:left;transition:.2s;white-space:nowrap}
+.admin-side button:hover{background:rgba(255,255,255,.06);color:#fff}
+.admin-side button.on{background:rgba(245,184,46,.14);color:var(--amber)}
+.admin-side button .count{margin-left:auto;background:rgba(255,255,255,.1);color:#fff;font-size:12px;padding:2px 8px;border-radius:999px}
+.admin-side .side-foot{margin-top:auto}
+.admin-main{padding:34px 36px 60px;min-width:0}
+.admin-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+.admin-top h1{font-size:1.9rem}
+.admin-top p{color:var(--muted);font-size:15.5px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px}
+.kpi{background:#fff;border-radius:18px;padding:22px;border:1px solid var(--line)}
+.kpi .ic{width:42px;height:42px;border-radius:12px;background:var(--amber-soft);color:var(--amber-deep);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.kpi b{display:block;font-family:var(--display);font-size:2rem;color:var(--ink);letter-spacing:-.03em;line-height:1}
+.kpi small{color:var(--muted);font-size:14.5px;font-weight:600}
+.kpi.dark{background:var(--navy);border-color:var(--navy)}
+.kpi.dark b{color:#fff}.kpi.dark small{color:rgba(255,255,255,.6)}
+.kpi.dark .ic{background:rgba(245,184,46,.15);color:var(--amber)}
+.tcard{background:#fff;border-radius:18px;border:1px solid var(--line);overflow:hidden}
+.tcard-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tcard-head h3{font-size:1.1rem}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:760px}
+th{text-align:left;font-size:12.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;padding:12px 16px;background:var(--grey);white-space:nowrap}
+td{padding:14px 16px;border-top:1px solid var(--line);vertical-align:middle}
+td .strong{font-weight:600;color:var(--ink);display:block}
+td .sub{font-size:13.5px;color:var(--muted);display:block}
+td.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:var(--muted);white-space:nowrap}
+tr:hover td{background:#FAFBFD}
+.thumb{width:56px;height:38px;border-radius:7px;object-fit:cover;background:var(--navy)}
+.row-actions{display:flex;gap:6px;flex-wrap:nowrap}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:16px;color:var(--text);background:#fff;transition:.15s}
+.icon-btn:hover{border-color:var(--ink);color:var(--ink)}
+.icon-btn.danger:hover{border-color:var(--red);color:var(--red);background:var(--red-soft)}
+.icon-btn.on{color:var(--green)}
+.status-select{height:36px;border:1.5px solid var(--line);border-radius:10px;padding:0 30px 0 10px;font-size:14px;font-weight:600;appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235E6A80' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 10px center;cursor:pointer}
+.status-select.s-new{border-color:#BCD1F5;color:var(--blue);background-color:var(--blue-soft)}
+.status-select.s-good{border-color:#A9DEC6;color:var(--green);background-color:var(--green-soft)}
+.status-select.s-mid{border-color:#F1D48A;color:var(--amber-deep);background-color:var(--amber-soft)}
+.status-select.s-bad{border-color:#F0B7B7;color:var(--red);background-color:var(--red-soft)}
+.msg-cell{max-width:360px;font-size:14.5px;white-space:pre-wrap}
+.admin-empty{padding:40px;text-align:center;color:var(--muted)}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .admin{grid-template-columns:1fr}
+  .admin-side{position:sticky;top:var(--headh);z-index:50;height:auto;flex-direction:row;overflow-x:auto;padding:10px 12px;gap:6px}
+  .admin-side .side-lbl{display:none}
+  .admin-side button{padding:10px 12px;font-size:14.5px}
+  .admin-side .side-foot{margin:0}
+  .admin-main{padding:24px 16px 50px}
+}
+@media(max-width:480px){.kpis{gap:12px}.kpi{padding:16px}.kpi b{font-size:1.6rem}}
+
+/* Modal */
+.modal{position:fixed;inset:0;z-index:3000;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;background:rgba(10,22,40,.6);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s}
+.modal.show{opacity:1;pointer-events:auto}
+.modal-box{background:#fff;border-radius:24px;width:100%;max-width:820px;box-shadow:var(--shadow-lg);transform:translateY(20px);transition:transform .3s;margin:auto}
+.modal.show .modal-box{transform:none}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:22px 28px;border-bottom:1px solid var(--line)}
+.modal-head h2{font-size:1.35rem}
+.modal-body{padding:26px 28px}
+.modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:18px 28px;border-top:1px solid var(--line);flex-wrap:wrap}
+.modal-sec{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-deep);grid-column:1/-1;margin-top:8px;padding-top:14px;border-top:1px dashed var(--line)}
+.modal-sec:first-child{margin-top:0;padding-top:0;border:0}
+.img-prev{width:100%;aspect-ratio:16/9;max-width:240px;border-radius:10px;object-fit:cover;background:var(--navy);margin-top:10px}
+.confirm-box{max-width:440px;padding:32px;text-align:center}
+.confirm-box .icon-badge{margin:0 auto 18px;background:var(--red-soft);color:var(--red)}
+.confirm-box h2{font-size:1.35rem;margin-bottom:10px}
+.confirm-box p{color:var(--muted);margin:0 auto 24px}
+.confirm-box .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{background:#B42F2F}
+@media(max-width:600px){.modal{padding:0;align-items:flex-end}.modal-box{border-radius:22px 22px 0 0;margin:auto 0 0}.modal-head,.modal-body,.modal-foot{padding-left:18px;padding-right:18px}.modal-foot .btn{flex:1}}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,140%);z-index:4000;background:var(--navy);color:#fff;padding:14px 20px;border-radius:14px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:12px;font-weight:600;font-size:15px;transition:transform .35s cubic-bezier(.2,.8,.2,1);max-width:calc(100vw - 32px)}
+.toast.show{transform:translate(-50%,0)}
+.toast .svg-i{color:var(--amber);font-size:20px}
+
+@media(max-width:600px){
+  body{font-size:16.5px}
+  .container{padding:0 16px}
+  .section{padding:68px 0}
+  .section-sm{padding:48px 0}
+  .page-hero{padding:60px 0 68px}
+  .demo-bar{font-size:12px}
+  .demo-bar .long{display:none}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-head">
+  <div class="demo-bar"><b>DEMO MODE</b> Sample listings for demonstration only<span class="long">&nbsp;· data resets when the page reloads</span></div>
+  <nav class="nav" aria-label="Main">
+    <div class="container nav-inner">
+      <a href="#/home" class="logo" aria-label="Oora Media home">
+        <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="4" width="38" height="28" rx="7" fill="#112240" stroke="#F5B82E" stroke-width="2"/><circle cx="20" cy="18" r="7.5" fill="none" stroke="#F5B82E" stroke-width="3.2"/><circle cx="20" cy="18" r="2" fill="#FFD36B"/><path d="M14 37h12" stroke="#F5B82E" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <span>oora<em>media</em></span>
+      </a>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><i data-i="menu"></i></button>
+      <div class="nav-links" id="navLinks">
+        <a href="#/home" data-nav="home">Home</a>
+        <a href="#/map" data-nav="map">Screen Map</a>
+        <a href="#/partners" data-nav="partners">Screen Partners</a>
+        <a href="#/advertisers" data-nav="advertisers">Advertisers</a>
+        <a href="#/how" data-nav="how">How It Works</a>
+        <a href="#/about" data-nav="about">About</a>
+        <a href="#/contact" data-nav="contact">Contact</a>
+        <a href="#/advertisers?form" class="btn btn-primary btn-sm nav-cta">Advertise With Us</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+
+<!-- ===================== HOME ===================== -->
+<section class="page" data-page="home">
+  <div class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Digital Advertising Network · Australia</div>
+        <h1>Be Seen Where <span class="glow">Life Happens.</span></h1>
+        <p class="tagline">Real people. Real places. Real reach.</p>
+        <p class="lead">Oora Media connects your brand with real customers through screens in the places they already spend their time.</p>
+        <div class="hero-actions">
+          <a href="#/advertisers" class="btn btn-primary btn-lg">Advertise With Us <i data-i="arrow"></i></a>
+          <a href="#/partners" class="btn btn-outline btn-lg">Become a Screen Partner</a>
+        </div>
+        <div class="hero-trust">
+          <span><i data-i="pin"></i> Starting in Adelaide, SA</span>
+          <span><i data-i="monitor"></i> Uses screens venues already have</span>
+          <span><i data-i="users"></i> Local audiences</span>
+        </div>
+      </div>
+      <div class="device-wrap">
+        <div class="device">
+          <div class="device-screen" id="heroScreen">
+            <div class="slide on" style="--c1:#F5B82E;--c2:#FF8A3D;color:#0A1628" data-at="Ivy &amp; Oak Café · North Adelaide">
+              <span class="ad-tag">Local café · Sample ad</span><span class="ad-cta">This week</span>
+              <h4>2-for-1 flat whites before 9am</h4><p>Bean Theory Roasters</p>
+            </div>
+            <div class="slide" style="--c1:#1B3059;--c2:#2F6FDB;color:#fff" data-at="Parade Hair Studio · Norwood">
+              <span class="ad-tag">Real estate · Sample ad</span><span class="ad-cta">Open Sat 11am</span>
+              <h4>Just listed: 3-bed family home</h4><p>Harbour Lane Realty</p>
+            </div>
+            <div class="slide" style="--c1:#4FD1C5;--c2:#1F9D6B;color:#062a1f" data-at="Unley Family Medical · Unley">
+              <span class="ad-tag">Dental · Sample ad</span><span class="ad-cta">Book online</span>
+              <h4>New patients welcome</h4><p>Smile Studio Dental</p>
+            </div>
+            <div class="slide" style="--c1:#0A1628;--c2:#3A2A6B;color:#FFD36B" data-at="Lakes Fitness Hub · Mawson Lakes">
+              <span class="ad-tag">Car care · Sample ad</span><span class="ad-cta">Mobile service</span>
+              <h4>Showroom shine, at your door</h4><p style="color:#fff">Detail Doctor Adelaide</p>
+            </div>
+          </div>
+          <div class="device-progress"><i id="heroProg"></i></div>
+        </div>
+        <div class="device-stand"></div><div class="device-foot"></div>
+        <p class="device-caption">Now showing at <b id="heroAt">Ivy &amp; Oak Café · North Adelaide</b> · sample creative</p>
+        <div class="stat-chip chip-a"><span class="ic"><i data-i="pin"></i></span><div><b id="heroVenues">12</b><small>venues in network · demo</small></div></div>
+        <div class="stat-chip chip-b"><span class="live-dot"></span><div><b>350–500</b><small>daily foot traffic · example venue</small></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="venue-strip" aria-hidden="true">
+    <div class="venue-track" id="venueTrack"></div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">How It Works</div>
+        <h2>Simple for venues. Simple for advertisers.</h2>
+        <p class="lead">Choose your side to see how Oora Media works for you.</p>
+      </div>
+      <div class="toggle" role="tablist">
+        <button class="on" data-how="partner" role="tab"><i data-i="store"></i> For Screen Partners</button>
+        <button data-how="advertiser" role="tab"><i data-i="megaphone"></i> For Advertisers</button>
+      </div>
+      <div class="steps" id="howSteps"></div>
+    </div>
+  </div>
+
+  <div class="section bg-navy">
+    <div class="container preview-grid">
+      <div>
+        <div class="eyebrow">Live Network Map</div>
+        <h2>See where your message could appear.</h2>
+        <p class="lead" style="margin-top:16px">Explore screens in cafés, gyms, salons, clinics and more across Adelaide. Tap any location to see venue details and the estimated audience.</p>
+        <div class="preview-stats">
+          <div><b id="pvScreens">12</b><small>Screens listed</small></div>
+          <div><b id="pvSuburbs">12</b><small>Suburbs</small></div>
+          <div><b id="pvTypes">9</b><small>Venue types</small></div>
+        </div>
+        <a href="#/map" class="btn btn-primary">Open the Interactive Screen Map <i data-i="arrow"></i></a>
+      </div>
+      <div class="preview-map-wrap">
+        <div class="preview-badge"><span class="live-dot"></span> Adelaide network · <span class="demo-tag" style="padding:2px 7px">Demo</span></div>
+        <div id="previewMap" aria-label="Preview map of screen locations"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <div class="section-head center">
+        <div class="eyebrow">Two Ways to Join</div>
+        <h2>Which one sounds like you?</h2>
+      </div>
+      <div class="grid-2">
+        <div class="callout callout-light">
+          <div class="icon-badge dark"><i data-i="store"></i></div>
+          <h3>I have a screen in my venue</h3>
+          <p>Your café, gym, salon or waiting room already has a digital screen. It could become a new income opportunity.</p>
+          <ul>
+            <li><i data-i="check"></i> Keep showing your own content</li>
+            <li><i data-i="check"></i> We find and coordinate the advertisers</li>
+            <li><i data-i="check"></i> Potential additional income from your screen</li>
+          </ul>
+          <a href="#/partners" class="btn btn-dark">Become a Screen Partner <i data-i="arrow"></i></a>
+        </div>
+        <div class="callout callout-dark">
+          <div class="icon-badge"><i data-i="megaphone"></i></div>
+          <h3>I want to reach local customers</h3>
+          <p>Put your business in front of people in the places they already visit every day — right in your local area.</p>
+          <ul>
+            <li><i data-i="check"></i> Browse screens on an interactive map</li>
+            <li><i data-i="check"></i> Choose suburbs and venue types</li>
+            <li><i data-i="check"></i> We help coordinate your campaign</li>
+          </ul>
+          <a href="#/advertisers" class="btn btn-primary">Advertise With Us <i data-i="arrow"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-sm" style="padding-top:0">
+    <div class="container">
+      <div class="cta-band">
+        <div>
+          <h2>Starting in Adelaide. Built for local.</h2>
+          <p>We're partnering with a small number of founding venues and advertisers.</p>
+        </div>
+        <div class="hero-actions">
+          <a href="#/contact" class="btn btn-primary">Talk to Us</a>
+          <a href="#/how" class="btn btn-outline">How It Works</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MAP ===================== -->
+<section class="page" data-page="map">
+  <div class="map-head">
+    <div class="container map-head-row">
+      <div>
+        <div class="eyebrow" style="margin-bottom:10px">Adelaide, South Australia</div>
+        <h1>Interactive Screen Map</h1>
+        <p>Explore digital screens in local venues. Tap a location to see details.</p>
+      </div>
+      <span class="demo-tag"><i data-i="info"></i> All listings are demo listings</span>
+    </div>
+  </div>
+  <div class="container">
+    <div class="map-toolbar">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div class="seg" role="tablist" aria-label="View">
+          <button class="on" data-view="map"><i data-i="map"></i> Map</button>
+          <button data-view="list"><i data-i="list"></i> List</button>
+        </div>
+        <button class="btn btn-ghost btn-sm filter-toggle" id="filterToggle"><i data-i="filter"></i> Filters <span id="filterCount"></span></button>
+      </div>
+      <div class="map-search" id="mapSearchBox" role="combobox" aria-expanded="false" aria-haspopup="listbox">
+        <i data-i="search"></i>
+        <input id="mapSearch" type="search" autocomplete="off" placeholder="Search a suburb, venue, landmark or your address…" aria-label="Search the map">
+        <button type="button" class="clear" id="mapSearchClear" aria-label="Clear search"><i data-i="x"></i></button>
+        <div class="search-drop" id="searchDrop" role="listbox"></div>
+      </div>
+      <div class="result-count" id="resultCount"></div>
+    </div>
+    <div class="map-layout">
+      <aside class="filters" id="filters">
+        <h3>Filter screens <button class="link-arrow" style="font-size:13.5px;color:var(--amber-deep)" id="resetFilters" type="button">Reset</button></h3>
+        <div class="field"><label for="fSuburb">Suburb</label><select id="fSuburb" data-f="suburb"></select></div>
+        <div class="field"><label for="fType">Venue type</label><select id="fType" data-f="type"></select></div>
+        <div class="field"><label for="fSize">Screen size</label>
+          <select id="fSize" data-f="size"><option value="">Any size</option><option value="s">Small (under 50")</option><option value="m">Medium (50"–64")</option><option value="l">Large (65"+)</option></select></div>
+        <div class="field"><label for="fAud">Estimated daily audience</label>
+          <select id="fAud" data-f="aud"><option value="">Any audience</option><option value="1">Under 200 / day</option><option value="2">200–500 / day</option><option value="3">500–1,000 / day</option><option value="4">1,000+ / day</option></select></div>
+        <div class="field"><label for="fStatus">Availability</label>
+          <select id="fStatus" data-f="status"><option value="">All listings</option><option>Available</option><option>Coming Soon</option><option>Temporarily Unavailable</option></select></div>
+        <div class="field"><label for="fOrient">Orientation</label>
+          <select id="fOrient" data-f="orient"><option value="">Any orientation</option><option>Landscape</option><option>Portrait</option></select></div>
+        <div class="legend">
+          <span><i style="background:#1F9D6B"></i> Available</span>
+          <span><i style="background:#F5B82E"></i> Coming Soon</span>
+          <span><i style="background:#D9622B"></i> Temporarily Unavailable</span>
+          <span><i style="background:transparent;border:1.5px dashed #1F9D6B;box-shadow:none"></i> Approx. walking reach (400 m)</span>
+          <span><i style="border-radius:4px;background:#fff;border:1.5px solid #1B3059;box-shadow:none"></i> Landmarks &amp; key places</span>
+        </div>
+        <p class="hint" style="font-size:13px;color:var(--muted);margin-top:14px;line-height:1.45">Use the <b>layers</b> button on the map to switch to Satellite or Terrain, or to show train &amp; tram lines.</p>
+      </aside>
+      <div class="map-stage">
+        <div id="mapView">
+          <div id="map" role="application" aria-label="Map of screen locations"></div>
+        </div>
+        <div id="listView" class="list-grid hidden"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SCREEN PARTNERS ===================== -->
+<section class="page" data-page="partners">
+  <div class="page-hero">
+    <div class="container">
+      <div class="eyebrow">For Screen Partners</div>
+      <h1>Your Screen Could Be More Than Just a Display.</h1>
+      <p class="lead">If your café, restaurant, gym, salon or waiting room already has a digital screen, part of that screen time could become a new opportunity. Oora Media lists suitable screens in our local network and connects them with advertisers who want to reach people in your area.</p>
+      <div class="hero-actions">
+        <a href="#/partners?form" class="btn btn-primary btn-lg">Apply to Become a Screen Partner <i data-i="arrow"></i></a>
+        <a href="#/how" class="btn btn-outline btn-lg">See How It Works</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Why Partner With Oora Media</div>
+        <h2>A simple way to explore what your screen could do.</h2>
+        <p class="lead">No new hardware to buy in most cases, and no need to go looking for advertisers yourself.</p>
+      </div>
+      <div class="benefits">
+        <div class="card card-hover"><div class="icon-badge"><i data-i="dollar"></i></div><h3>Potential Additional Income</h3><p>When campaigns run at your location, you may receive a share of advertising revenue based on the agreed partnership model.</p></div>
+        <div class="card card-hover"><div class="icon-badge"><i data-i="search"></i></div><h3>No Need to Find Advertisers</h3><p>We build relationships with local businesses and coordinate campaigns, so you can focus on running your venue.</p></div>
+        <div class="card card-hover"><div class="icon-badge"><i data-i="monitor"></i></div><h3>Keep Your Business Content</h3><p>Your menu, specials and messages stay on screen. Advertising only uses an agreed share of your screen time.</p></div>
+        <div class="card card-hover"><div class="icon-badge"><i data-i="pin"></i></div><h3>Local Advertising Opportunities</h3><p>Ads come from local businesses — the kind of content your customers are likely to find relevant.</p></div>
+        <div class="card card-hover"><div class="icon-badge"><i data-i="shield"></i></div><h3>You Stay Involved</h3><p>You'll know what's shown at your venue, and you can raise any content you're not comfortable with.</p></div>
+      </div>
+      <div class="note" style="margin-top:32px"><i data-i="info"></i><span>Any advertising income is indicative only. Actual income depends on campaign demand, your location and the agreed partnership arrangement, and is not guaranteed.</span></div>
+    </div>
+  </div>
+
+  <!-- Earnings calculator slot: reserved for a future indicative earnings estimator (removed from current build). -->
+  <div class="calc-slot" id="calcSlot"></div>
+
+  <div class="section bg-grey" id="partnerFormSec">
+    <div class="container split">
+      <div class="split-sticky">
+        <div class="eyebrow">Apply</div>
+        <h2>Tell us about your screen.</h2>
+        <p class="lead" style="margin-top:14px">It takes about two minutes. There's no commitment — we'll get in touch to talk through whether your venue is a good fit.</p>
+        <ul class="checklist">
+          <li><span class="tick"><i data-i="check"></i></span><div><b>We review your details</b><span>Location, screen and typical customer traffic.</span></div></li>
+          <li><span class="tick"><i data-i="check"></i></span><div><b>We have a chat</b><span>A quick call or visit to answer your questions.</span></div></li>
+          <li><span class="tick"><i data-i="check"></i></span><div><b>We agree on a partnership</b><span>Clear terms before anything appears on your screen.</span></div></li>
+        </ul>
+        <div class="note"><i data-i="lock"></i><span>Your details are only used to assess your application and contact you about Oora Media.</span></div>
+      </div>
+      <div class="form-card">
+        <form id="partnerForm" novalidate>
+          <h2>Screen Partner Application</h2>
+          <p style="color:var(--muted);margin-bottom:26px">Fields marked optional can be left blank.</p>
+          <div class="form-grid">
+            <div class="field full"><label for="pBusiness">Business name</label><input id="pBusiness" name="business" required autocomplete="organization"></div>
+            <div class="field"><label for="pContact">Contact name</label><input id="pContact" name="contact" required autocomplete="name"></div>
+            <div class="field"><label for="pPhone">Phone number</label><input id="pPhone" name="phone" type="tel" required autocomplete="tel" inputmode="tel"></div>
+            <div class="field full"><label for="pEmail">Email</label><input id="pEmail" name="email" type="email" required autocomplete="email"></div>
+            <div class="field full"><label for="pAddress">Business address</label><input id="pAddress" name="address" required autocomplete="street-address"></div>
+            <div class="field"><label for="pSuburb">Suburb</label><input id="pSuburb" name="suburb" required list="suburbList" autocomplete="address-level2"></div>
+            <div class="field"><label for="pType">Business type</label><select id="pType" name="type" required></select></div>
+            <div class="field"><label for="pScreens">Number of screens</label><select id="pScreens" name="screens" required><option value="">Select…</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></div>
+            <div class="field"><label for="pSize">Screen size</label><select id="pSize" name="size" required><option value="">Select…</option><option>Under 40"</option><option>40"–49"</option><option>50"–59"</option><option>60"–69"</option><option>70"+</option><option>Not sure</option></select></div>
+            <div class="field"><label for="pTraffic">Approx. daily customers</label><select id="pTraffic" name="traffic" required><option value="">Select…</option><option>Under 100</option><option>100–250</option><option>250–500</option><option>500–1,000</option><option>1,000+</option></select></div>
+            <div class="field"><label for="pHours">Opening hours</label><input id="pHours" name="hours" required placeholder="e.g. Mon–Sat, 7am–5pm"></div>
+            <div class="field full"><label>Screen photo <span class="opt">(optional)</span></label>
+              <label class="upload" for="pPhoto"><span class="ic" id="pPhotoIc"><i data-i="camera"></i></span><span><b id="pPhotoName">Upload a photo of your screen</b><small>JPG or PNG — a phone photo is perfect</small></span></label>
+              <input type="file" id="pPhoto" accept="image/*" class="sr"></div>
+            <div class="field full"><label for="pComments">Additional comments <span class="opt">(optional)</span></label><textarea id="pComments" name="comments" placeholder="Anything else we should know about your venue or screen?"></textarea></div>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Apply to Become a Screen Partner</button>
+            <p class="fine">No obligation. Submitting this form doesn't commit you to anything.</p>
+          </div>
+        </form>
+        <div class="success hidden" id="partnerSuccess">
+          <div class="ic"><i data-i="check"></i></div>
+          <h3>Thanks — application received!</h3>
+          <p>We'll review your details and be in touch soon to talk about your venue.</p>
+          <button class="btn btn-ghost" data-reset="partnerForm">Submit another venue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ADVERTISERS ===================== -->
+<section class="page" data-page="advertisers">
+  <div class="page-hero">
+    <div class="container">
+      <div class="eyebrow">For Advertisers</div>
+      <h1>Reach Local Customers Where They Already Are.</h1>
+      <p class="lead">Oora Media lets you explore advertising opportunities on digital screens inside local venues — cafés, gyms, salons, clinics and more. Choose the areas and venue types that suit your business, and we'll help coordinate the campaign.</p>
+      <div class="hero-actions">
+        <a href="#/map" class="btn btn-primary btn-lg"><i data-i="map"></i> Explore the Screen Map</a>
+        <a href="#/advertisers?form" class="btn btn-outline btn-lg">Submit a Campaign Enquiry</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">What You Can Do</div>
+        <h2>Find the right screens in a few taps.</h2>
+      </div>
+      <div class="feature-row">
+        <div class="card card-hover"><div class="icon-badge"><i data-i="map"></i></div><h3>Explore the map</h3><p>See screen locations across Adelaide on a live map.</p></div>
+        <div class="card card-hover"><div class="icon-badge"><i data-i="monitor"></i></div><h3>Browse screens</h3><p>Switch to list view to compare venues side by side.</p></div>
+        <div class="card card-hover"><div class="icon-badge"><i data-i="filter"></i></div><h3>Filter locations</h3><p>Narrow down by suburb, venue type, size and audience.</p></div>
+        <div class="card card-hover"><div class="icon-badge"><i data-i="eye"></i></div><h3>View screen info</h3><p>Check screen size, opening hours and estimated audience.</p></div>
+        <div class="card card-hover"><div class="icon-badge"><i data-i="layers"></i></div><h3>Select multiple</h3><p>Add several screens to one enquiry for a wider reach.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section bg-grey" id="advFormSec">
+    <div class="container split">
+      <div class="split-sticky">
+        <div class="eyebrow">Campaign Enquiry</div>
+        <h2>Tell us what you'd like to promote.</h2>
+        <p class="lead" style="margin-top:14px">Share a few details and we'll come back with suitable screen options for your campaign.</p>
+        <ul class="checklist">
+          <li><span class="tick"><i data-i="check"></i></span><div><b>No payment now</b><span>This is an enquiry only — nothing is booked or charged.</span></div></li>
+          <li><span class="tick"><i data-i="check"></i></span><div><b>We suggest locations</b><span>Based on your goals, area and budget.</span></div></li>
+          <li><span class="tick"><i data-i="check"></i></span><div><b>We help coordinate</b><span>From your ad creative to going live on screen.</span></div></li>
+        </ul>
+        <a href="#/map" class="link-arrow">Browse screens on the map first <i data-i="arrow"></i></a>
+      </div>
+      <div class="form-card">
+        <form id="advForm" novalidate>
+          <h2>Campaign Enquiry</h2>
+          <p style="color:var(--muted);margin-bottom:26px">Takes about two minutes.</p>
+          <div class="form-grid">
+            <div class="field full sel-screens hidden" id="selScreensBox">
+              <h4><i data-i="monitor"></i> Screens you're interested in</h4>
+              <div class="chips" id="selScreens"></div>
+            </div>
+            <div class="field full"><label for="aBusiness">Business name</label><input id="aBusiness" required autocomplete="organization"></div>
+            <div class="field"><label for="aContact">Contact name</label><input id="aContact" required autocomplete="name"></div>
+            <div class="field"><label for="aPhone">Phone number</label><input id="aPhone" type="tel" required autocomplete="tel" inputmode="tel"></div>
+            <div class="field full"><label for="aEmail">Email</label><input id="aEmail" type="email" required autocomplete="email"></div>
+            <div class="field full"><label for="aGoal">Campaign goal</label><select id="aGoal" required><option value="">Select a goal…</option><option>Brand Awareness</option><option>Promote a Product</option><option>Promote a Service</option><option>Local Event</option><option>Special Offer</option><option>Other</option></select></div>
+            <div class="field full"><label>Preferred locations <span class="opt">(select any)</span></label><div class="chips" id="aSuburbs"></div></div>
+            <div class="field full"><label>Preferred venue types <span class="opt">(select any)</span></label><div class="chips" id="aTypes"></div></div>
+            <div class="field full"><label>Campaign duration</label><div class="chips" id="aDuration" data-single>
+              <button type="button" class="chip">1 Week</button><button type="button" class="chip">2 Weeks</button><button type="button" class="chip on">1 Month</button><button type="button" class="chip">Custom</button></div></div>
+            <div class="field full"><label for="aBudget">Approximate budget <span class="opt">(optional)</span></label><select id="aBudget"><option value="">Prefer not to say</option><option>Under A$500</option><option>A$500 – A$1,000</option><option>A$1,000 – A$2,500</option><option>A$2,500 – A$5,000</option><option>A$5,000+</option></select></div>
+            <div class="field full"><label for="aInfo">Additional information <span class="opt">(optional)</span></label><textarea id="aInfo" placeholder="Tell us about your business, timing, or anything else that would help."></textarea></div>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Submit Campaign Enquiry</button>
+            <p class="fine">This is an enquiry only. No booking or payment is made.</p>
+          </div>
+        </form>
+        <div class="success hidden" id="advSuccess">
+          <div class="ic"><i data-i="check"></i></div>
+          <h3>Enquiry received — thank you!</h3>
+          <p>We'll review your goals and get back to you with suitable screen options.</p>
+          <button class="btn btn-ghost" data-reset="advForm">Submit another enquiry</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="page" data-page="how">
+  <div class="page-hero">
+    <div class="container">
+      <div class="eyebrow">How Oora Media Works</div>
+      <h1>One network. Three groups that benefit.</h1>
+      <p class="lead">Venues provide the screens, advertisers provide the messages, and Oora Media brings them together.</p>
+    </div>
+  </div>
+  <div class="section">
+    <div class="container">
+      <div class="flow">
+        <div class="flow-node"><div class="flow-icon"><i data-i="store"></i></div>
+          <div class="flow-card"><span class="step-lbl">Step 1</span><h3>Screen Partner</h3><p>A café, gym, salon or other venue provides access to a suitable digital screen they already have.</p></div></div>
+        <div class="flow-node core"><div class="flow-icon"><i data-i="logo"></i></div>
+          <div class="flow-card"><span class="step-lbl">Step 2</span><h3>Oora Media</h3><p>We build the network of screens and connect them with local advertising opportunities — handling the coordination in between.</p></div></div>
+        <div class="flow-node"><div class="flow-icon"><i data-i="megaphone"></i></div>
+          <div class="flow-card"><span class="step-lbl">Step 3</span><h3>Advertiser</h3><p>Local businesses promote themselves to relevant audiences in the places those people already spend time.</p></div></div>
+        <div class="flow-node rev"><div class="flow-icon"><i data-i="dollar"></i></div>
+          <div class="flow-card"><span class="step-lbl">Step 4</span><h3>Revenue Opportunity</h3><p>Where advertising revenue is generated, it can be shared according to the agreed partnership arrangement.</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="section bg-grey">
+    <div class="container">
+      <div class="section-head center"><div class="eyebrow">Common Questions</div><h2>Good questions, straight answers.</h2></div>
+      <div class="faq">
+        <details><summary>Do I need to buy a new screen?</summary><p>In most cases, no. Oora Media is built around screens venues already have. We'll talk through your setup to see whether it's suitable.</p></details>
+        <details><summary>Will ads replace my own content?</summary><p>No. Your own content stays on screen. Advertising uses an agreed share of screen time that we discuss with you up front.</p></details>
+        <details><summary>How much could a Screen Partner earn?</summary><p>It depends on your location, audience, and advertiser demand. Any figures we discuss are estimates only — actual advertising income may vary and is not guaranteed.</p></details>
+        <details><summary>Can advertisers book and pay online?</summary><p>Not yet. Right now advertisers submit an enquiry and we help coordinate the campaign directly. Online booking is something we plan to explore as the network grows.</p></details>
+        <details><summary>Where is Oora Media available?</summary><p>We're starting in Adelaide, South Australia, with a small number of founding partners before expanding further.</p></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section class="page" data-page="about">
+  <div class="page-hero">
+    <div class="container">
+      <div class="eyebrow">About Oora Media</div>
+      <h1>Building a Smarter Local Advertising Network.</h1>
+      <p class="lead">Oora Media connects advertisers with real customers through digital screens in the places they already spend their time, and engage every day. We help bring your message directly into the real-world spaces your customers already visit.</p>
+    </div>
+  </div>
+  <div class="section">
+    <div class="container split">
+      <div>
+        <div class="eyebrow">Our Approach</div>
+        <h2>Starting locally, in Adelaide.</h2>
+      </div>
+      <div>
+        <p class="lead" style="margin-bottom:18px">We're beginning right here in Adelaide, working with a small number of founding Screen Partners and advertisers to test the model properly before we expand.</p>
+        <p style="color:var(--muted)">That means listening closely to venue owners and local businesses, getting the details right, and growing at a pace that keeps the network useful for everyone involved.</p>
+      </div>
+    </div>
+  </div>
+  <div class="section bg-grey">
+    <div class="container">
+      <div class="section-head center"><div class="eyebrow">What We Stand For</div><h2>Three simple principles.</h2></div>
+      <div class="grid-3">
+        <div class="card card-hover"><div class="icon-badge"><i data-i="pin"></i></div><h3 style="margin-bottom:10px">Local first</h3><p style="color:var(--muted)">Local venues, local advertisers, local audiences. We start in our own backyard and build from there.</p></div>
+        <div class="card card-hover"><div class="icon-badge"><i data-i="scale"></i></div><h3 style="margin-bottom:10px">Fair to both sides</h3><p style="color:var(--muted)">Clear, honest arrangements that work for Screen Partners and advertisers alike — no overpromising.</p></div>
+        <div class="card card-hover"><div class="icon-badge"><i data-i="trend"></i></div><h3 style="margin-bottom:10px">Built to grow carefully</h3><p style="color:var(--muted)">We test, learn and improve with founding partners before expanding the network further.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="section bg-navy">
+    <div class="container">
+      <div class="section-head center"><div class="eyebrow">Where We're Heading</div><h2>From Adelaide, step by step.</h2></div>
+      <div class="roadmap">
+        <div class="rm now"><i></i><b>Adelaide</b><small>Founding partners · now</small></div>
+        <div class="rm"><i></i><b>South Australia</b><small>Regional centres · planned</small></div>
+        <div class="rm"><i></i><b>Australian capitals</b><small>Longer-term ambition</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section class="page" data-page="contact">
+  <div class="page-hero">
+    <div class="container">
+      <div class="eyebrow">Contact</div>
+      <h1>Let's talk.</h1>
+      <p class="lead">Whether you have a screen, want to advertise, or just have a question — we'd love to hear from you.</p>
+    </div>
+  </div>
+  <div class="section bg-grey">
+    <div class="container split">
+      <div>
+        <h2>Get in touch</h2>
+        <p class="lead" style="margin-top:12px">We usually reply within one business day.</p>
+        <!-- Replace the placeholder contact details below with real ones before launch. -->
+        <div class="contact-list">
+          <div class="contact-item"><div class="icon-badge"><i data-i="mail"></i></div><div><small>Email</small><b>hello@ooramedia.com.au</b></div></div>
+          <div class="contact-item"><div class="icon-badge"><i data-i="phone"></i></div><div><small>Phone</small><b>(08) 7000 0000</b></div></div>
+          <div class="contact-item"><div class="icon-badge"><i data-i="pin"></i></div><div><small>Location</small><b>Adelaide, South Australia</b></div></div>
+        </div>
+      </div>
+      <div class="form-card">
+        <form id="contactForm" novalidate>
+          <h2>Send a message</h2>
+          <p style="color:var(--muted);margin-bottom:26px">Screen partner, advertiser or just curious — all welcome.</p>
+          <div class="form-grid">
+            <div class="field"><label for="cName">Name</label><input id="cName" required autocomplete="name"></div>
+            <div class="field"><label for="cEmail">Email</label><input id="cEmail" type="email" required autocomplete="email"></div>
+            <div class="field"><label for="cPhone">Phone <span class="opt">(optional)</span></label><input id="cPhone" type="tel" autocomplete="tel" inputmode="tel"></div>
+            <div class="field"><label for="cCompany">Company <span class="opt">(optional)</span></label><input id="cCompany" autocomplete="organization"></div>
+            <div class="field full"><label for="cMessage">Message</label><textarea id="cMessage" required></textarea></div>
+          </div>
+          <div class="form-submit"><button type="submit" class="btn btn-primary btn-lg btn-block">Send Message</button></div>
+        </form>
+        <div class="success hidden" id="contactSuccess">
+          <div class="ic"><i data-i="check"></i></div>
+          <h3>Message sent</h3>
+          <p>Thanks for reaching out. We'll get back to you shortly.</p>
+          <button class="btn btn-ghost" data-reset="contactForm">Send another message</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ADMIN ===================== -->
+<section class="page" data-page="admin">
+  <div class="admin-login" id="adminLogin">
+    <form class="login-card" id="loginForm">
+      <div class="icon-badge dark"><i data-i="lock"></i></div>
+      <h1>Admin Dashboard</h1>
+      <p>Sign in to manage screens and enquiries.</p>
+      <div class="field" id="pwField"><label for="adminPw">Password</label><input type="password" id="adminPw" autocomplete="current-password"><div class="err">Incorrect password. Please try again.</div></div>
+      <button class="btn btn-primary btn-block" type="submit">Sign In</button>
+      <div class="note"><i data-i="info"></i><span><b>Demo-only authentication.</b> This is a simple client-side check for private demonstrations — not production security. Demo password: <code>oora-demo</code></span></div>
+    </form>
+  </div>
+  <div class="admin hidden" id="adminApp">
+    <aside class="admin-side">
+      <div class="side-lbl">Dashboard</div>
+      <button data-tab="overview" class="on"><i data-i="grid"></i> Overview</button>
+      <button data-tab="screens"><i data-i="monitor"></i> Screens <span class="count" id="cntScreens"></span></button>
+      <button data-tab="partners"><i data-i="store"></i> Partner Enquiries <span class="count" id="cntPartners"></span></button>
+      <button data-tab="advertisers"><i data-i="megaphone"></i> Advertiser Enquiries <span class="count" id="cntAdv"></span></button>
+      <button data-tab="messages"><i data-i="inbox"></i> Messages <span class="count" id="cntMsg"></span></button>
+      <div class="side-foot"><button id="logoutBtn"><i data-i="logout"></i> Sign out</button></div>
+    </aside>
+    <div class="admin-main" id="adminMain"></div>
+  </div>
+</section>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="#/home" class="logo"><svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="4" width="38" height="28" rx="7" fill="#112240" stroke="#F5B82E" stroke-width="2"/><circle cx="20" cy="18" r="7.5" fill="none" stroke="#F5B82E" stroke-width="3.2"/><circle cx="20" cy="18" r="2" fill="#FFD36B"/><path d="M14 37h12" stroke="#F5B82E" stroke-width="2.4" stroke-linecap="round"/></svg><span>oora<em>media</em></span></a>
+        <p class="footer-tag">Be Seen Where Life Happens.</p>
+        <p>Real people. Real places. Real reach. A local digital advertising network, starting in Adelaide.</p>
+      </div>
+      <div><h4>Explore</h4><ul><li><a href="#/map">Screen Map</a></li><li><a href="#/how">How It Works</a></li><li><a href="#/about">About</a></li></ul></div>
+      <div><h4>Get Started</h4><ul><li><a href="#/partners">Screen Partners</a></li><li><a href="#/advertisers">Advertisers</a></li><li><a href="#/contact">Contact</a></li></ul></div>
+      <div><h4>Location</h4><ul><li>Adelaide, South Australia</li><li><a href="#/contact">hello@ooramedia.com.au</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span id="yr"></span> Oora Media. Demo Mode: all screen listings are sample data. Audience figures are estimates; any advertising income is indicative and not guaranteed.</p>
+      <a href="#/admin">Admin</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Info panel (desktop side panel / mobile bottom sheet) -->
+<div class="backdrop panel-bd" id="panelBackdrop"></div>
+<aside class="panel" id="panel" aria-hidden="true" aria-label="Screen details"></aside>
+
+<!-- Screen add/edit modal -->
+<div class="modal" id="screenModal" aria-hidden="true">
+  <form class="modal-box" id="screenForm" novalidate>
+    <div class="modal-head"><h2 id="screenModalTitle">Add Screen</h2><button type="button" class="icon-btn" data-close-modal aria-label="Close"><i data-i="x"></i></button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="modal-sec">Screen &amp; venue</div>
+        <div class="field"><label for="sfName">Screen name</label><input id="sfName" required placeholder="e.g. Front Counter Display"><div class="err">Required</div></div>
+        <div class="field"><label for="sfVenue">Venue name</label><input id="sfVenue" required><div class="err">Required</div></div>
+        <div class="field"><label for="sfType">Venue type</label><select id="sfType" required></select></div>
+        <div class="field"><label for="sfStatus">Status</label><select id="sfStatus"><option>Available</option><option>Coming Soon</option><option>Temporarily Unavailable</option><option>Inactive</option></select></div>
+        <div class="modal-sec">Location</div>
+        <div class="field full"><label for="sfAddress">Full address</label><input id="sfAddress" required><div class="err">Required</div></div>
+        <div class="field full"><label for="sfSuburb">Suburb</label><input id="sfSuburb" required list="suburbList"><div class="err">Required</div></div>
+        <div class="field"><label for="sfLat">Latitude</label><input id="sfLat" type="number" step="any" inputmode="decimal" required placeholder="-34.9285"><div class="err">Enter a latitude within Australia (−44 to −10)</div></div>
+        <div class="field"><label for="sfLng">Longitude</label><input id="sfLng" type="number" step="any" inputmode="decimal" required placeholder="138.6007"><div class="err">Enter a longitude within Australia (112 to 154)</div></div>
+        <div class="field full"><div class="hint" style="margin:0">Tip: in Google Maps, right-click a spot to copy its latitude and longitude.</div></div>
+        <div class="modal-sec">Screen details</div>
+        <div class="field"><label for="sfSize">Screen size (inches)</label><input id="sfSize" type="number" min="10" max="200" inputmode="numeric" required><div class="err">Enter a size between 10 and 200</div></div>
+        <div class="field"><label for="sfOrient">Orientation</label><select id="sfOrient"><option>Landscape</option><option>Portrait</option></select></div>
+        <div class="field"><label for="sfAudLow">Est. daily audience — from</label><input id="sfAudLow" type="number" min="0" inputmode="numeric" required><div class="err">Enter a number</div></div>
+        <div class="field"><label for="sfAudHigh">Est. daily audience — to</label><input id="sfAudHigh" type="number" min="0" inputmode="numeric" required><div class="err">Must be ≥ the "from" value</div></div>
+        <div class="field"><label for="sfDays">Opening days</label><input id="sfDays" required placeholder="e.g. Mon–Sun"><div class="err">Required</div></div>
+        <div class="field"><label for="sfHours">Opening hours</label><input id="sfHours" required placeholder="e.g. 7:00am – 4:00pm"><div class="err">Required</div></div>
+        <div class="field"><label for="sfVis">Visibility rating</label><select id="sfVis"><option value="5">5 — Excellent</option><option value="4">4 — Very good</option><option value="3">3 — Good</option><option value="2">2 — Fair</option><option value="1">1 — Limited</option></select></div>
+        <div class="field full"><label for="sfDesc">Description</label><textarea id="sfDesc" style="min-height:90px"></textarea></div>
+        <div class="field full"><label for="sfImage">Screen image URL <span class="opt">(optional — a placeholder is generated if blank)</span></label><input id="sfImage" type="url" placeholder="https://…"><img class="img-prev" id="sfImgPrev" alt=""></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+      <button type="submit" class="btn btn-primary">Save Screen</button>
+    </div>
+  </form>
+</div>
+
+<!-- Confirm modal -->
+<div class="modal" id="confirmModal" aria-hidden="true">
+  <div class="modal-box confirm-box">
+    <div class="icon-badge"><i data-i="trash"></i></div>
+    <h2 id="confirmTitle">Are you sure?</h2>
+    <p id="confirmText"></p>
+    <div class="btns"><button class="btn btn-ghost" data-close-modal>Cancel</button><button class="btn btn-danger" id="confirmYes">Delete</button></div>
+  </div>
+</div>
+
+<datalist id="suburbList"></datalist>
+<div class="toast" id="toast" role="status" aria-live="polite"><i data-i="check"></i><span></span></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* =====================================================================
+   Oora Media — demo platform
+   All data lives in memory for this demo. Replace the `store` functions
+   with API calls (and real form delivery) before operational use.
+   ===================================================================== */
+(function(){
+'use strict';
+
+/* ---------- Helpers ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtN = n => Number(n).toLocaleString('en-AU');
+const fmtDate = iso => new Date(iso).toLocaleDateString('en-AU', {day:'numeric', month:'short', year:'numeric'});
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const daysAgo = d => new Date(Date.now() - d*864e5).toISOString();
+
+const ICONS = {
+  arrow:'<path d="M5 12h14M12 5l7 7-7 7"/>',
+  check:'<path d="M20 6L9 17l-5-5"/>',
+  x:'<path d="M18 6L6 18M6 6l12 12"/>',
+  menu:'<path d="M3 6h18M3 12h18M3 18h18"/>',
+  monitor:'<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  map:'<path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><path d="M8 2v16M16 6v16"/>',
+  pin:'<path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>',
+  dollar:'<path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>',
+  users:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>',
+  target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  send:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>',
+  layers:'<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>',
+  eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
+  trend:'<path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/>',
+  store:'<path d="M3 9l1.5-5h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6"/>',
+  mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>',
+  phone:'<path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.7a2 2 0 01-.5 2.1L8 9.8a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.7.7a2 2 0 011.7 2z"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  filter:'<path d="M22 3H2l8 9.5V19l4 2v-8.5L22 3z"/>',
+  edit:'<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>',
+  trash:'<path d="M3 6h18M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>',
+  power:'<path d="M18.4 6.6a9 9 0 11-12.8 0M12 2v10"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>',
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+  inbox:'<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.5-6.9A2 2 0 0016.8 4H7.2a2 2 0 00-1.7 1.1z"/>',
+  megaphone:'<path d="M3 11v2a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/>',
+  search:'<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  camera:'<path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>',
+  scale:'<path d="M12 3v18M5 21h14M3 7h18M6 7l-3 7a3 3 0 006 0L6 7zM18 7l-3 7a3 3 0 006 0l-3-7z"/>',
+  logout:'<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>',
+  maximize:'<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>',
+  logo:'<rect x="2" y="3" width="20" height="14" rx="3"/><circle cx="12" cy="10" r="3.5"/><path d="M8 21h8"/>',
+  bag:'<path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/>',
+  train:'<rect x="4" y="3" width="16" height="13" rx="3"/><path d="M4 10h16M8 20l-2 2M16 20l2 2M8 13h.01M16 13h.01"/>',
+  plane:'<path d="M2 16l20-6-3-3-7 2-5-5-2 1 3 6-4 1-2-2-1 1 2 4z"/>',
+  tree:'<path d="M12 22v-5M12 2l6 8h-3l4 6H5l4-6H6z"/>',
+  waves:'<path d="M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 13c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 19c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>',
+  star:'<path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>',
+  cap:'<path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',
+  cross:'<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>',
+  mountain:'<path d="M8 4l4 7 4-4 6 13H2z"/>',
+  locate:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="8"/>',
+  expand:'<path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3"/>',
+  shrink:'<path d="M8 3v3a2 2 0 01-2 2H3M21 8h-3a2 2 0 01-2-2V3M3 16h3a2 2 0 012 2v3M16 21v-3a2 2 0 012-2h3"/>',
+  directions:'<path d="M3 11l19-9-9 19-2-8-8-2z"/>'
+};
+const icon = (n, extra='') => `<svg class="svg-i" viewBox="0 0 24 24" aria-hidden="true" ${extra}>${ICONS[n]||''}</svg>`;
+function hydrateIcons(root=document){ $$('i[data-i]', root).forEach(el => { el.outerHTML = icon(el.dataset.i); }); }
+
+/* ---------- Config (structured for future expansion beyond Adelaide) ---------- */
+const REGIONS = { adelaide: { name:'Adelaide', state:'SA', center:[-34.9285,138.6007], zoom:11,
+  bounds:[[-35.45,138.25],[-34.55,139.05]],            // map is kept within Greater Adelaide
+  cityCentre:{ name:'Victoria Square', lat:-34.9285, lng:138.6007 },
+  cbd:[[-34.9208,138.5925],[-34.9208,138.6115],[-34.9362,138.6115],[-34.9362,138.5925]] } };
+/* Key Adelaide places shown on the map and used for "What's nearby" (approximate positions). */
+const LM_CATS = {
+  shopping:{label:'Shopping precinct', c:'#D9622B', i:'bag'},
+  transport:{label:'Transport hub', c:'#2F6FDB', i:'train'},
+  airport:{label:'Airport', c:'#2F6FDB', i:'plane'},
+  park:{label:'Park & gardens', c:'#1F9D6B', i:'tree'},
+  beach:{label:'Beach & jetty', c:'#0E9FB5', i:'waves'},
+  attraction:{label:'Attraction & venue', c:'#8B5CF6', i:'star'},
+  education:{label:'University', c:'#1B3059', i:'cap'},
+  health:{label:'Hospital', c:'#D23B3B', i:'cross'},
+  lookout:{label:'Lookout', c:'#6B7A2E', i:'mountain'}
+};
+const LANDMARKS = [
+  {n:'Rundle Mall', c:'shopping', lat:-34.9228, lng:138.6040},
+  {n:'Adelaide Central Market', c:'shopping', lat:-34.9297, lng:138.5967},
+  {n:'The Parade, Norwood', c:'shopping', lat:-34.9205, lng:138.6385},
+  {n:'Jetty Road, Glenelg', c:'shopping', lat:-34.9795, lng:138.5185},
+  {n:'Burnside Village', c:'shopping', lat:-34.9392, lng:138.6448},
+  {n:'Westfield Marion', c:'shopping', lat:-35.0176, lng:138.5467},
+  {n:'Westfield Tea Tree Plaza', c:'shopping', lat:-34.8297, lng:138.6886},
+  {n:'Hahndorf Main Street', c:'shopping', lat:-35.0290, lng:138.8090},
+  {n:'Adelaide Railway Station', c:'transport', lat:-34.9213, lng:138.5960},
+  {n:'Glenelg Tram Terminus', c:'transport', lat:-34.9797, lng:138.5130},
+  {n:'Port Adelaide Station', c:'transport', lat:-34.8467, lng:138.5020},
+  {n:'Mawson Lakes Interchange', c:'transport', lat:-34.8163, lng:138.6205},
+  {n:'Adelaide Airport', c:'airport', lat:-34.9450, lng:138.5306},
+  {n:'Adelaide Botanic Garden', c:'park', lat:-34.9175, lng:138.6105},
+  {n:'Victoria Square / Tarntanyangga', c:'park', lat:-34.9285, lng:138.6007},
+  {n:'Rymill Park', c:'park', lat:-34.9232, lng:138.6135},
+  {n:'Glenelg Jetty', c:'beach', lat:-34.9812, lng:138.5095},
+  {n:'Henley Jetty', c:'beach', lat:-34.9195, lng:138.4915},
+  {n:'Semaphore Jetty', c:'beach', lat:-34.8390, lng:138.4790},
+  {n:'Brighton Jetty', c:'beach', lat:-35.0173, lng:138.5150},
+  {n:'Adelaide Oval', c:'attraction', lat:-34.9156, lng:138.5961},
+  {n:'Adelaide Zoo', c:'attraction', lat:-34.9135, lng:138.6060},
+  {n:'Adelaide Entertainment Centre', c:'attraction', lat:-34.9083, lng:138.5724},
+  {n:'Port Adelaide Lighthouse', c:'attraction', lat:-34.8436, lng:138.5055},
+  {n:'University of Adelaide', c:'education', lat:-34.9196, lng:138.6056},
+  {n:'Flinders University', c:'education', lat:-35.0193, lng:138.5717},
+  {n:'UniSA Mawson Lakes', c:'education', lat:-34.8093, lng:138.6200},
+  {n:'Royal Adelaide Hospital', c:'health', lat:-34.9209, lng:138.5866},
+  {n:'Flinders Medical Centre', c:'health', lat:-35.0226, lng:138.5680},
+  {n:'Mount Lofty Summit', c:'lookout', lat:-34.9776, lng:138.7085}
+];
+const REACH_M = 400; // approximate walking reach drawn around each screen
+const ACTIVE_REGION = 'adelaide';
+const VENUE_TYPES = ['Café','Restaurant','Gym','Salon','Barber','Medical Centre','Waiting Room','Retail Store','University','Other'];
+const SUBURBS = ['North Adelaide','Adelaide CBD','University Precinct','Glenelg','Norwood','Prospect','Unley','Burnside','Henley Beach','Port Adelaide','Stirling','Mawson Lakes'];
+const SCREEN_STATUS = ['Available','Coming Soon','Temporarily Unavailable','Inactive'];
+const PARTNER_STATUS = ['New','Contacted','Meeting Scheduled','Approved','Rejected'];
+const ADV_STATUS = ['New','Contacted','Proposal Sent','Negotiating','Confirmed','Closed'];
+const STATUS_COLOR = {'Available':'#1F9D6B','Coming Soon':'#F5B82E','Temporarily Unavailable':'#D9622B','Inactive':'#8A94A6'};
+const STATUS_CLASS = {'Available':'b-available','Coming Soon':'b-coming','Temporarily Unavailable':'b-unavail','Inactive':'b-inactive'};
+const TYPE_HUE = {'Café':'#F5B82E','Restaurant':'#FF7A59','Gym':'#4FD1C5','Salon':'#F687B3','Barber':'#9F7AEA','Medical Centre':'#63B3ED','Waiting Room':'#68D391','Retail Store':'#F6AD55','University':'#7F9CF5','Other':'#F5B82E'};
+const ADMIN_PASS = 'oora-demo'; // Demo-only. Replace with real authentication before production.
+
+/* ---------- Demo data (in-memory; resets on reload) ---------- */
+const S = (o) => Object.assign({ region:ACTIVE_REGION, demo:true, image:'' }, o);
+let screens = [
+  S({id:'s1', name:'Front Counter Display', venue:'Ivy & Oak Café', type:'Café', address:"O'Connell Street, North Adelaide SA 5006", suburb:'North Adelaide', lat:-34.9063, lng:138.5953, size:55, orientation:'Landscape', audLow:350, audHigh:500, days:'Mon–Sun', hours:'7:00am – 4:00pm', visibility:5, status:'Available', added:daysAgo(62), description:'Wall-mounted screen directly above the ordering counter. Every customer sees it while they order and wait for coffee.'}),
+  S({id:'s2', name:'Main Floor Screen', venue:'Rundle Fitness Studio', type:'Gym', address:'Grenfell Street, Adelaide SA 5000', suburb:'Adelaide CBD', lat:-34.9236, lng:138.6078, size:65, orientation:'Landscape', audLow:600, audHigh:900, days:'Mon–Sun', hours:'5:30am – 9:00pm', visibility:4, status:'Available', added:daysAgo(58), description:'Large screen facing the cardio area — members typically spend 30–60 minutes in view.'}),
+  S({id:'s3', name:'Dining Room Display', venue:'Bayside Brunch House', type:'Restaurant', address:'Jetty Road, Glenelg SA 5045', suburb:'Glenelg', lat:-34.9803, lng:138.5160, size:50, orientation:'Landscape', audLow:500, audHigh:800, days:'Mon–Sun', hours:'7:00am – 9:00pm', visibility:5, status:'Available', added:daysAgo(55), description:'Beachside brunch spot with steady weekend crowds. Screen is visible from most tables.'}),
+  S({id:'s4', name:'Styling Station Screen', venue:'Parade Hair Studio', type:'Salon', address:'The Parade, Norwood SA 5067', suburb:'Norwood', lat:-34.9210, lng:138.6335, size:43, orientation:'Portrait', audLow:80, audHigh:150, days:'Tue–Sat', hours:'9:00am – 6:00pm', visibility:4, status:'Available', added:daysAgo(49), description:'Portrait screen in the waiting and styling area. Clients are seated for 45+ minutes on average.'}),
+  S({id:'s5', name:'Waiting Bench Screen', venue:'Prospect Road Barber Co.', type:'Barber', address:'Prospect Road, Prospect SA 5082', suburb:'Prospect', lat:-34.8835, lng:138.5948, size:43, orientation:'Portrait', audLow:60, audHigh:120, days:'Tue–Sun', hours:'9:00am – 7:00pm', visibility:3, status:'Coming Soon', added:daysAgo(40), description:'Screen beside the waiting bench, with a mostly local, repeat clientele.'}),
+  S({id:'s6', name:'Reception Screen', venue:'Unley Family Medical', type:'Medical Centre', address:'Unley Road, Unley SA 5061', suburb:'Unley', lat:-34.9500, lng:138.6060, size:50, orientation:'Landscape', audLow:150, audHigh:250, days:'Mon–Sat', hours:'8:00am – 6:00pm', visibility:5, status:'Available', added:daysAgo(36), description:'Waiting-room screen with high dwell time. Suited to health, family and local service messages.'}),
+  S({id:'s7', name:'Lounge Display', venue:'Burnside Wellness Clinic', type:'Waiting Room', address:'Greenhill Road, Burnside SA 5066', suburb:'Burnside', lat:-34.9390, lng:138.6455, size:43, orientation:'Landscape', audLow:90, audHigh:160, days:'Mon–Fri', hours:'8:30am – 5:30pm', visibility:4, status:'Temporarily Unavailable', added:daysAgo(31), description:'Calm waiting lounge for a physio and wellness clinic. Temporarily unavailable during renovation.'}),
+  S({id:'s8', name:'Window-Facing Screen', venue:'Seaside Gelato Bar', type:'Café', address:'Henley Square, Henley Beach SA 5022', suburb:'Henley Beach', lat:-34.9197, lng:138.4935, size:55, orientation:'Portrait', audLow:400, audHigh:700, days:'Mon–Sun', hours:'11:00am – 10:00pm', visibility:4, status:'Available', added:daysAgo(26), description:'Portrait screen visible from inside the store and from the square outside. Busy on summer evenings.'}),
+  S({id:'s9', name:'Bar Screen', venue:'Harbourside Kitchen', type:'Restaurant', address:'Commercial Road, Port Adelaide SA 5015', suburb:'Port Adelaide', lat:-34.8465, lng:138.5050, size:65, orientation:'Landscape', audLow:250, audHigh:400, days:'Wed–Sun', hours:'11:30am – 10:00pm', visibility:4, status:'Available', added:daysAgo(20), description:'Screen above the bar in a popular dining venue near the historic Port precinct.'}),
+  S({id:'s10', name:'Checkout Display', venue:'Hills Provisions Store', type:'Retail Store', address:'Mount Barker Road, Stirling SA 5152', suburb:'Stirling', lat:-35.0040, lng:138.7170, size:50, orientation:'Portrait', audLow:200, audHigh:350, days:'Mon–Sun', hours:'8:00am – 6:00pm', visibility:3, status:'Coming Soon', added:daysAgo(14), description:'Local providore in the Adelaide Hills. Portrait screen near the checkout queue.'}),
+  S({id:'s11', name:'Entry Screen', venue:'Lakes Fitness Hub', type:'Gym', address:'Main Street, Mawson Lakes SA 5095', suburb:'Mawson Lakes', lat:-34.8095, lng:138.6105, size:55, orientation:'Landscape', audLow:300, audHigh:550, days:'Mon–Sun', hours:'5:00am – 10:00pm', visibility:4, status:'Available', added:daysAgo(8), description:'Screen at the entry and check-in area. Members pass it on every visit.'}),
+  S({id:'s12', name:'Atrium Display', venue:'North Terrace Student Hub', type:'University', address:'North Terrace, Adelaide SA 5000', suburb:'University Precinct', lat:-34.9200, lng:138.6040, size:75, orientation:'Landscape', audLow:1200, audHigh:2000, days:'Mon–Fri', hours:'7:30am – 9:00pm', visibility:5, status:'Available', added:daysAgo(3), description:'Large atrium screen in a busy student hub. High foot traffic during semester.'})
+];
+let partnerEnquiries = [
+  {id:'p1', sample:true, business:'Corner Grind Espresso', contact:'Sam Nguyen', phone:'0400 000 111', email:'sam@example.com', address:'Magill Road', suburb:'Kensington', type:'Café', screens:'1', size:'50"–59"', traffic:'250–500', hours:'Mon–Fri 6:30am–3pm', comments:'Screen currently shows our menu.', photo:'', date:daysAgo(5), status:'New'},
+  {id:'p2', sample:true, business:'Peak Performance Gym', contact:'Jordan Lee', phone:'0400 000 222', email:'jordan@example.com', address:'Brighton Road', suburb:'Brighton', type:'Gym', screens:'3', size:'60"–69"', traffic:'500–1,000', hours:'24/7', comments:'', photo:'', date:daysAgo(12), status:'Contacted'}
+];
+let advertiserEnquiries = [
+  {id:'a1', sample:true, business:'Harbour Lane Realty', contact:'Alex Taylor', email:'alex@example.com', phone:'0400 000 333', goal:'Brand Awareness', suburbs:['Norwood','Burnside','Unley'], types:['Café','Gym'], screens:[], duration:'1 Month', budget:'A$1,000 – A$2,500', info:'Looking to build awareness in the eastern suburbs.', date:daysAgo(4), status:'Proposal Sent'},
+  {id:'a2', sample:true, business:'Smile Studio Dental', contact:'Priya Shah', email:'priya@example.com', phone:'0400 000 444', goal:'Promote a Service', suburbs:['Glenelg'], types:['Café','Restaurant'], screens:['s3'], duration:'2 Weeks', budget:'Under A$500', info:'', date:daysAgo(1), status:'New'}
+];
+let messages = [
+  {id:'m1', sample:true, name:'Chris Martin', email:'chris@example.com', phone:'', company:'Local Events Co.', message:'Hi — do you have screens near the Adelaide Oval for event promotion?', date:daysAgo(2)}
+];
+
+/* ---------- Derived helpers ---------- */
+const publicScreens = () => screens.filter(s => s.status !== 'Inactive');
+const audRange = s => `${fmtN(s.audLow)}–${fmtN(s.audHigh)}`;
+const audBucket = s => { const m = (s.audLow + s.audHigh)/2; return m < 200 ? '1' : m < 500 ? '2' : m < 1000 ? '3' : '4'; };
+const sizeBucket = s => s.size < 50 ? 's' : s.size < 65 ? 'm' : 'l';
+const badge = st => `<span class="badge ${STATUS_CLASS[st]||''}">${esc(st)}</span>`;
+const dots = n => `<span class="dots" aria-label="${n} out of 5">${[1,2,3,4,5].map(i => `<i class="${i<=n?'on':''}"></i>`).join('')}</span>`;
+const visLabel = n => ['','Limited','Fair','Good','Very good','Excellent'][n] || '';
+
+function placeholderImg(s){
+  const c = TYPE_HUE[s.type] || '#F5B82E';
+  const p = s.orientation === 'Portrait';
+  const sw = p ? 110 : 240, sh = p ? 180 : 135, sx = (400-sw)/2, sy = p ? 22 : 38;
+  const name = esc((s.venue||'').slice(0,28));
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'><defs><linearGradient id='b' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#16294A'/><stop offset='1' stop-color='#0A1628'/></linearGradient><linearGradient id='s' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${c}'/><stop offset='1' stop-color='${c}' stop-opacity='.5'/></linearGradient><radialGradient id='g'><stop offset='0' stop-color='${c}' stop-opacity='.4'/><stop offset='1' stop-color='${c}' stop-opacity='0'/></radialGradient></defs><rect width='400' height='250' fill='url(#b)'/><ellipse cx='200' cy='${sy+sh/2}' rx='200' ry='130' fill='url(#g)'/><rect x='0' y='218' width='400' height='32' fill='#07101F'/><rect x='${sx-5}' y='${sy-5}' width='${sw+10}' height='${sh+10}' rx='7' fill='#040913'/><rect x='${sx}' y='${sy}' width='${sw}' height='${sh}' rx='3' fill='url(#s)'/><text x='200' y='${sy+sh/2-4}' text-anchor='middle' font-family='Arial,sans-serif' font-weight='700' font-size='${p?12:17}' fill='#0A1628'>YOUR AD HERE</text><text x='200' y='${sy+sh/2+14}' text-anchor='middle' font-family='Arial,sans-serif' font-size='${p?10:12}' fill='#0A1628' opacity='.7'>${s.size}&quot; ${esc(s.orientation)}</text><text x='16' y='239' font-family='Arial,sans-serif' font-size='12' fill='#fff' opacity='.55'>${name}</text></svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+const imgSrc = s => s.image || placeholderImg(s);
+window.__ooraImgFallback = (el, id) => { el.onerror = null; const s = screens.find(x => x.id === id); if (s) el.src = placeholderImg(s); };
+const imgTag = (s, cls='') => `<img ${cls?`class="${cls}"`:''} src="${esc(imgSrc(s))}" alt="${esc(s.name)} at ${esc(s.venue)}" loading="lazy" onerror="__ooraImgFallback(this,'${s.id}')">`;
+
+/* ---------- Toast ---------- */
+let toastT;
+function toast(msg){ const t = $('#toast'); $('span', t).textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2800); }
+
+/* ---------- Router ---------- */
+let pendingPanel = null;
+function route(){
+  const raw = location.hash.replace(/^#\/?/, '') || 'home';
+  const [page, q] = raw.split('?');
+  const target = $(`.page[data-page="${page}"]`) ? page : 'home';
+  $$('.page').forEach(p => p.classList.toggle('active', p.dataset.page === target));
+  $$('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === target));
+  $('#navLinks').classList.remove('open'); $('#burger').setAttribute('aria-expanded','false');
+  closePanel(); if (map) exitFs();
+  document.title = ({home:'Oora Media — Be Seen Where Life Happens', map:'Screen Map · Oora Media', partners:'Screen Partners · Oora Media', advertisers:'Advertisers · Oora Media', how:'How It Works · Oora Media', about:'About · Oora Media', contact:'Contact · Oora Media', admin:'Admin · Oora Media'})[target];
+  const scrollTo = q === 'form' ? (target === 'partners' ? '#partnerFormSec' : target === 'advertisers' ? '#advFormSec' : null) : null;
+  if (scrollTo) setTimeout(() => { const el = $(scrollTo); window.scrollTo({top: el.getBoundingClientRect().top + scrollY - 90, behavior:'smooth'}); }, 60);
+  else window.scrollTo(0,0);
+  if (target === 'home') initPreviewMap();
+  if (target === 'map') { initMap(); if (pendingPanel) { const id = pendingPanel; pendingPanel = null; setTimeout(() => focusScreen(id), 250); } }
+  if (target === 'admin') renderAdmin();
+}
+window.addEventListener('hashchange', route);
+$('#burger').addEventListener('click', () => { const o = $('#navLinks').classList.toggle('open'); $('#burger').setAttribute('aria-expanded', o); });
+
+/* ---------- Hero slideshow ---------- */
+(function heroSlides(){
+  const slides = $$('#heroScreen .slide'); let i = 0; const prog = $('#heroProg');
+  const run = () => { prog.classList.remove('run'); void prog.offsetWidth; prog.classList.add('run'); };
+  run();
+  setInterval(() => {
+    slides[i].classList.remove('on'); i = (i+1) % slides.length; slides[i].classList.add('on');
+    $('#heroAt').textContent = slides[i].dataset.at; run();
+  }, 4500);
+  const v = ['Cafés','Restaurants','Gyms','Salons','Barbers','Waiting rooms','Retail stores','Universities','Medical centres'];
+  const items = v.map(x => `<span>${icon('monitor')} ${x}</span>`).join('');
+  $('#venueTrack').innerHTML = items + items;
+})();
+
+/* ---------- How it works toggle ---------- */
+const HOW = {
+  partner: [
+    {i:'send', t:'Join the Network', d:'Tell us about your digital screen and venue. It only takes a couple of minutes.'},
+    {i:'monitor', t:'Make Your Screen Available', d:'We list suitable screen opportunities within the Oora Media network.'},
+    {i:'dollar', t:'Earn From Advertising', d:'When campaigns run through your location, you may receive advertising revenue based on the agreed partnership model.'}
+  ],
+  advertiser: [
+    {i:'map', t:'Explore Locations', d:'Browse available advertising opportunities across Adelaide on our interactive map.'},
+    {i:'target', t:'Choose Your Audience', d:'Select locations based on area, venue type and potential audience.'},
+    {i:'send', t:'Launch Your Campaign', d:'Submit an enquiry and Oora Media helps coordinate the campaign with you.'}
+  ]
+};
+function renderHow(mode){
+  $('#howSteps').innerHTML = HOW[mode].map((s,n) => `<div class="step"><span class="step-num">0${n+1}</span><div class="icon-badge ${mode==='advertiser'?'dark':''}">${icon(s.i)}</div><h3>${s.t}</h3><p>${s.d}</p></div>`).join('')
+    + `<div style="grid-column:1/-1;margin-top:10px"><a class="link-arrow" href="${mode==='partner'?'#/partners':'#/advertisers'}">${mode==='partner'?'Learn more about becoming a Screen Partner':'Learn more about advertising with Oora Media'} ${icon('arrow')}</a></div>`;
+}
+$$('[data-how]').forEach(b => b.addEventListener('click', () => { $$('[data-how]').forEach(x => x.classList.toggle('on', x === b)); renderHow(b.dataset.how); }));
+renderHow('partner');
+
+/* ---------- Pins ---------- */
+function pinIcon(s, selected){
+  const c = STATUS_COLOR[s.status];
+  return L.divIcon({ className:'pin-wrap', html:`<span class="pin ${s.status==='Available'?'pulse':''} ${selected?'sel':''}" style="--pc:${c}"></span>`, iconSize:[26,26], iconAnchor:[13,13], tooltipAnchor:[0,-12] });
+}
+const tipHtml = s => `<strong>${esc(s.venue)}</strong><br><small>${esc(s.suburb)} · ${esc(s.status)}</small>`;
+
+/* ---------- Home preview map ---------- */
+let pMap, pLayer;
+function initPreviewMap(){
+  if (!window.L) return;
+  if (pMap) { setTimeout(() => pMap.invalidateSize(), 50); return; }
+  const R = REGIONS[ACTIVE_REGION];
+  pMap = L.map('previewMap', { center:R.center, zoom:10, scrollWheelZoom:false, dragging:!L.Browser.mobile, tap:false, zoomControl:!L.Browser.mobile, attributionControl:true });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom:19, subdomains:'abcd', attribution:'&copy; OpenStreetMap contributors &copy; CARTO' }).addTo(pMap);
+  pLayer = L.layerGroup().addTo(pMap);
+  renderPreviewMarkers(true);
+}
+function renderPreviewMarkers(fit){
+  if (!pMap) return;
+  pLayer.clearLayers();
+  const list = publicScreens();
+  list.forEach(s => {
+    L.marker([s.lat, s.lng], { icon:pinIcon(s) }).bindTooltip(tipHtml(s), { className:'ootip', direction:'top' })
+      .on('click', () => { pendingPanel = s.id; location.hash = '#/map'; }).addTo(pLayer);
+  });
+  if (fit && list.length) pMap.fitBounds(L.latLngBounds(list.map(s => [s.lat, s.lng])), { padding:[40,40] });
+}
+
+/* ---------- Full map ---------- */
+let map, mLayer, cLayer, lmLayer, pinLayer, markers = {}, selectedId = null, view = 'map';
+const OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const ESRI = p => `https://server.arcgisonline.com/ArcGIS/rest/services/${p}/MapServer/tile/{z}/{y}/{x}`;
+const dist = (a, b) => L.latLng(a.lat, a.lng).distanceTo(L.latLng(b.lat, b.lng));
+const fmtDist = m => m < 1000 ? `${Math.round(m/10)*10} m` : `${(m/1000).toFixed(m < 10000 ? 1 : 0)} km`;
+const walkMin = m => Math.max(1, Math.round(m / 80)); // ~4.8 km/h
+const lmIcon = (l, withLabel=true) => { const k = LM_CATS[l.c]; return `<div class="lm" style="--lc:${k.c}">${icon(k.i)}${withLabel ? `<span>${esc(l.n)}</span>` : ''}</div>`; };
+const nearestLandmarks = (p, n) => LANDMARKS.map(l => ({ l, d:dist(p, l) })).sort((a,b) => a.d - b.d).slice(0, n);
+const nearestScreens = (p, n) => publicScreens().map(s => ({ s, d:dist(p, s) })).sort((a,b) => a.d - b.d).slice(0, n);
+
+function lfButton(pos, ic, title, onClick){
+  const C = L.Control.extend({ options:{position:pos}, onAdd(){ const d = L.DomUtil.create('div','leaflet-bar'); d.innerHTML = `<a href="#" class="lf-btn" title="${title}" role="button" aria-label="${title}">${icon(ic)}</a>`; L.DomEvent.on(d,'click', e => { L.DomEvent.preventDefault(e); onClick($('a', d)); }); L.DomEvent.disableClickPropagation(d); return d; } });
+  map.addControl(new C());
+}
+
+function initMap(){
+  if (!window.L) { $('#map').innerHTML = '<div class="empty">The map could not load. Please check your internet connection and refresh.</div>'; return; }
+  if (map) { setTimeout(() => map.invalidateSize(), 60); return; }
+  const R = REGIONS[ACTIVE_REGION];
+  map = L.map('map', { center:R.center, zoom:R.zoom, zoomControl:true, tap:false, minZoom:9, maxZoom:19, maxBounds:R.bounds, maxBoundsViscosity:.8 });
+
+  /* Base maps */
+  const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:OSM_ATTR });
+  const detailed = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom:19, subdomains:'abcd', attribution:OSM_ATTR + ' &copy; CARTO' });
+  const esriAttr = 'Imagery &copy; Esri, Maxar, Earthstar Geographics, and the GIS User Community';
+  const satellite = L.layerGroup([
+    L.tileLayer(ESRI('World_Imagery'), { maxZoom:19, attribution:esriAttr }),
+    L.tileLayer(ESRI('Reference/World_Transportation'), { maxZoom:19, opacity:.9 }),
+    L.tileLayer(ESRI('Reference/World_Boundaries_and_Places'), { maxZoom:19 })
+  ]);
+  const terrain = L.tileLayer(ESRI('World_Topo_Map'), { maxZoom:19, attribution:'Tiles &copy; Esri — Esri, HERE, Garmin, USGS, NGA, OpenStreetMap contributors' });
+  const simple = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom:19, subdomains:'abcd', attribution:OSM_ATTR + ' &copy; CARTO' });
+  street.addTo(map);
+
+  /* Overlays */
+  const rail = L.tileLayer('https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png', { maxZoom:19, subdomains:'abc', opacity:.85, attribution:'Rail &copy; <a href="https://www.openrailwaymap.org/">OpenRailwayMap</a>' });
+  const cbd = L.layerGroup([
+    L.polygon(R.cbd, { color:'#C98A06', weight:2, dashArray:'6 6', fillColor:'#F5B82E', fillOpacity:.05, interactive:false }),
+    L.tooltip({ permanent:true, direction:'center', className:'cbd-label', interactive:false }).setLatLng([R.cbd[2][0] + .0012, (R.cbd[0][1] + R.cbd[1][1]) / 2]).setContent('Adelaide CBD')
+  ]).addTo(map);
+  lmLayer = L.layerGroup().addTo(map);
+  LANDMARKS.forEach(l => {
+    const k = LM_CATS[l.c];
+    L.marker([l.lat, l.lng], { icon:L.divIcon({ className:'lm-wrap', html:lmIcon(l), iconSize:[22,22], iconAnchor:[11,11] }), zIndexOffset:-500, keyboard:false })
+      .bindTooltip(`<strong>${esc(l.n)}</strong><br><small>${k.label}</small>`, { className:'ootip', direction:'top', offset:[0,-10] })
+      .on('click', () => showPlace(l.lat, l.lng, l.n, k.label, false))
+      .addTo(lmLayer);
+  });
+  cLayer = L.layerGroup().addTo(map);
+  mLayer = L.layerGroup().addTo(map);
+  pinLayer = L.layerGroup().addTo(map);
+
+  L.control.layers(
+    { 'Street detail':street, 'Detailed (colour)':detailed, 'Satellite':satellite, 'Terrain':terrain, 'Simplified':simple },
+    { 'Screen reach (≈400 m walk)':cLayer, 'Landmarks & key places':lmLayer, 'Adelaide CBD outline':cbd, 'Train & tram lines':rail },
+    { position:'topright', collapsed:window.innerWidth < 1100 }
+  ).addTo(map);
+  L.control.scale({ imperial:false, position:'bottomright' }).addTo(map);
+
+  /* Buttons: show all, my location, fullscreen */
+  lfButton('topleft', 'maximize', 'Show all screens', () => { pinLayer.clearLayers(); fitToResults(); });
+  lfButton('topleft', 'locate', 'Show my location', a => { a.classList.add('on'); map.locate({ enableHighAccuracy:true, timeout:10000 }); });
+  lfButton('topleft', 'expand', 'Full screen map', a => toggleFs(a));
+  map.on('locationfound', e => { $$('.lf-btn.on').forEach(b => { if (b.title === 'Show my location') b.classList.remove('on'); }); showPlace(e.latlng.lat, e.latlng.lng, 'You are here', 'Your current location', true, true); });
+  map.on('locationerror', () => { $$('.lf-btn.on').forEach(b => { if (b.title === 'Show my location') b.classList.remove('on'); }); toast('Could not get your location — check location permissions'); });
+
+  /* Legend */
+  const Legend = L.Control.extend({ options:{position:'bottomleft'}, onAdd(){ const d = L.DomUtil.create('div','map-legend');
+    d.innerHTML = `<b>Screens</b>${['Available','Coming Soon','Temporarily Unavailable'].map(s => `<div><i style="background:${STATUS_COLOR[s]}"></i>${s}</div>`).join('')}<div><i class="ring"></i>Walking reach</div><div><i class="sq"></i>Landmark</div>`;
+    L.DomEvent.disableClickPropagation(d); return d; } });
+  map.addControl(new Legend());
+
+  /* Landmark labels only when zoomed in, to keep the city view clean */
+  const syncLabels = () => map.getContainer().classList.toggle('lm-labels-off', map.getZoom() < 13);
+  map.on('zoomend', syncLabels); syncLabels();
+
+  const hint = document.createElement('div'); hint.className = 'map-hint'; hint.textContent = L.Browser.mobile ? 'Pinch to zoom · tap a pin for details' : 'Scroll to zoom · click a pin for details';
+  $('#map').appendChild(hint); setTimeout(() => hint.style.opacity = 0, 4000); setTimeout(() => hint.remove(), 4600);
+
+  renderMarkers(); fitToResults();
+}
+
+function toggleFs(a){
+  const st = $('.map-stage'), on = !st.classList.contains('fs');
+  if (on && view !== 'map') $('[data-view="map"]').click();
+  st.classList.toggle('fs', on);
+  document.body.style.overflow = on ? 'hidden' : '';
+  const btn = a || $$('.lf-btn').find(b => b.title.includes('ull screen'));
+  if (btn) { btn.innerHTML = icon(on ? 'shrink' : 'expand'); btn.title = on ? 'Exit full screen' : 'Full screen map'; }
+  setTimeout(() => map.invalidateSize(), 60);
+}
+function exitFs(){ if ($('.map-stage.fs')) toggleFs(); }
+
+/* A searched address, clicked landmark or "my location": drop a pin and list the nearest screens */
+function showPlace(lat, lng, title, sub, fly=true, isMe=false){
+  if (!map) return;
+  if (view !== 'map') $('[data-view="map"]').click();
+  pinLayer.clearLayers();
+  const p = { lat, lng };
+  const near = nearestScreens(p, 3);
+  const html = `<div class="pop-h">${esc(title)}</div><div class="pop-sub">${esc(sub)}</div>
+    ${near.length ? `<div class="pop-sub" style="margin:0;font-weight:600;color:var(--ink)">Nearest screens</div>` + near.map(({s,d}) => `<button class="near-btn" data-open="${s.id}"><span><b>${esc(s.venue)}</b><small>${esc(s.suburb)} · ${audRange(s)}/day</small></span><em>${fmtDist(d)}</em></button>`).join('') : ''}`;
+  if (isMe || !LANDMARKS.some(l => l.lat === lat && l.lng === lng)) {
+    const ic = isMe ? L.divIcon({ className:'pin-wrap', html:'<span class="me-dot"></span>', iconSize:[20,20], iconAnchor:[10,10], popupAnchor:[0,-10] })
+                    : L.divIcon({ className:'pin-wrap', html:'<span class="drop-pin"></span>', iconSize:[30,30], iconAnchor:[15,34], popupAnchor:[0,-32] });
+    L.marker([lat, lng], { icon:ic, zIndexOffset:1000 }).addTo(pinLayer).bindPopup(html, { maxWidth:300 }).openPopup();
+  } else {
+    L.popup({ maxWidth:300, offset:[0,-8] }).setLatLng([lat, lng]).setContent(html).openOn(map);
+  }
+  if (fly) map.flyTo([lat, lng], Math.max(map.getZoom(), 14), { duration:.7 });
+}
+function getFilters(){ const f = {}; $$('#filters select').forEach(s => f[s.dataset.f] = s.value); return f; }
+function filtered(){
+  const f = getFilters();
+  return publicScreens().filter(s =>
+    (!f.suburb || s.suburb === f.suburb) && (!f.type || s.type === f.type) && (!f.size || sizeBucket(s) === f.size) &&
+    (!f.aud || audBucket(s) === f.aud) && (!f.status || s.status === f.status) && (!f.orient || s.orientation === f.orient));
+}
+function fitToResults(){
+  if (!map) return; const list = filtered();
+  if (list.length === 1) map.setView([list[0].lat, list[0].lng], 15);
+  else if (list.length) map.fitBounds(L.latLngBounds(list.map(s => [s.lat, s.lng])), { padding:[50,50], maxZoom:15 });
+}
+function renderMarkers(){
+  if (!map) return;
+  mLayer.clearLayers(); cLayer.clearLayers(); markers = {};
+  filtered().forEach(s => {
+    L.circle([s.lat, s.lng], { radius:REACH_M, color:STATUS_COLOR[s.status], weight:1.5, dashArray:'4 5', fillColor:STATUS_COLOR[s.status], fillOpacity:.08, interactive:false }).addTo(cLayer);
+    const m = L.marker([s.lat, s.lng], { icon:pinIcon(s, s.id === selectedId), riseOnHover:true, keyboard:true, title:s.venue })
+      .bindTooltip(tipHtml(s), { className:'ootip', direction:'top' })
+      .on('click', () => openPanel(s.id)).addTo(mLayer);
+    markers[s.id] = m;
+  });
+}
+function renderList(){
+  const list = filtered();
+  $('#listView').innerHTML = list.length ? list.map(s => `
+    <article class="scard">
+      <div class="scard-img">${imgTag(s)}<span class="demo-tag">Demo Listing</span>${badge(s.status)}</div>
+      <div class="scard-body">
+        <h3>${esc(s.venue)}</h3>
+        <div class="scard-loc">${icon('pin')} ${esc(s.suburb)} · ${esc(s.type)}</div>
+        <div class="meta-row">
+          <span class="meta">${icon('monitor')} ${s.size}" ${esc(s.orientation)}</span>
+          <span class="meta">${icon('users')} ${audRange(s)} / day</span>
+        </div>
+        <button class="btn btn-dark btn-sm btn-block" data-open="${s.id}">View Details</button>
+      </div>
+    </article>`).join('') : emptyHtml();
+}
+const emptyHtml = () => `<div class="empty">${icon('search')}<h3 style="margin-bottom:6px">No screens match these filters</h3><p style="margin:0 auto 16px">Try widening your search.</p><button class="btn btn-ghost btn-sm" data-reset-filters>Reset filters</button></div>`;
+function renderFilterOptions(){
+  const pub = publicScreens();
+  const opts = (sel, vals, anyLabel) => { const cur = sel.value; sel.innerHTML = `<option value="">${anyLabel}</option>` + vals.map(v => `<option ${v===cur?'selected':''}>${esc(v)}</option>`).join(''); if (cur && !vals.includes(cur)) sel.value = ''; };
+  opts($('#fSuburb'), [...new Set(pub.map(s => s.suburb))].sort(), 'All suburbs');
+  opts($('#fType'), [...new Set(pub.map(s => s.type))].sort(), 'All venue types');
+}
+function updateCount(){
+  const n = filtered().length, total = publicScreens().length;
+  $('#resultCount').innerHTML = `Showing <b>${n}</b> of ${total} screens`;
+  const active = Object.values(getFilters()).filter(Boolean).length;
+  $('#filterCount').textContent = active ? `(${active})` : '';
+}
+function applyFilters(fit){ renderMarkers(); renderList(); updateCount(); if (fit) fitToResults(); }
+$$('#filters select').forEach(s => s.addEventListener('change', () => applyFilters(true)));
+function resetFilters(){ $$('#filters select').forEach(s => s.value = ''); applyFilters(true); }
+$('#resetFilters').addEventListener('click', resetFilters);
+$('#filterToggle').addEventListener('click', () => $('#filters').classList.toggle('open'));
+$$('[data-view]').forEach(b => b.addEventListener('click', () => {
+  view = b.dataset.view;
+  $$('[data-view]').forEach(x => x.classList.toggle('on', x === b));
+  $('#mapView').classList.toggle('hidden', view !== 'map');
+  $('#listView').classList.toggle('hidden', view !== 'list');
+  if (view === 'map' && map) setTimeout(() => map.invalidateSize(), 30);
+}));
+
+/* ---------- Map search: screens, suburbs, landmarks, then any Adelaide address ---------- */
+(function mapSearch(){
+  const box = $('#mapSearchBox'), inp = $('#mapSearch'), drop = $('#searchDrop');
+  let actions = [], hl = -1, geoBusy = false;
+  const open = html => { drop.innerHTML = html; drop.classList.add('show'); box.setAttribute('aria-expanded','true'); };
+  const close = () => { drop.classList.remove('show'); box.setAttribute('aria-expanded','false'); hl = -1; };
+  const item = (ic, title, sub, fn) => { actions.push(fn); return `<button type="button" class="sd-item" data-sd="${actions.length-1}"><span class="ic">${ic}</span><span><b>${esc(title)}</b><small>${esc(sub)}</small></span></button>`; };
+  function render(){
+    const q = inp.value.trim().toLowerCase(); box.classList.toggle('has', !!q);
+    if (!q) { close(); return; }
+    actions = []; hl = -1; let html = '';
+    const scr = publicScreens().filter(s => [s.venue, s.name, s.suburb, s.type, s.address].join(' ').toLowerCase().includes(q)).slice(0, 5);
+    const subs = [...new Set(publicScreens().map(s => s.suburb))].filter(x => x.toLowerCase().includes(q)).slice(0, 3);
+    const lms = LANDMARKS.filter(l => l.n.toLowerCase().includes(q)).slice(0, 4);
+    if (scr.length) html += `<div class="sd-h">Screens</div>` + scr.map(s => item(icon('monitor'), s.venue, `${s.suburb} · ${s.type} · ${s.status}`, () => openPanel(s.id))).join('');
+    if (subs.length) html += `<div class="sd-h">Suburbs</div>` + subs.map(x => item(icon('pin'), x, `${publicScreens().filter(s => s.suburb === x).length} screen(s)`, () => { $('#fSuburb').value = x; applyFilters(true); })).join('');
+    if (lms.length) html += `<div class="sd-h">Places</div>` + lms.map(l => item(icon(LM_CATS[l.c].i), l.n, LM_CATS[l.c].label, () => showPlace(l.lat, l.lng, l.n, LM_CATS[l.c].label))).join('');
+    html += `<div class="sd-h">Address</div>` + item(icon('search'), `Search “${inp.value.trim()}”`, 'Find an address or place in Greater Adelaide', geocode);
+    open(html);
+  }
+  async function geocode(){
+    const q = inp.value.trim(); if (!q || geoBusy) return;
+    geoBusy = true; actions = []; open(`<div class="sd-empty">Searching Adelaide for “${esc(q)}”…</div>`);
+    const [[s, w], [n, e]] = REGIONS[ACTIVE_REGION].bounds;
+    const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&countrycodes=au&bounded=1&viewbox=${w},${n},${e},${s}&q=${encodeURIComponent(q)}`;
+    try {
+      const r = await fetch(url, { headers:{ 'Accept-Language':'en-AU' } });
+      const data = await r.json();
+      if (!data.length) open(`<div class="sd-empty">No places found for “${esc(q)}” in the Adelaide area. Try a street name or suburb.</div>`);
+      else open(`<div class="sd-h">Places in Adelaide</div>` + data.map(d => {
+        const parts = d.display_name.split(', '); const title = parts.slice(0, 2).join(', '); const sub = parts.slice(2, 5).join(', ');
+        return item(icon('pin'), title, sub, () => showPlace(+d.lat, +d.lon, title, sub));
+      }).join(''));
+    } catch (err) { open(`<div class="sd-empty">Address search isn't available right now. You can still search screens, suburbs and landmarks.</div>`); }
+    geoBusy = false;
+  }
+  inp.addEventListener('input', render);
+  inp.addEventListener('focus', () => { if (inp.value.trim()) render(); });
+  inp.addEventListener('keydown', e => {
+    const items = $$('.sd-item', drop);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (!items.length) return; hl = (hl + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length; items.forEach((b,i) => b.classList.toggle('hl', i === hl)); items[hl].scrollIntoView({ block:'nearest' }); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (hl >= 0 && items[hl]) items[hl].click(); else if (items.length === 1 || !items.length) geocode(); else items[0].click(); }
+    else if (e.key === 'Escape') { close(); inp.blur(); }
+  });
+  drop.addEventListener('click', e => { const b = e.target.closest('[data-sd]'); if (!b) return; const fn = actions[+b.dataset.sd]; if (fn === geocode) { geocode(); return; } close(); inp.blur(); fn && fn(); });
+  $('#mapSearchClear').addEventListener('click', () => { inp.value = ''; box.classList.remove('has'); close(); if (pinLayer) pinLayer.clearLayers(); if (map) map.closePopup(); inp.focus(); });
+  document.addEventListener('click', e => { if (!box.contains(e.target)) close(); });
+})();
+
+/* ---------- Info panel ---------- */
+function openPanel(id){
+  const s = screens.find(x => x.id === id); if (!s) return;
+  const prev = selectedId; selectedId = id;
+  if (markers[prev]) markers[prev].setIcon(pinIcon(screens.find(x => x.id === prev) || s, false));
+  if (markers[id]) markers[id].setIcon(pinIcon(s, true));
+  const canEnquire = s.status !== 'Inactive';
+  const R = REGIONS[s.region] || REGIONS[ACTIVE_REGION];
+  const cityD = window.L ? dist(s, R.cityCentre) : 0;
+  const nearL = window.L ? nearestLandmarks(s, 3) : [];
+  if (map) map.closePopup();
+  $('#panel').innerHTML = `
+    <span class="panel-grab"></span>
+    <div class="panel-scroll">
+      <div class="panel-img">${imgTag(s)}<button class="panel-close" data-close-panel aria-label="Close details">${icon('x')}</button><span class="demo-tag">Demo Listing</span></div>
+      <div class="panel-body">
+        ${badge(s.status)}
+        <h2>${esc(s.name)}</h2>
+        <div class="panel-venue">${esc(s.venue)} · ${esc(s.type)}</div>
+        <div class="spec-grid">
+          <div class="spec"><small>Suburb</small><b>${esc(s.suburb)}</b></div>
+          <div class="spec"><small>Venue type</small><b>${esc(s.type)}</b></div>
+          <div class="spec"><small>Screen size</small><b>${s.size}"</b></div>
+          <div class="spec"><small>Orientation</small><b>${esc(s.orientation)}</b></div>
+          <div class="spec full"><small>Est. daily audience</small><b>${audRange(s)} people / day</b></div>
+          <div class="spec"><small>Operating days</small><b>${esc(s.days)}</b></div>
+          <div class="spec"><small>Opening hours</small><b>${esc(s.hours)}</b></div>
+          <div class="spec full"><small>Visibility</small><b>${dots(s.visibility)} &nbsp;${visLabel(s.visibility)}</b></div>
+          <div class="spec full"><small>Address</small><b>${esc(s.address)}</b></div>
+          <div class="spec full"><small>Distance to city centre</small><b>${fmtDist(cityD)} from ${esc(R.cityCentre.name)}</b></div>
+        </div>
+        ${s.description ? `<p class="panel-desc">${esc(s.description)}</p>` : ''}
+        <div class="nearby"><h4>What's nearby</h4><ul>
+          ${nearL.map(({l,d}) => `<li><span>${lmIcon(l,false)} ${esc(l.n)}</span><span>${fmtDist(d)}${d < 2000 ? ` · ${walkMin(d)} min walk` : ''}</span></li>`).join('')}
+        </ul></div>
+        <div class="ext-links">
+          <a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}">${icon('directions')} Directions</a>
+          <a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${s.lat},${s.lng}">${icon('eye')} Street View</a>
+        </div>
+      </div>
+    </div>
+    <div class="panel-foot">
+      ${canEnquire ? `<button class="btn btn-primary btn-block" data-enquire="${s.id}">Enquire About This Screen ${icon('arrow')}</button>` : `<div class="note">${icon('info')}<span>This screen is currently inactive and hidden from the public map.</span></div>`}
+      <p class="fine">Demo listing. Audience figures are indicative estimates based on available information.</p>
+    </div>`;
+  $('#panel').classList.add('open'); $('#panel').setAttribute('aria-hidden','false');
+  $('#panelBackdrop').classList.add('show');
+  if (map && $('.page.active')?.dataset.page === 'map' && view === 'map') {
+    const off = window.innerWidth > 768 ? [-(Math.min(410, window.innerWidth*.4))/2, 0] : [0, window.innerHeight*.25];
+    const pt = map.project([s.lat, s.lng], Math.max(map.getZoom(), 14)).subtract(off);
+    map.flyTo(map.unproject(pt, Math.max(map.getZoom(), 14)), Math.max(map.getZoom(), 14), { duration:.6 });
+  }
+}
+function closePanel(){
+  $('#panel').classList.remove('open'); $('#panel').setAttribute('aria-hidden','true'); $('#panelBackdrop').classList.remove('show');
+  if (selectedId && markers[selectedId]) { const s = screens.find(x => x.id === selectedId); if (s) markers[selectedId].setIcon(pinIcon(s, false)); }
+  selectedId = null;
+}
+function focusScreen(id){ openPanel(id); }
+$('#panelBackdrop').addEventListener('click', closePanel);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if ($('#panel').classList.contains('open')) closePanel(); else exitFs(); closeModals(); } });
+// Swipe-down to close bottom sheet on mobile
+(function(){ let y0 = null; const p = $('#panel');
+  p.addEventListener('touchstart', e => { const sc = $('.panel-scroll', p); y0 = (sc && sc.scrollTop > 0) ? null : e.touches[0].clientY; }, {passive:true});
+  p.addEventListener('touchmove', e => { if (y0 === null || window.innerWidth > 768) return; const dy = e.touches[0].clientY - y0; if (dy > 0) p.style.transform = `translateY(${dy}px)`; }, {passive:true});
+  p.addEventListener('touchend', e => { if (y0 === null) return; const dy = e.changedTouches[0].clientY - y0; p.style.transform = ''; if (dy > 110 && window.innerWidth <= 768) closePanel(); y0 = null; });
+})();
+
+/* ---------- Global click delegation ---------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-open],[data-enquire],[data-close-panel],[data-reset-filters],[data-reset],[data-close-modal],.chip[type=button]');
+  if (!t) return;
+  if (t.dataset.open) openPanel(t.dataset.open);
+  else if (t.dataset.enquire) enquire(t.dataset.enquire);
+  else if (t.hasAttribute('data-close-panel')) closePanel();
+  else if (t.hasAttribute('data-reset-filters')) resetFilters();
+  else if (t.dataset.reset) { const f = $('#' + t.dataset.reset); f.reset(); f.classList.remove('hidden'); t.closest('.success').classList.add('hidden'); if (t.dataset.reset === 'partnerForm') resetPhoto(); if (t.dataset.reset === 'advForm') resetAdvChips(); }
+  else if (t.hasAttribute('data-close-modal')) closeModals();
+  else if (t.classList.contains('chip')) {
+    const group = t.parentElement;
+    if (group.hasAttribute('data-single')) $$('.chip', group).forEach(c => c.classList.toggle('on', c === t));
+    else t.classList.toggle('on');
+  }
+});
+
+/* ---------- Advertiser form ---------- */
+let selScreens = [];
+function buildChips(el, vals){ el.innerHTML = vals.map(v => `<button type="button" class="chip" data-v="${esc(v)}">${esc(v)}</button>`).join(''); }
+function allSuburbs(){ return [...new Set([...SUBURBS, ...publicScreens().map(s => s.suburb)])]; }
+function refreshAdvChips(){
+  const keep = $$('#aSuburbs .chip.on').map(c => c.dataset.v);
+  buildChips($('#aSuburbs'), allSuburbs());
+  keep.forEach(v => { const c = $(`#aSuburbs .chip[data-v="${CSS.escape(v)}"]`); if (c) c.classList.add('on'); });
+}
+function resetAdvChips(){ $$('#aSuburbs .chip, #aTypes .chip').forEach(c => c.classList.remove('on')); $$('#aDuration .chip').forEach(c => c.classList.toggle('on', c.textContent === '1 Month')); selScreens = []; renderSelScreens(); }
+function renderSelScreens(){
+  selScreens = selScreens.filter(id => screens.some(s => s.id === id));
+  $('#selScreensBox').classList.toggle('hidden', !selScreens.length);
+  $('#selScreens').innerHTML = selScreens.map(id => { const s = screens.find(x => x.id === id);
+    return `<span class="chip on" style="cursor:default">${esc(s.venue)} · ${esc(s.suburb)} <button type="button" data-remove-sel="${id}" aria-label="Remove">${icon('x')}</button></span>`; }).join('')
+    + `<a href="#/map" class="chip" style="border-style:dashed">${icon('plus')} Add more from map</a>`;
+}
+$('#selScreens').addEventListener('click', e => { const b = e.target.closest('[data-remove-sel]'); if (!b) return; e.stopPropagation(); selScreens = selScreens.filter(x => x !== b.dataset.removeSel); renderSelScreens(); });
+function enquire(id){
+  const s = screens.find(x => x.id === id); if (!s) return;
+  if (!selScreens.includes(id)) selScreens.push(id);
+  renderSelScreens();
+  const sc = $(`#aSuburbs .chip[data-v="${CSS.escape(s.suburb)}"]`); if (sc) sc.classList.add('on');
+  const tc = $(`#aTypes .chip[data-v="${CSS.escape(s.type)}"]`); if (tc) tc.classList.add('on');
+  $('#advForm').classList.remove('hidden'); $('#advSuccess').classList.add('hidden');
+  toast(`${s.venue} added to your enquiry`);
+  location.hash = '#/advertisers?form';
+}
+$('#advForm').addEventListener('submit', e => {
+  e.preventDefault(); if (!validateForm(e.target)) return;
+  advertiserEnquiries.unshift({ id:uid('a'), business:$('#aBusiness').value.trim(), contact:$('#aContact').value.trim(), email:$('#aEmail').value.trim(), phone:$('#aPhone').value.trim(), goal:$('#aGoal').value,
+    suburbs:$$('#aSuburbs .chip.on').map(c => c.dataset.v), types:$$('#aTypes .chip.on').map(c => c.dataset.v), screens:[...selScreens],
+    duration:($('#aDuration .chip.on')||{}).textContent || '', budget:$('#aBudget').value, info:$('#aInfo').value.trim(), date:new Date().toISOString(), status:'New' });
+  e.target.classList.add('hidden'); $('#advSuccess').classList.remove('hidden');
+  e.target.reset(); resetAdvChips(); refreshAll();
+  $('#advSuccess').scrollIntoView({ behavior:'smooth', block:'center' });
+});
+
+/* ---------- Partner form ---------- */
+let partnerPhoto = '';
+function resetPhoto(){ partnerPhoto = ''; $('#pPhotoIc').innerHTML = icon('camera'); $('#pPhotoName').textContent = 'Upload a photo of your screen'; }
+$('#pPhoto').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  if (!f.type.startsWith('image/')) { toast('Please choose an image file'); return; }
+  const r = new FileReader();
+  r.onload = () => { // downscale for in-memory storage
+    const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const k = Math.min(1, 640 / img.width); c.width = img.width*k; c.height = img.height*k; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); partnerPhoto = c.toDataURL('image/jpeg', .8); $('#pPhotoIc').innerHTML = `<img src="${partnerPhoto}" alt="">`; };
+    img.src = r.result; $('#pPhotoName').textContent = f.name;
+  };
+  r.readAsDataURL(f);
+});
+$('#partnerForm').addEventListener('submit', e => {
+  e.preventDefault(); if (!validateForm(e.target)) return;
+  const v = id => $('#' + id).value.trim();
+  partnerEnquiries.unshift({ id:uid('p'), business:v('pBusiness'), contact:v('pContact'), phone:v('pPhone'), email:v('pEmail'), address:v('pAddress'), suburb:v('pSuburb'), type:v('pType'), screens:v('pScreens'), size:v('pSize'), traffic:v('pTraffic'), hours:v('pHours'), comments:v('pComments'), photo:partnerPhoto, date:new Date().toISOString(), status:'New' });
+  e.target.classList.add('hidden'); $('#partnerSuccess').classList.remove('hidden');
+  e.target.reset(); resetPhoto(); refreshAll();
+  $('#partnerSuccess').scrollIntoView({ behavior:'smooth', block:'center' });
+});
+
+/* ---------- Contact form ---------- */
+$('#contactForm').addEventListener('submit', e => {
+  e.preventDefault(); if (!validateForm(e.target)) return;
+  const v = id => $('#' + id).value.trim();
+  messages.unshift({ id:uid('m'), name:v('cName'), email:v('cEmail'), phone:v('cPhone'), company:v('cCompany'), message:v('cMessage'), date:new Date().toISOString() });
+  e.target.classList.add('hidden'); $('#contactSuccess').classList.remove('hidden');
+  e.target.reset(); refreshAll();
+});
+
+/* Simple validation: highlight invalid fields, focus the first one */
+function validateForm(form){
+  let first = null;
+  $$('input,select,textarea', form).forEach(el => {
+    const fld = el.closest('.field'); if (!fld || el.type === 'file') return;
+    if (!fld.querySelector('.err')) fld.insertAdjacentHTML('beforeend', `<div class="err">${el.type === 'email' ? 'Please enter a valid email address' : 'Please fill in this field'}</div>`);
+    const ok = el.checkValidity(); fld.classList.toggle('invalid', !ok); if (!ok && !first) first = el;
+  });
+  if (first) { first.focus({ preventScroll:true }); first.scrollIntoView({ behavior:'smooth', block:'center' }); }
+  return !first;
+}
+document.addEventListener('input', e => { const f = e.target.closest('.field.invalid'); if (f && e.target.checkValidity()) f.classList.remove('invalid'); });
+
+/* ---------- Admin ---------- */
+let authed = false, adminTab = 'overview', editingId = null;
+$('#loginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  if ($('#adminPw').value === ADMIN_PASS) { authed = true; $('#adminPw').value = ''; $('#pwField').classList.remove('invalid'); renderAdmin(); toast('Signed in to demo dashboard'); }
+  else { $('#pwField').classList.add('invalid'); $('#adminPw').select(); }
+});
+$('#logoutBtn').addEventListener('click', () => { authed = false; renderAdmin(); });
+$$('.admin-side [data-tab]').forEach(b => b.addEventListener('click', () => { adminTab = b.dataset.tab; renderAdmin(); window.scrollTo(0,0); }));
+
+const enqClass = st => ({'New':'s-new','Approved':'s-good','Confirmed':'s-good','Rejected':'s-bad','Closed':'s-bad','Contacted':'s-mid','Meeting Scheduled':'s-mid','Proposal Sent':'s-mid','Negotiating':'s-mid'})[st] || '';
+const statusSelect = (kind, id, st, opts) => `<select class="status-select ${enqClass(st)}" data-enq="${kind}" data-id="${id}" aria-label="Status">${opts.map(o => `<option ${o===st?'selected':''}>${o}</option>`).join('')}</select>`;
+const sampleTag = r => r.sample ? ' <span class="demo-tag" style="font-size:9.5px;padding:2px 6px">Sample</span>' : '';
+
+function renderAdmin(){
+  $('#adminLogin').classList.toggle('hidden', authed);
+  $('#adminApp').classList.toggle('hidden', !authed);
+  if (!authed) return;
+  $$('.admin-side [data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === adminTab));
+  $('#cntScreens').textContent = screens.length;
+  $('#cntPartners').textContent = partnerEnquiries.length;
+  $('#cntAdv').textContent = advertiserEnquiries.length;
+  $('#cntMsg').textContent = messages.length;
+  const main = $('#adminMain');
+  const head = (t, p, action='') => `<div class="admin-top"><div><h1>${t}</h1><p>${p}</p></div>${action}</div>`;
+  const addBtn = `<button class="btn btn-primary btn-sm" data-add-screen>${icon('plus')} Add Screen</button>`;
+
+  if (adminTab === 'overview') {
+    const recent = [...screens].sort((a,b) => b.added.localeCompare(a.added)).slice(0,5);
+    main.innerHTML = head('Overview', 'Demo Mode · data is held in this browser session only.', addBtn) + `
+      <div class="kpis">
+        <div class="kpi dark"><div class="ic">${icon('monitor')}</div><b>${screens.length}</b><small>Total Screens</small></div>
+        <div class="kpi"><div class="ic">${icon('check')}</div><b>${screens.filter(s => s.status === 'Available').length}</b><small>Available Screens</small></div>
+        <div class="kpi"><div class="ic">${icon('store')}</div><b>${partnerEnquiries.length}</b><small>Screen Partner Enquiries</small></div>
+        <div class="kpi"><div class="ic">${icon('megaphone')}</div><b>${advertiserEnquiries.length}</b><small>Advertiser Enquiries</small></div>
+      </div>
+      <div class="tcard"><div class="tcard-head"><h3>Recently Added Screens</h3><button class="link-arrow" style="font-size:14.5px" data-goto-tab="screens">View all ${icon('arrow')}</button></div>
+        <div class="table-wrap"><table><thead><tr><th></th><th>Screen</th><th>Suburb</th><th>Size</th><th>Status</th><th>Date added</th></tr></thead><tbody>
+        ${recent.map(s => `<tr><td style="width:72px">${imgTag(s,'thumb')}</td><td><span class="strong">${esc(s.name)}</span><span class="sub">${esc(s.venue)}</span></td><td>${esc(s.suburb)}</td><td>${s.size}"</td><td>${badge(s.status)}</td><td>${fmtDate(s.added)}</td></tr>`).join('')}
+        </tbody></table></div></div>`;
+  }
+  else if (adminTab === 'screens') {
+    const rows = [...screens].sort((a,b) => b.added.localeCompare(a.added));
+    main.innerHTML = head('Screen Management', 'Changes appear on the public map and list immediately.', addBtn) + `
+      <div class="tcard"><div class="tcard-head"><h3>All screens (${screens.length})</h3></div><div class="table-wrap"><table style="min-width:980px"><thead><tr><th></th><th>Screen / Venue</th><th>Suburb</th><th>Position</th><th>Size</th><th>Status</th><th>Added</th><th>Actions</th></tr></thead><tbody>
+      ${rows.length ? rows.map(s => `<tr>
+        <td style="width:72px">${imgTag(s,'thumb')}</td>
+        <td><span class="strong">${esc(s.name)}</span><span class="sub">${esc(s.venue)} · ${esc(s.type)}</span></td>
+        <td>${esc(s.suburb)}</td>
+        <td class="mono">${s.lat.toFixed(4)},<br>${s.lng.toFixed(4)}</td>
+        <td>${s.size}" <span class="sub">${esc(s.orientation)}</span></td>
+        <td>${badge(s.status)}</td>
+        <td style="white-space:nowrap">${fmtDate(s.added)}</td>
+        <td><div class="row-actions">
+          <button class="icon-btn" title="View on map" aria-label="View" data-view-screen="${s.id}">${icon('eye')}</button>
+          <button class="icon-btn" title="Edit" aria-label="Edit" data-edit-screen="${s.id}">${icon('edit')}</button>
+          <button class="icon-btn ${s.status!=='Inactive'?'on':''}" title="${s.status==='Inactive'?'Activate':'Deactivate'}" aria-label="${s.status==='Inactive'?'Activate':'Deactivate'}" data-toggle-screen="${s.id}">${icon('power')}</button>
+          <button class="icon-btn danger" title="Delete" aria-label="Delete" data-del-screen="${s.id}">${icon('trash')}</button>
+        </div></td></tr>`).join('') : `<tr><td colspan="8" class="admin-empty">No screens yet. Click “Add Screen” to create one.</td></tr>`}
+      </tbody></table></div></div>`;
+  }
+  else if (adminTab === 'partners') {
+    main.innerHTML = head('Screen Partner Enquiries', 'Applications submitted from the Screen Partners page.') + `
+      <div class="tcard"><div class="table-wrap"><table style="min-width:1000px"><thead><tr><th>Business</th><th>Contact</th><th>Location</th><th>Screen details</th><th>Submitted</th><th>Status</th></tr></thead><tbody>
+      ${partnerEnquiries.length ? partnerEnquiries.map(p => `<tr>
+        <td>${p.photo ? `<img class="thumb" src="${p.photo}" alt="" style="margin-bottom:6px">` : ''}<span class="strong">${esc(p.business)}${sampleTag(p)}</span><span class="sub">${esc(p.type)} · ${esc(p.hours)}</span>${p.comments ? `<span class="sub" style="max-width:260px">“${esc(p.comments)}”</span>` : ''}</td>
+        <td><span class="strong">${esc(p.contact)}</span><span class="sub">${esc(p.email)}</span><span class="sub">${esc(p.phone)}</span></td>
+        <td>${esc(p.address)}<span class="sub">${esc(p.suburb)}</span></td>
+        <td>${esc(p.screens)} screen${p.screens==='1'?'':'s'} · ${esc(p.size)}<span class="sub">${esc(p.traffic)} customers / day</span></td>
+        <td style="white-space:nowrap">${fmtDate(p.date)}</td>
+        <td>${statusSelect('partner', p.id, p.status, PARTNER_STATUS)}</td></tr>`).join('') : `<tr><td colspan="6" class="admin-empty">No Screen Partner enquiries yet.</td></tr>`}
+      </tbody></table></div></div>`;
+  }
+  else if (adminTab === 'advertisers') {
+    main.innerHTML = head('Advertiser Enquiries', 'Campaign enquiries submitted from the Advertisers page.') + `
+      <div class="tcard"><div class="table-wrap"><table style="min-width:1050px"><thead><tr><th>Business</th><th>Contact</th><th>Campaign goal</th><th>Preferred locations</th><th>Budget</th><th>Submitted</th><th>Status</th></tr></thead><tbody>
+      ${advertiserEnquiries.length ? advertiserEnquiries.map(a => { const scr = a.screens.map(id => screens.find(s => s.id === id)).filter(Boolean); return `<tr>
+        <td><span class="strong">${esc(a.business)}${sampleTag(a)}</span>${a.info ? `<span class="sub" style="max-width:240px">“${esc(a.info)}”</span>` : ''}</td>
+        <td><span class="strong">${esc(a.contact)}</span><span class="sub">${esc(a.email)}</span><span class="sub">${esc(a.phone)}</span></td>
+        <td>${esc(a.goal)}<span class="sub">${esc(a.duration)}</span></td>
+        <td style="max-width:260px">${a.suburbs.length ? esc(a.suburbs.join(', ')) : '<span class="sub">Any</span>'}${a.types.length ? `<span class="sub">${esc(a.types.join(', '))}</span>` : ''}${scr.length ? `<span class="sub"><b>Screens:</b> ${esc(scr.map(s => s.venue).join(', '))}</span>` : ''}</td>
+        <td>${a.budget ? esc(a.budget) : '<span class="sub">Not stated</span>'}</td>
+        <td style="white-space:nowrap">${fmtDate(a.date)}</td>
+        <td>${statusSelect('adv', a.id, a.status, ADV_STATUS)}</td></tr>`; }).join('') : `<tr><td colspan="7" class="admin-empty">No advertiser enquiries yet.</td></tr>`}
+      </tbody></table></div></div>`;
+  }
+  else if (adminTab === 'messages') {
+    main.innerHTML = head('Contact Messages', 'Messages submitted through the public Contact form.') + `
+      <div class="tcard"><div class="table-wrap"><table><thead><tr><th>From</th><th>Company</th><th>Message</th><th>Received</th></tr></thead><tbody>
+      ${messages.length ? messages.map(m => `<tr><td><span class="strong">${esc(m.name)}${sampleTag(m)}</span><span class="sub">${esc(m.email)}</span>${m.phone ? `<span class="sub">${esc(m.phone)}</span>` : ''}</td><td>${esc(m.company) || '<span class="sub">—</span>'}</td><td class="msg-cell">${esc(m.message)}</td><td style="white-space:nowrap">${fmtDate(m.date)}</td></tr>`).join('') : `<tr><td colspan="4" class="admin-empty">No messages yet.</td></tr>`}
+      </tbody></table></div></div>`;
+  }
+}
+
+$('#adminMain').addEventListener('change', e => {
+  const sel = e.target.closest('[data-enq]'); if (!sel) return;
+  const list = sel.dataset.enq === 'partner' ? partnerEnquiries : advertiserEnquiries;
+  const r = list.find(x => x.id === sel.dataset.id); if (!r) return;
+  r.status = sel.value; sel.className = 'status-select ' + enqClass(r.status);
+  toast(`Status updated to “${r.status}”`);
+});
+$('#adminMain').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const d = b.dataset;
+  if ('addScreen' in d) openScreenModal(null);
+  else if (d.gotoTab) { adminTab = d.gotoTab; renderAdmin(); }
+  else if (d.editScreen) openScreenModal(d.editScreen);
+  else if (d.viewScreen) { pendingPanel = d.viewScreen; location.hash = '#/map'; }
+  else if (d.toggleScreen) {
+    const s = screens.find(x => x.id === d.toggleScreen);
+    s.status = s.status === 'Inactive' ? 'Available' : 'Inactive';
+    refreshAll(); toast(`${s.venue} ${s.status === 'Inactive' ? 'deactivated — hidden from public map' : 'activated'}`);
+  }
+  else if (d.delScreen) {
+    const s = screens.find(x => x.id === d.delScreen);
+    confirmDialog('Delete this screen?', `“${s.name}” at ${s.venue} will be permanently removed from the map and list.`, () => {
+      screens = screens.filter(x => x.id !== s.id); refreshAll(); toast('Screen deleted');
+    });
+  }
+});
+
+/* ---------- Modals ---------- */
+function showModal(id){ const m = $('#' + id); m.classList.add('show'); m.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; }
+function closeModals(){ $$('.modal.show').forEach(m => { m.classList.remove('show'); m.setAttribute('aria-hidden','true'); }); document.body.style.overflow = ''; }
+$$('.modal').forEach(m => m.addEventListener('mousedown', e => { if (e.target === m) closeModals(); }));
+let confirmCb = null;
+function confirmDialog(title, text, cb){ $('#confirmTitle').textContent = title; $('#confirmText').textContent = text; confirmCb = cb; showModal('confirmModal'); }
+$('#confirmYes').addEventListener('click', () => { closeModals(); if (confirmCb) confirmCb(); confirmCb = null; });
+
+const SF = ['Name','Venue','Type','Status','Address','Suburb','Lat','Lng','Size','Orient','AudLow','AudHigh','Days','Hours','Vis','Desc','Image'];
+const SF_KEY = {Name:'name',Venue:'venue',Type:'type',Status:'status',Address:'address',Suburb:'suburb',Lat:'lat',Lng:'lng',Size:'size',Orient:'orientation',AudLow:'audLow',AudHigh:'audHigh',Days:'days',Hours:'hours',Vis:'visibility',Desc:'description',Image:'image'};
+function openScreenModal(id){
+  editingId = id;
+  const s = id ? screens.find(x => x.id === id) : { type:'Café', status:'Available', orientation:'Landscape', visibility:4, lat:'', lng:'', size:'', audLow:'', audHigh:'', days:'Mon–Sun', hours:'' };
+  $('#screenModalTitle').textContent = id ? 'Edit Screen' : 'Add Screen';
+  SF.forEach(k => { $('#sf' + k).value = s[SF_KEY[k]] ?? ''; });
+  $$('#screenForm .field').forEach(f => f.classList.remove('invalid'));
+  updateImgPrev();
+  showModal('screenModal');
+  setTimeout(() => $('#sfName').focus(), 100);
+}
+function updateImgPrev(){
+  const url = $('#sfImage').value.trim();
+  const tmp = { venue:$('#sfVenue').value || 'Venue', type:$('#sfType').value, orientation:$('#sfOrient').value, size:$('#sfSize').value || '—' };
+  const prev = $('#sfImgPrev'); prev.onerror = () => { prev.onerror = null; prev.src = placeholderImg(tmp); };
+  prev.src = url || placeholderImg(tmp);
+}
+['sfImage','sfVenue','sfType','sfOrient','sfSize'].forEach(id => $('#' + id).addEventListener('input', updateImgPrev));
+$('#screenForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const get = k => $('#sf' + k).value.trim();
+  const inv = (k, bad) => { $('#sf' + k).closest('.field').classList.toggle('invalid', bad); return bad; };
+  let bad = false;
+  ['Name','Venue','Address','Suburb','Days','Hours'].forEach(k => { bad = inv(k, !get(k)) || bad; });
+  const lat = parseFloat(get('Lat')), lng = parseFloat(get('Lng')), size = parseInt(get('Size'),10), lo = parseInt(get('AudLow'),10), hi = parseInt(get('AudHigh'),10);
+  bad = inv('Lat', !(lat >= -44 && lat <= -10)) || bad;
+  bad = inv('Lng', !(lng >= 112 && lng <= 154)) || bad;
+  bad = inv('Size', !(size >= 10 && size <= 200)) || bad;
+  bad = inv('AudLow', !(lo >= 0)) || bad;
+  bad = inv('AudHigh', !(hi >= 0 && hi >= lo)) || bad;
+  if (bad) { const f = $('#screenForm .field.invalid input'); if (f) f.focus(); return; }
+  const data = { name:get('Name'), venue:get('Venue'), type:get('Type'), status:get('Status'), address:get('Address'), suburb:get('Suburb'), lat, lng, size, orientation:get('Orient'), audLow:lo, audHigh:hi, days:get('Days'), hours:get('Hours'), visibility:parseInt(get('Vis'),10), description:get('Desc'), image:get('Image') };
+  if (editingId) Object.assign(screens.find(x => x.id === editingId), data);
+  else screens.push(S({ id:uid('s'), added:new Date().toISOString(), ...data }));
+  closeModals(); refreshAll(); if (!editingId) fitToResults();
+  toast(editingId ? 'Screen updated — map refreshed' : 'Screen added — now live on the map');
+});
+
+/* ---------- Refresh everything that depends on data ---------- */
+function refreshAll(){
+  renderFilterOptions();
+  applyFilters(false);
+  renderPreviewMarkers(false);
+  refreshAdvChips(); renderSelScreens();
+  $('#suburbList').innerHTML = allSuburbs().map(s => `<option value="${esc(s)}">`).join('');
+  const pub = publicScreens();
+  $('#heroVenues').textContent = new Set(pub.map(s => s.venue)).size;
+  $('#pvScreens').textContent = pub.length;
+  $('#pvSuburbs').textContent = new Set(pub.map(s => s.suburb)).size;
+  $('#pvTypes').textContent = new Set(pub.map(s => s.type)).size;
+  if (selectedId) { const s = screens.find(x => x.id === selectedId); if (s && $('#panel').classList.contains('open')) openPanel(s.id); else closePanel(); }
+  renderAdmin();
+}
+
+/* ---------- Init ---------- */
+hydrateIcons();
+$('#yr').textContent = new Date().getFullYear();
+const typeOpts = '<option value="">Select…</option>' + VENUE_TYPES.map(t => `<option>${t}</option>`).join('');
+$('#pType').innerHTML = typeOpts;
+$('#sfType').innerHTML = VENUE_TYPES.map(t => `<option>${t}</option>`).join('');
+buildChips($('#aTypes'), VENUE_TYPES.filter(t => t !== 'Other'));
+refreshAll();
+route();
+})();
+</script>
+</body>
+</html>
