@@ -20,7 +20,7 @@
   --red:#D23B3B; --red-soft:#FCE6E6; --blue:#2F6FDB; --blue-soft:#E4EDFC;
   --display:'Sora',system-ui,sans-serif; --body:'Source Sans 3',system-ui,sans-serif;
   --r:18px; --r-sm:12px; --shadow:0 10px 30px -12px rgba(10,22,40,.18); --shadow-lg:0 30px 60px -20px rgba(10,22,40,.35);
-  --headh:98px;
+  --headh:68px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -37,12 +37,10 @@ p{max-width:65ch}
 .container{max-width:1200px;margin:0 auto;padding:0 24px}
 .svg-i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .hidden{display:none!important}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;border:0!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important}
 
 /* ---------- Header ---------- */
 .site-head{position:sticky;top:0;z-index:2000}
-.demo-bar{background:var(--amber);color:var(--navy);font-size:13.5px;font-weight:600;text-align:center;padding:6px 16px;line-height:1.4;height:30px;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.demo-bar b{font-family:var(--display);font-size:11px;letter-spacing:.12em;background:var(--navy);color:var(--amber);padding:2px 7px;border-radius:5px}
 .nav{background:rgba(10,22,40,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--navy-line)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
 .logo{display:flex;align-items:center;gap:10px;color:#fff;font-family:var(--display);font-weight:700;font-size:1.2rem;letter-spacing:-.02em}
@@ -186,13 +184,12 @@ p{max-width:65ch}
 /* ---------- Map preview on home ---------- */
 .preview-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:center}
 .preview-map-wrap{position:relative;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid var(--navy-line)}
-#previewMap{height:440px;background:#0b1220}
-.preview-badge{position:absolute;left:16px;top:16px;z-index:500;background:rgba(10,22,40,.88);backdrop-filter:blur(8px);color:#fff;border-radius:12px;padding:8px 14px;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px;border:1px solid var(--navy-line)}
+#homeMap{height:470px;background:#e8ecf2;z-index:1}
 .preview-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0 34px}
 .preview-stats div{background:rgba(255,255,255,.05);border:1px solid var(--navy-line);border-radius:14px;padding:16px}
 .preview-stats b{display:block;font-family:var(--display);font-size:1.7rem;color:#fff;letter-spacing:-.02em}
 .preview-stats small{font-size:13px;color:rgba(255,255,255,.55)}
-@media(max-width:960px){.preview-grid{grid-template-columns:1fr}#previewMap{height:340px}}
+@media(max-width:960px){.preview-grid{grid-template-columns:1fr}#homeMap{height:420px}}
 
 /* ---------- Audience callouts ---------- */
 .callout{border-radius:24px;padding:44px;position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:380px}
@@ -329,9 +326,10 @@ p{max-width:65ch}
 .map-legend i.sq{border-radius:3px;background:#fff;border:1.5px solid var(--navy-3);box-shadow:none}
 .map-legend i.ring{background:transparent;border:1.5px dashed var(--green);box-shadow:none}
 @media(max-width:600px){.map-legend{display:none}}
-.map-stage.fs{position:fixed;inset:0;z-index:2040;background:#fff}
-.map-stage.fs #map{height:100dvh!important;min-height:0;border-radius:0;border:0}
+.map-stage.fs{position:fixed;inset:0;z-index:2040;background:#fff;border-radius:0;border:0}
+.map-stage.fs .screen-map{height:100dvh!important;min-height:0;border-radius:0;border:0}
 .map-hint{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:500;background:rgba(10,22,40,.88);color:#fff;font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .4s}
+@media(max-width:700px){.map-hint{top:auto;bottom:34px;font-size:12px;max-width:calc(100% - 24px);white-space:normal;text-align:center}}
 .leaflet-bar a.lf-btn{display:flex!important;align-items:center;justify-content:center;font-size:17px;color:var(--ink)}
 .leaflet-bar a.lf-btn.on{color:var(--amber-deep);background:var(--amber-soft)}
 
@@ -566,7 +564,71 @@ tr:hover td{background:#FAFBFD}
   .admin-side .side-foot{margin:0}
   .admin-main{padding:24px 16px 50px}
 }
+/* Phones: admin tables become stacked cards instead of scrolling sideways */
+@media(max-width:700px){
+  .table-wrap table{min-width:0!important;display:block}
+  .table-wrap thead{display:none}
+  .table-wrap tbody{display:block}
+  .table-wrap tr{display:block;padding:14px 16px;border-top:1px solid var(--line)}
+  .table-wrap tr:first-child{border-top:0}
+  .table-wrap tr:hover td{background:none}
+  .table-wrap td{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:6px 0;border:0;text-align:right;width:auto!important;max-width:none!important;white-space:normal!important}
+  .table-wrap td[data-label]::before{content:attr(data-label);font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;text-align:left;flex-shrink:0;padding-top:3px}
+  .table-wrap td > div.cell{min-width:0}
+  .table-wrap td .sub{max-width:none!important}
+  .table-wrap td.msg-cell{text-align:left;display:block}
+  .table-wrap td.msg-cell::before{display:block;margin-bottom:4px}
+  .table-wrap td.mono br{display:none}
+  .table-wrap td.admin-empty{display:block;text-align:center}
+  .row-actions{justify-content:flex-end}
+  .icon-btn{width:42px;height:42px}
+  .status-select{height:42px}
+  .admin-top h1{font-size:1.6rem}
+  .admin-top .btn{width:100%}
+  .pub-banner .btns,.pub-banner .btns .btn{width:100%}
+  .pub-card .btns .btn{flex:1 1 100%}
+  .tcard-head{padding:16px}
+}
 @media(max-width:480px){.kpis{gap:12px}.kpi{padding:16px}.kpi b{font-size:1.6rem}}
+
+/* Publishing / content management */
+.pub-banner{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--amber-soft);border:1px solid #F1D48A;border-radius:16px;padding:16px 20px;margin-bottom:24px}
+.pub-banner b{display:block;color:var(--ink);font-family:var(--display);font-size:15.5px}
+.pub-banner span{font-size:14.5px;color:var(--text)}
+.pub-banner .btns{display:flex;gap:8px;flex-wrap:wrap}
+.admin-side .count.dot{background:none;color:var(--amber);font-size:14px;padding:0}
+.pub-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.pub-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px}
+.pub-card h3{font-size:1.15rem;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.pub-card > p{color:var(--muted);font-size:15px;margin-bottom:18px}
+.pub-card .field{margin-bottom:14px}
+.pub-card .field input{height:46px}
+.pub-card .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.pub-card ol{padding-left:20px;font-size:14.5px;color:var(--text);display:grid;gap:6px;margin:4px 0 18px}
+.pub-card ol a{color:var(--blue);text-decoration:underline}
+.pub-card code{background:var(--grey);padding:1px 6px;border-radius:5px;font-size:13px}
+.status-list{display:grid;gap:10px;margin-bottom:18px}
+.status-list div{display:flex;justify-content:space-between;gap:12px;font-size:15px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.status-list div span:first-child{color:var(--muted)}
+.status-list div span:last-child{font-weight:600;color:var(--ink);text-align:right}
+.conn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:3px 10px;border-radius:999px}
+.conn.ok{background:var(--green-soft);color:var(--green)}
+.conn.no{background:var(--grey-2);color:var(--muted)}
+.full-span{grid-column:1/-1}
+@media(max-width:1000px){.pub-grid{grid-template-columns:1fr}}
+.draft-chip{position:fixed;left:16px;bottom:16px;z-index:1900;display:flex;align-items:center;gap:8px;background:var(--navy);color:#fff;font-size:13.5px;font-weight:600;padding:10px 14px;border-radius:999px;box-shadow:var(--shadow-lg);max-width:calc(100vw - 32px)}
+.draft-chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0}
+.draft-chip u{color:var(--amber)}
+.inline-input{display:flex;gap:8px}
+.inline-input input{flex:1;min-width:0}
+.inline-input .btn{height:52px;flex-shrink:0}
+.pick-map{height:270px;border-radius:12px;border:1.5px solid var(--line);background:#e8ecf2;z-index:1}
+.photo-row{display:grid;grid-template-columns:240px 1fr;gap:18px;align-items:start}
+.photo-row .img-prev{margin-top:0}
+.check{display:flex!important;align-items:center;gap:10px;cursor:pointer;font-weight:600}
+.check input{width:20px!important;height:20px!important;accent-color:var(--navy);appearance:auto!important;-webkit-appearance:auto!important}
+.btn.busy{opacity:.7;pointer-events:none}
+@media(max-width:600px){.photo-row{grid-template-columns:1fr}.inline-input{flex-direction:column}.inline-input .btn{height:46px}}
 
 /* Modal */
 .modal{position:fixed;inset:0;z-index:3000;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;background:rgba(10,22,40,.6);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s}
@@ -600,8 +662,6 @@ tr:hover td{background:#FAFBFD}
   .section{padding:68px 0}
   .section-sm{padding:48px 0}
   .page-hero{padding:60px 0 68px}
-  .demo-bar{font-size:12px}
-  .demo-bar .long{display:none}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
@@ -610,7 +670,6 @@ tr:hover td{background:#FAFBFD}
 
 <!-- ===================== HEADER ===================== -->
 <header class="site-head">
-  <div class="demo-bar"><b>DEMO MODE</b> Sample listings for demonstration only<span class="long">&nbsp;· data resets when the page reloads</span></div>
   <nav class="nav" aria-label="Main">
     <div class="container nav-inner">
       <a href="#/home" class="logo" aria-label="Oora Media home">
@@ -712,11 +771,10 @@ tr:hover td{background:#FAFBFD}
           <div><b id="pvSuburbs">12</b><small>Suburbs</small></div>
           <div><b id="pvTypes">9</b><small>Venue types</small></div>
         </div>
-        <a href="#/map" class="btn btn-primary">Open the Interactive Screen Map <i data-i="arrow"></i></a>
+        <a href="#/map" class="btn btn-primary">Open the full map — search &amp; filters <i data-i="arrow"></i></a>
       </div>
-      <div class="preview-map-wrap">
-        <div class="preview-badge"><span class="live-dot"></span> Adelaide network · <span class="demo-tag" style="padding:2px 7px">Demo</span></div>
-        <div id="previewMap" aria-label="Preview map of screen locations"></div>
+      <div class="preview-map-wrap map-stage">
+        <div id="homeMap" role="application" aria-label="Interactive map of screen locations"></div>
       </div>
     </div>
   </div>
@@ -779,7 +837,7 @@ tr:hover td{background:#FAFBFD}
         <h1>Interactive Screen Map</h1>
         <p>Explore digital screens in local venues. Tap a location to see details.</p>
       </div>
-      <span class="demo-tag"><i data-i="info"></i> All listings are demo listings</span>
+      <span class="demo-tag" id="mapDemoTag"><i data-i="info"></i> Includes demo listings</span>
     </div>
   </div>
   <div class="container">
@@ -1130,7 +1188,7 @@ tr:hover td{background:#FAFBFD}
       <p>Sign in to manage screens and enquiries.</p>
       <div class="field" id="pwField"><label for="adminPw">Password</label><input type="password" id="adminPw" autocomplete="current-password"><div class="err">Incorrect password. Please try again.</div></div>
       <button class="btn btn-primary btn-block" type="submit">Sign In</button>
-      <div class="note"><i data-i="info"></i><span><b>Demo-only authentication.</b> This is a simple client-side check for private demonstrations — not production security. Demo password: <code>oora-demo</code></span></div>
+      <div class="note"><i data-i="info"></i><span>The password keeps casual visitors out. Publishing changes to the live website also requires your GitHub access key, which is stored only on your own device.</span></div>
     </form>
   </div>
   <div class="admin hidden" id="adminApp">
@@ -1141,6 +1199,7 @@ tr:hover td{background:#FAFBFD}
       <button data-tab="partners"><i data-i="store"></i> Partner Enquiries <span class="count" id="cntPartners"></span></button>
       <button data-tab="advertisers"><i data-i="megaphone"></i> Advertiser Enquiries <span class="count" id="cntAdv"></span></button>
       <button data-tab="messages"><i data-i="inbox"></i> Messages <span class="count" id="cntMsg"></span></button>
+      <button data-tab="publishing"><i data-i="upload"></i> Publishing <span class="count dot hidden" id="cntPub">●</span></button>
       <div class="side-foot"><button id="logoutBtn"><i data-i="logout"></i> Sign out</button></div>
     </aside>
     <div class="admin-main" id="adminMain"></div>
@@ -1162,7 +1221,7 @@ tr:hover td{background:#FAFBFD}
       <div><h4>Location</h4><ul><li>Adelaide, South Australia</li><li><a href="#/contact">hello@ooramedia.com.au</a></li></ul></div>
     </div>
     <div class="footer-bottom">
-      <p>© <span id="yr"></span> Oora Media. Demo Mode: all screen listings are sample data. Audience figures are estimates; any advertising income is indicative and not guaranteed.</p>
+      <p>© <span id="yr"></span> Oora Media. Listings marked “Demo Listing” are sample data. Audience figures are estimates; any advertising income is indicative and not guaranteed.</p>
       <a href="#/admin">Admin</a>
     </div>
   </div>
@@ -1184,11 +1243,11 @@ tr:hover td{background:#FAFBFD}
         <div class="field"><label for="sfType">Venue type</label><select id="sfType" required></select></div>
         <div class="field"><label for="sfStatus">Status</label><select id="sfStatus"><option>Available</option><option>Coming Soon</option><option>Temporarily Unavailable</option><option>Inactive</option></select></div>
         <div class="modal-sec">Location</div>
-        <div class="field full"><label for="sfAddress">Full address</label><input id="sfAddress" required><div class="err">Required</div></div>
+        <div class="field full"><label for="sfAddress">Full address</label><div class="inline-input"><input id="sfAddress" required placeholder="e.g. 120 Jetty Road, Glenelg SA 5045"><button type="button" class="btn btn-dark btn-sm" id="sfFind"><i data-i="search"></i> Find on map</button></div><div class="err">Required</div></div>
         <div class="field full"><label for="sfSuburb">Suburb</label><input id="sfSuburb" required list="suburbList"><div class="err">Required</div></div>
         <div class="field"><label for="sfLat">Latitude</label><input id="sfLat" type="number" step="any" inputmode="decimal" required placeholder="-34.9285"><div class="err">Enter a latitude within Australia (−44 to −10)</div></div>
         <div class="field"><label for="sfLng">Longitude</label><input id="sfLng" type="number" step="any" inputmode="decimal" required placeholder="138.6007"><div class="err">Enter a longitude within Australia (112 to 154)</div></div>
-        <div class="field full"><div class="hint" style="margin:0">Tip: in Google Maps, right-click a spot to copy its latitude and longitude.</div></div>
+        <div class="field full"><label>Pin location <span class="opt">— click the map or drag the pin to the exact spot</span></label><div id="sfMap" class="pick-map"></div><div class="hint">“Find on map” places the pin from the address. Latitude and longitude update automatically.</div></div>
         <div class="modal-sec">Screen details</div>
         <div class="field"><label for="sfSize">Screen size (inches)</label><input id="sfSize" type="number" min="10" max="200" inputmode="numeric" required><div class="err">Enter a size between 10 and 200</div></div>
         <div class="field"><label for="sfOrient">Orientation</label><select id="sfOrient"><option>Landscape</option><option>Portrait</option></select></div>
@@ -1198,7 +1257,18 @@ tr:hover td{background:#FAFBFD}
         <div class="field"><label for="sfHours">Opening hours</label><input id="sfHours" required placeholder="e.g. 7:00am – 4:00pm"><div class="err">Required</div></div>
         <div class="field"><label for="sfVis">Visibility rating</label><select id="sfVis"><option value="5">5 — Excellent</option><option value="4">4 — Very good</option><option value="3">3 — Good</option><option value="2">2 — Fair</option><option value="1">1 — Limited</option></select></div>
         <div class="field full"><label for="sfDesc">Description</label><textarea id="sfDesc" style="min-height:90px"></textarea></div>
-        <div class="field full"><label for="sfImage">Screen image URL <span class="opt">(optional — a placeholder is generated if blank)</span></label><input id="sfImage" type="url" placeholder="https://…"><img class="img-prev" id="sfImgPrev" alt=""></div>
+        <div class="field full"><label>Screen photo <span class="opt">(optional — a placeholder is shown if blank)</span></label>
+          <div class="photo-row">
+            <img class="img-prev" id="sfImgPrev" alt="">
+            <div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn btn-ghost btn-sm" for="sfPhoto" style="cursor:pointer"><i data-i="camera"></i> Upload photo</label><button type="button" class="btn btn-ghost btn-sm hidden" id="sfPhotoRemove">Remove photo</button></div>
+              <input type="file" id="sfPhoto" accept="image/*" class="sr">
+              <div class="hint" style="margin:12px 0 6px">…or paste an image link</div>
+              <input id="sfImage" type="text" inputmode="url" placeholder="https://…">
+            </div>
+          </div>
+        </div>
+        <div class="field full"><label class="check"><input type="checkbox" id="sfDemo"> Show a “Demo Listing” tag on this screen</label><div class="hint">Leave unticked for real, confirmed partner screens.</div></div>
       </div>
     </div>
     <div class="modal-foot">
@@ -1219,6 +1289,7 @@ tr:hover td{background:#FAFBFD}
 </div>
 
 <datalist id="suburbList"></datalist>
+<a href="#/admin" class="draft-chip hidden" id="draftChip">Unpublished changes — previewing on this device only · <u>Publish</u></a>
 <div class="toast" id="toast" role="status" aria-live="polite"><i data-i="check"></i><span></span></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -1290,7 +1361,10 @@ const ICONS = {
   locate:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="8"/>',
   expand:'<path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3"/>',
   shrink:'<path d="M8 3v3a2 2 0 01-2 2H3M21 8h-3a2 2 0 01-2-2V3M3 16h3a2 2 0 012 2v3M16 21v-3a2 2 0 012-2h3"/>',
-  directions:'<path d="M3 11l19-9-9 19-2-8-8-2z"/>'
+  directions:'<path d="M3 11l19-9-9 19-2-8-8-2z"/>',
+  upload:'<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+  download:'<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+  github:'<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 00-.9-2.6c3.1-.3 6.4-1.5 6.4-7A5.4 5.4 0 0020 4.8 5 5 0 0019.9 1S18.7.7 16 2.5a13.4 13.4 0 00-7 0C6.3.7 5.1 1 5.1 1A5 5 0 005 4.8a5.4 5.4 0 00-1.5 3.7c0 5.4 3.3 6.6 6.4 7a3.4 3.4 0 00-.9 2.6V22"/>'
 };
 const icon = (n, extra='') => `<svg class="svg-i" viewBox="0 0 24 24" aria-hidden="true" ${extra}>${ICONS[n]||''}</svg>`;
 function hydrateIcons(root=document){ $$('i[data-i]', root).forEach(el => { el.outerHTML = icon(el.dataset.i); }); }
@@ -1354,11 +1428,13 @@ const ADV_STATUS = ['New','Contacted','Proposal Sent','Negotiating','Confirmed',
 const STATUS_COLOR = {'Available':'#1F9D6B','Coming Soon':'#F5B82E','Temporarily Unavailable':'#D9622B','Inactive':'#8A94A6'};
 const STATUS_CLASS = {'Available':'b-available','Coming Soon':'b-coming','Temporarily Unavailable':'b-unavail','Inactive':'b-inactive'};
 const TYPE_HUE = {'Café':'#F5B82E','Restaurant':'#FF7A59','Gym':'#4FD1C5','Salon':'#F687B3','Barber':'#9F7AEA','Medical Centre':'#63B3ED','Waiting Room':'#68D391','Retail Store':'#F6AD55','University':'#7F9CF5','Other':'#F5B82E'};
-const ADMIN_PASS = 'oora-demo'; // Demo-only. Replace with real authentication before production.
+// SHA-256 of the default admin password. Change it from Admin → Publishing; the new hash is published in data/site-data.json.
+const DEFAULT_ADMIN_HASH = 'c9ead274c3d3c87fbccc4c3e5db6ba229a26e2a045923095effc55f66838fb4d';
 
 /* ---------- Demo data (in-memory; resets on reload) ---------- */
 const S = (o) => Object.assign({ region:ACTIVE_REGION, demo:true, image:'' }, o);
-let screens = [
+// Built-in fallback, used only when data/site-data.json cannot be loaded (e.g. opening the file directly).
+const DEFAULT_SCREENS = [
   S({id:'s1', name:'Front Counter Display', venue:'Ivy & Oak Café', type:'Café', address:"O'Connell Street, North Adelaide SA 5006", suburb:'North Adelaide', lat:-34.9063, lng:138.5953, size:55, orientation:'Landscape', audLow:350, audHigh:500, days:'Mon–Sun', hours:'7:00am – 4:00pm', visibility:5, status:'Available', added:daysAgo(62), description:'Wall-mounted screen directly above the ordering counter. Every customer sees it while they order and wait for coffee.'}),
   S({id:'s2', name:'Main Floor Screen', venue:'Rundle Fitness Studio', type:'Gym', address:'Grenfell Street, Adelaide SA 5000', suburb:'Adelaide CBD', lat:-34.9236, lng:138.6078, size:65, orientation:'Landscape', audLow:600, audHigh:900, days:'Mon–Sun', hours:'5:30am – 9:00pm', visibility:4, status:'Available', added:daysAgo(58), description:'Large screen facing the cardio area — members typically spend 30–60 minutes in view.'}),
   S({id:'s3', name:'Dining Room Display', venue:'Bayside Brunch House', type:'Restaurant', address:'Jetty Road, Glenelg SA 5045', suburb:'Glenelg', lat:-34.9803, lng:138.5160, size:50, orientation:'Landscape', audLow:500, audHigh:800, days:'Mon–Sun', hours:'7:00am – 9:00pm', visibility:5, status:'Available', added:daysAgo(55), description:'Beachside brunch spot with steady weekend crowds. Screen is visible from most tables.'}),
@@ -1372,6 +1448,7 @@ let screens = [
   S({id:'s11', name:'Entry Screen', venue:'Lakes Fitness Hub', type:'Gym', address:'Main Street, Mawson Lakes SA 5095', suburb:'Mawson Lakes', lat:-34.8095, lng:138.6105, size:55, orientation:'Landscape', audLow:300, audHigh:550, days:'Mon–Sun', hours:'5:00am – 10:00pm', visibility:4, status:'Available', added:daysAgo(8), description:'Screen at the entry and check-in area. Members pass it on every visit.'}),
   S({id:'s12', name:'Atrium Display', venue:'North Terrace Student Hub', type:'University', address:'North Terrace, Adelaide SA 5000', suburb:'University Precinct', lat:-34.9200, lng:138.6040, size:75, orientation:'Landscape', audLow:1200, audHigh:2000, days:'Mon–Fri', hours:'7:30am – 9:00pm', visibility:5, status:'Available', added:daysAgo(3), description:'Large atrium screen in a busy student hub. High foot traffic during semester.'})
 ];
+let screens = DEFAULT_SCREENS.map(s => ({...s}));
 let partnerEnquiries = [
   {id:'p1', sample:true, business:'Corner Grind Espresso', contact:'Sam Nguyen', phone:'0400 000 111', email:'sam@example.com', address:'Magill Road', suburb:'Kensington', type:'Café', screens:'1', size:'50"–59"', traffic:'250–500', hours:'Mon–Fri 6:30am–3pm', comments:'Screen currently shows our menu.', photo:'', date:daysAgo(5), status:'New'},
   {id:'p2', sample:true, business:'Peak Performance Gym', contact:'Jordan Lee', phone:'0400 000 222', email:'jordan@example.com', address:'Brighton Road', suburb:'Brighton', type:'Gym', screens:'3', size:'60"–69"', traffic:'500–1,000', hours:'24/7', comments:'', photo:'', date:daysAgo(12), status:'Contacted'}
@@ -1418,12 +1495,12 @@ function route(){
   $$('.page').forEach(p => p.classList.toggle('active', p.dataset.page === target));
   $$('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === target));
   $('#navLinks').classList.remove('open'); $('#burger').setAttribute('aria-expanded','false');
-  closePanel(); if (map) exitFs();
+  closePanel(); exitFs();
   document.title = ({home:'Oora Media — Be Seen Where Life Happens', map:'Screen Map · Oora Media', partners:'Screen Partners · Oora Media', advertisers:'Advertisers · Oora Media', how:'How It Works · Oora Media', about:'About · Oora Media', contact:'Contact · Oora Media', admin:'Admin · Oora Media'})[target];
   const scrollTo = q === 'form' ? (target === 'partners' ? '#partnerFormSec' : target === 'advertisers' ? '#advFormSec' : null) : null;
   if (scrollTo) setTimeout(() => { const el = $(scrollTo); window.scrollTo({top: el.getBoundingClientRect().top + scrollY - 90, behavior:'smooth'}); }, 60);
   else window.scrollTo(0,0);
-  if (target === 'home') initPreviewMap();
+  if (target === 'home') initHomeMap();
   if (target === 'map') { initMap(); if (pendingPanel) { const id = pendingPanel; pendingPanel = null; setTimeout(() => focusScreen(id), 250); } }
   if (target === 'admin') renderAdmin();
 }
@@ -1471,30 +1548,14 @@ function pinIcon(s, selected){
 }
 const tipHtml = s => `<strong>${esc(s.venue)}</strong><br><small>${esc(s.suburb)} · ${esc(s.status)}</small>`;
 
-/* ---------- Home preview map ---------- */
-let pMap, pLayer;
-function initPreviewMap(){
-  if (!window.L) return;
-  if (pMap) { setTimeout(() => pMap.invalidateSize(), 50); return; }
-  const R = REGIONS[ACTIVE_REGION];
-  pMap = L.map('previewMap', { center:R.center, zoom:10, scrollWheelZoom:false, dragging:!L.Browser.mobile, tap:false, zoomControl:!L.Browser.mobile, attributionControl:true });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom:19, subdomains:'abcd', attribution:'&copy; OpenStreetMap contributors &copy; CARTO' }).addTo(pMap);
-  pLayer = L.layerGroup().addTo(pMap);
-  renderPreviewMarkers(true);
-}
-function renderPreviewMarkers(fit){
-  if (!pMap) return;
-  pLayer.clearLayers();
-  const list = publicScreens();
-  list.forEach(s => {
-    L.marker([s.lat, s.lng], { icon:pinIcon(s) }).bindTooltip(tipHtml(s), { className:'ootip', direction:'top' })
-      .on('click', () => { pendingPanel = s.id; location.hash = '#/map'; }).addTo(pLayer);
-  });
-  if (fit && list.length) pMap.fitBounds(L.latLngBounds(list.map(s => [s.lat, s.lng])), { padding:[40,40] });
-}
-
-/* ---------- Full map ---------- */
-let map, mLayer, cLayer, lmLayer, pinLayer, markers = {}, selectedId = null, view = 'map';
+/* =====================================================================
+   Screen map component
+   One implementation, used by both the Screen Map page and the Home page.
+   Every instance reads the same `screens` data, so they always stay in sync.
+   ===================================================================== */
+let selectedId = null, view = 'map';
+const screenMaps = [];          // all live map instances
+let mainMap = null, homeMap = null;
 const OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 const ESRI = p => `https://server.arcgisonline.com/ArcGIS/rest/services/${p}/MapServer/tile/{z}/{y}/{x}`;
 const dist = (a, b) => L.latLng(a.lat, a.lng).distanceTo(L.latLng(b.lat, b.lng));
@@ -1504,23 +1565,31 @@ const lmIcon = (l, withLabel=true) => { const k = LM_CATS[l.c]; return `<div cla
 const nearestLandmarks = (p, n) => LANDMARKS.map(l => ({ l, d:dist(p, l) })).sort((a,b) => a.d - b.d).slice(0, n);
 const nearestScreens = (p, n) => publicScreens().map(s => ({ s, d:dist(p, s) })).sort((a,b) => a.d - b.d).slice(0, n);
 
-function lfButton(pos, ic, title, onClick){
-  const C = L.Control.extend({ options:{position:pos}, onAdd(){ const d = L.DomUtil.create('div','leaflet-bar'); d.innerHTML = `<a href="#" class="lf-btn" title="${title}" role="button" aria-label="${title}">${icon(ic)}</a>`; L.DomEvent.on(d,'click', e => { L.DomEvent.preventDefault(e); onClick($('a', d)); }); L.DomEvent.disableClickPropagation(d); return d; } });
-  map.addControl(new C());
+function getFilters(){ const f = {}; $$('#filters select').forEach(s => f[s.dataset.f] = s.value); return f; }
+function filtered(){
+  const f = getFilters();
+  return publicScreens().filter(s =>
+    (!f.suburb || s.suburb === f.suburb) && (!f.type || s.type === f.type) && (!f.size || sizeBucket(s) === f.size) &&
+    (!f.aud || audBucket(s) === f.aud) && (!f.status || s.status === f.status) && (!f.orient || s.orientation === f.orient));
 }
 
-function initMap(){
-  if (!window.L) { $('#map').innerHTML = '<div class="empty">The map could not load. Please check your internet connection and refresh.</div>'; return; }
-  if (map) { setTimeout(() => map.invalidateSize(), 60); return; }
-  const R = REGIONS[ACTIVE_REGION];
-  map = L.map('map', { center:R.center, zoom:R.zoom, zoomControl:true, tap:false, minZoom:9, maxZoom:19, maxBounds:R.bounds, maxBoundsViscosity:.8 });
+/* opt.getList  → which screens this map shows (e.g. filtered() or publicScreens())
+   opt.compact  → embedded use: page scrolling is not hijacked until the visitor clicks the map
+   opt.onBeforePlace → hook run before a place pin is shown (e.g. switch from list to map view) */
+function createScreenMap(elId, opt={}){
+  const el = $('#' + elId);
+  if (!window.L) { el.innerHTML = '<div class="empty">The map could not load. Please check your internet connection and refresh.</div>'; return null; }
+  const R = REGIONS[ACTIVE_REGION], compact = !!opt.compact, stage = el.closest('.map-stage');
+  const touch = L.Browser.mobile;
+  el.classList.add('screen-map');
+  const map = L.map(el, { center:R.center, zoom:R.zoom, zoomControl:true, tap:false, minZoom:9, maxZoom:19, maxBounds:R.bounds, maxBoundsViscosity:.8,
+    scrollWheelZoom:!compact, dragging:!(compact && touch) });
 
   /* Base maps */
   const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:OSM_ATTR });
   const detailed = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom:19, subdomains:'abcd', attribution:OSM_ATTR + ' &copy; CARTO' });
-  const esriAttr = 'Imagery &copy; Esri, Maxar, Earthstar Geographics, and the GIS User Community';
   const satellite = L.layerGroup([
-    L.tileLayer(ESRI('World_Imagery'), { maxZoom:19, attribution:esriAttr }),
+    L.tileLayer(ESRI('World_Imagery'), { maxZoom:19, attribution:'Imagery &copy; Esri, Maxar, Earthstar Geographics, and the GIS User Community' }),
     L.tileLayer(ESRI('Reference/World_Transportation'), { maxZoom:19, opacity:.9 }),
     L.tileLayer(ESRI('Reference/World_Boundaries_and_Places'), { maxZoom:19 })
   ]);
@@ -1534,31 +1603,33 @@ function initMap(){
     L.polygon(R.cbd, { color:'#C98A06', weight:2, dashArray:'6 6', fillColor:'#F5B82E', fillOpacity:.05, interactive:false }),
     L.tooltip({ permanent:true, direction:'center', className:'cbd-label', interactive:false }).setLatLng([R.cbd[2][0] + .0012, (R.cbd[0][1] + R.cbd[1][1]) / 2]).setContent('Adelaide CBD')
   ]).addTo(map);
-  lmLayer = L.layerGroup().addTo(map);
+  const lmLayer = L.layerGroup().addTo(map);
   LANDMARKS.forEach(l => {
     const k = LM_CATS[l.c];
     L.marker([l.lat, l.lng], { icon:L.divIcon({ className:'lm-wrap', html:lmIcon(l), iconSize:[22,22], iconAnchor:[11,11] }), zIndexOffset:-500, keyboard:false })
       .bindTooltip(`<strong>${esc(l.n)}</strong><br><small>${k.label}</small>`, { className:'ootip', direction:'top', offset:[0,-10] })
-      .on('click', () => showPlace(l.lat, l.lng, l.n, k.label, false))
+      .on('click', () => inst.showPlace(l.lat, l.lng, l.n, k.label, false))
       .addTo(lmLayer);
   });
-  cLayer = L.layerGroup().addTo(map);
-  mLayer = L.layerGroup().addTo(map);
-  pinLayer = L.layerGroup().addTo(map);
+  const cLayer = L.layerGroup().addTo(map), mLayer = L.layerGroup().addTo(map), pinLayer = L.layerGroup().addTo(map);
 
   L.control.layers(
     { 'Street detail':street, 'Detailed (colour)':detailed, 'Satellite':satellite, 'Terrain':terrain, 'Simplified':simple },
     { 'Screen reach (≈400 m walk)':cLayer, 'Landmarks & key places':lmLayer, 'Adelaide CBD outline':cbd, 'Train & tram lines':rail },
-    { position:'topright', collapsed:window.innerWidth < 1100 }
+    { position:'topright', collapsed:compact || window.innerWidth < 1100 }
   ).addTo(map);
   L.control.scale({ imperial:false, position:'bottomright' }).addTo(map);
 
   /* Buttons: show all, my location, fullscreen */
-  lfButton('topleft', 'maximize', 'Show all screens', () => { pinLayer.clearLayers(); fitToResults(); });
-  lfButton('topleft', 'locate', 'Show my location', a => { a.classList.add('on'); map.locate({ enableHighAccuracy:true, timeout:10000 }); });
-  lfButton('topleft', 'expand', 'Full screen map', a => toggleFs(a));
-  map.on('locationfound', e => { $$('.lf-btn.on').forEach(b => { if (b.title === 'Show my location') b.classList.remove('on'); }); showPlace(e.latlng.lat, e.latlng.lng, 'You are here', 'Your current location', true, true); });
-  map.on('locationerror', () => { $$('.lf-btn.on').forEach(b => { if (b.title === 'Show my location') b.classList.remove('on'); }); toast('Could not get your location — check location permissions'); });
+  const button = (ic, title, onClick) => {
+    let a; const C = L.Control.extend({ options:{position:'topleft'}, onAdd(){ const d = L.DomUtil.create('div','leaflet-bar'); d.innerHTML = `<a href="#" class="lf-btn" title="${title}" role="button" aria-label="${title}">${icon(ic)}</a>`; a = $('a', d); L.DomEvent.on(d,'click', e => { L.DomEvent.preventDefault(e); onClick(a); }); L.DomEvent.disableClickPropagation(d); return d; } });
+    map.addControl(new C()); return a;
+  };
+  button('maximize', 'Show all screens', () => { pinLayer.clearLayers(); map.closePopup(); inst.fit(); });
+  const locBtn = button('locate', 'Show my location', a => { a.classList.add('on'); map.locate({ enableHighAccuracy:true, timeout:10000 }); });
+  const fsBtn = button('expand', 'Full screen map', () => inst.toggleFs());
+  map.on('locationfound', e => { locBtn.classList.remove('on'); inst.showPlace(e.latlng.lat, e.latlng.lng, 'You are here', 'Your current location', true, true); });
+  map.on('locationerror', () => { locBtn.classList.remove('on'); toast('Could not get your location — check location permissions'); });
 
   /* Legend */
   const Legend = L.Control.extend({ options:{position:'bottomleft'}, onAdd(){ const d = L.DomUtil.create('div','map-legend');
@@ -1567,72 +1638,105 @@ function initMap(){
   map.addControl(new Legend());
 
   /* Landmark labels only when zoomed in, to keep the city view clean */
-  const syncLabels = () => map.getContainer().classList.toggle('lm-labels-off', map.getZoom() < 13);
+  const syncLabels = () => el.classList.toggle('lm-labels-off', map.getZoom() < 13);
   map.on('zoomend', syncLabels); syncLabels();
 
-  const hint = document.createElement('div'); hint.className = 'map-hint'; hint.textContent = L.Browser.mobile ? 'Pinch to zoom · tap a pin for details' : 'Scroll to zoom · click a pin for details';
-  $('#map').appendChild(hint); setTimeout(() => hint.style.opacity = 0, 4000); setTimeout(() => hint.remove(), 4600);
-
-  renderMarkers(); fitToResults();
-}
-
-function toggleFs(a){
-  const st = $('.map-stage'), on = !st.classList.contains('fs');
-  if (on && view !== 'map') $('[data-view="map"]').click();
-  st.classList.toggle('fs', on);
-  document.body.style.overflow = on ? 'hidden' : '';
-  const btn = a || $$('.lf-btn').find(b => b.title.includes('ull screen'));
-  if (btn) { btn.innerHTML = icon(on ? 'shrink' : 'expand'); btn.title = on ? 'Exit full screen' : 'Full screen map'; }
-  setTimeout(() => map.invalidateSize(), 60);
-}
-function exitFs(){ if ($('.map-stage.fs')) toggleFs(); }
-
-/* A searched address, clicked landmark or "my location": drop a pin and list the nearest screens */
-function showPlace(lat, lng, title, sub, fly=true, isMe=false){
-  if (!map) return;
-  if (view !== 'map') $('[data-view="map"]').click();
-  pinLayer.clearLayers();
-  const p = { lat, lng };
-  const near = nearestScreens(p, 3);
-  const html = `<div class="pop-h">${esc(title)}</div><div class="pop-sub">${esc(sub)}</div>
-    ${near.length ? `<div class="pop-sub" style="margin:0;font-weight:600;color:var(--ink)">Nearest screens</div>` + near.map(({s,d}) => `<button class="near-btn" data-open="${s.id}"><span><b>${esc(s.venue)}</b><small>${esc(s.suburb)} · ${audRange(s)}/day</small></span><em>${fmtDist(d)}</em></button>`).join('') : ''}`;
-  if (isMe || !LANDMARKS.some(l => l.lat === lat && l.lng === lng)) {
-    const ic = isMe ? L.divIcon({ className:'pin-wrap', html:'<span class="me-dot"></span>', iconSize:[20,20], iconAnchor:[10,10], popupAnchor:[0,-10] })
-                    : L.divIcon({ className:'pin-wrap', html:'<span class="drop-pin"></span>', iconSize:[30,30], iconAnchor:[15,34], popupAnchor:[0,-32] });
-    L.marker([lat, lng], { icon:ic, zIndexOffset:1000 }).addTo(pinLayer).bindPopup(html, { maxWidth:300 }).openPopup();
-  } else {
-    L.popup({ maxWidth:300, offset:[0,-8] }).setLatLng([lat, lng]).setContent(html).openOn(map);
+  /* Embedded maps: don't trap page scrolling until the visitor clicks/taps the map */
+  const arm = on => { if (!compact) return; on = on || stage?.classList.contains('fs');
+    map.scrollWheelZoom[on ? 'enable' : 'disable'](); if (touch) map.dragging[on ? 'enable' : 'disable'](); el.classList.toggle('armed', !!on); };
+  if (compact) {
+    map.on('click', () => arm(true));
+    el.addEventListener('mouseleave', () => arm(false));
+    document.addEventListener('touchstart', e => { if (!el.contains(e.target)) arm(false); }, { passive:true });
   }
-  if (fly) map.flyTo([lat, lng], Math.max(map.getZoom(), 14), { duration:.7 });
+
+  const hint = document.createElement('div'); hint.className = 'map-hint';
+  hint.textContent = compact ? (touch ? 'Tap the map to move it · tap a pin for details' : 'Click the map to zoom · click a pin for details') : (touch ? 'Pinch to zoom · tap a pin for details' : 'Scroll to zoom · click a pin for details');
+  el.appendChild(hint); setTimeout(() => hint.style.opacity = 0, 4500); setTimeout(() => hint.remove(), 5100);
+
+  const inst = {
+    map, el, compact, markers:{},
+    list: () => (opt.getList ? opt.getList() : publicScreens()),
+    /* Redraw pins and reach circles from the shared screen data */
+    render(){
+      mLayer.clearLayers(); cLayer.clearLayers(); inst.markers = {};
+      inst.list().forEach(s => {
+        L.circle([s.lat, s.lng], { radius:REACH_M, color:STATUS_COLOR[s.status], weight:1.5, dashArray:'4 5', fillColor:STATUS_COLOR[s.status], fillOpacity:.08, interactive:false }).addTo(cLayer);
+        inst.markers[s.id] = L.marker([s.lat, s.lng], { icon:pinIcon(s, s.id === selectedId), riseOnHover:true, keyboard:true, title:s.venue })
+          .bindTooltip(tipHtml(s), { className:'ootip', direction:'top' })
+          .on('click', () => openPanel(s.id)).addTo(mLayer);
+      });
+    },
+    fit(){
+      const list = inst.list();
+      if (list.length === 1) map.setView([list[0].lat, list[0].lng], 15);
+      else if (list.length) map.fitBounds(L.latLngBounds(list.map(s => [s.lat, s.lng])), { padding:compact ? [34,34] : [50,50], maxZoom:15 });
+    },
+    setSelected(id, on){ const m = inst.markers[id], s = screens.find(x => x.id === id); if (m && s) m.setIcon(pinIcon(s, on)); },
+    isVisible: () => el.offsetParent !== null,
+    /* Centre on a screen, leaving room for the details panel */
+    focus(s){
+      const z = Math.max(map.getZoom(), 14);
+      const off = window.innerWidth > 768 ? [-(Math.min(410, window.innerWidth*.4))/2, 0] : [0, window.innerHeight*.25];
+      const r = el.getBoundingClientRect(), overlapsPanel = window.innerWidth > 768 ? r.right > window.innerWidth - 430 : true;
+      const pt = map.project([s.lat, s.lng], z).subtract(overlapsPanel ? off : [0,0]);
+      map.flyTo(map.unproject(pt, z), z, { duration:.6 });
+    },
+    clearPins(){ pinLayer.clearLayers(); map.closePopup(); },
+    /* A searched address, clicked landmark or "my location": drop a pin and list the nearest screens */
+    showPlace(lat, lng, title, sub, fly=true, isMe=false){
+      if (opt.onBeforePlace) opt.onBeforePlace();
+      pinLayer.clearLayers();
+      const near = nearestScreens({ lat, lng }, 3);
+      const html = `<div class="pop-h">${esc(title)}</div><div class="pop-sub">${esc(sub)}</div>
+        ${near.length ? `<div class="pop-sub" style="margin:0;font-weight:600;color:var(--ink)">Nearest screens</div>` + near.map(({s,d}) => `<button class="near-btn" data-open="${s.id}"><span><b>${esc(s.venue)}</b><small>${esc(s.suburb)} · ${audRange(s)}/day</small></span><em>${fmtDist(d)}</em></button>`).join('') : ''}`;
+      if (isMe || !LANDMARKS.some(l => l.lat === lat && l.lng === lng)) {
+        const ic = isMe ? L.divIcon({ className:'pin-wrap', html:'<span class="me-dot"></span>', iconSize:[20,20], iconAnchor:[10,10], popupAnchor:[0,-10] })
+                        : L.divIcon({ className:'pin-wrap', html:'<span class="drop-pin"></span>', iconSize:[30,30], iconAnchor:[15,34], popupAnchor:[0,-32] });
+        L.marker([lat, lng], { icon:ic, zIndexOffset:1000 }).addTo(pinLayer).bindPopup(html, { maxWidth:300 }).openPopup();
+      } else {
+        L.popup({ maxWidth:300, offset:[0,-8] }).setLatLng([lat, lng]).setContent(html).openOn(map);
+      }
+      if (fly) map.flyTo([lat, lng], Math.max(map.getZoom(), 14), { duration:.7 });
+    },
+    toggleFs(force){
+      if (!stage) return;
+      const on = force !== undefined ? force : !stage.classList.contains('fs');
+      if (on === stage.classList.contains('fs')) return;
+      if (on && opt.onBeforePlace) opt.onBeforePlace();
+      stage.classList.toggle('fs', on);
+      document.body.style.overflow = on ? 'hidden' : '';
+      fsBtn.innerHTML = icon(on ? 'shrink' : 'expand'); fsBtn.title = on ? 'Exit full screen' : 'Full screen map';
+      arm(on);
+      setTimeout(() => map.invalidateSize(), 60);
+    },
+    refreshSize(){ setTimeout(() => map.invalidateSize(), 60); }
+  };
+  screenMaps.push(inst);
+  inst.render(); inst.fit();
+  return inst;
 }
-function getFilters(){ const f = {}; $$('#filters select').forEach(s => f[s.dataset.f] = s.value); return f; }
-function filtered(){
-  const f = getFilters();
-  return publicScreens().filter(s =>
-    (!f.suburb || s.suburb === f.suburb) && (!f.type || s.type === f.type) && (!f.size || sizeBucket(s) === f.size) &&
-    (!f.aud || audBucket(s) === f.aud) && (!f.status || s.status === f.status) && (!f.orient || s.orientation === f.orient));
+
+/* The two places the component is used */
+function initMap(){
+  if (mainMap) { mainMap.refreshSize(); return; }
+  mainMap = createScreenMap('map', { getList:filtered, onBeforePlace:() => { if (view !== 'map') $('[data-view="map"]').click(); } });
 }
-function fitToResults(){
-  if (!map) return; const list = filtered();
-  if (list.length === 1) map.setView([list[0].lat, list[0].lng], 15);
-  else if (list.length) map.fitBounds(L.latLngBounds(list.map(s => [s.lat, s.lng])), { padding:[50,50], maxZoom:15 });
+function initHomeMap(){
+  if (homeMap) { homeMap.refreshSize(); return; }
+  homeMap = createScreenMap('homeMap', { compact:true, getList:publicScreens });
 }
-function renderMarkers(){
-  if (!map) return;
-  mLayer.clearLayers(); cLayer.clearLayers(); markers = {};
-  filtered().forEach(s => {
-    L.circle([s.lat, s.lng], { radius:REACH_M, color:STATUS_COLOR[s.status], weight:1.5, dashArray:'4 5', fillColor:STATUS_COLOR[s.status], fillOpacity:.08, interactive:false }).addTo(cLayer);
-    const m = L.marker([s.lat, s.lng], { icon:pinIcon(s, s.id === selectedId), riseOnHover:true, keyboard:true, title:s.venue })
-      .bindTooltip(tipHtml(s), { className:'ootip', direction:'top' })
-      .on('click', () => openPanel(s.id)).addTo(mLayer);
-    markers[s.id] = m;
-  });
-}
+const visibleMap = () => screenMaps.find(m => m.isVisible());
+function renderMarkers(){ screenMaps.forEach(m => m.render()); }
+function fitToResults(){ if (mainMap) mainMap.fit(); }
+function fitAllMaps(){ screenMaps.forEach(m => m.fit()); }
+function exitFs(){ screenMaps.forEach(m => m.toggleFs(false)); }
+function showPlace(...a){ if (mainMap) mainMap.showPlace(...a); }
 function renderList(){
   const list = filtered();
   $('#listView').innerHTML = list.length ? list.map(s => `
     <article class="scard">
-      <div class="scard-img">${imgTag(s)}<span class="demo-tag">Demo Listing</span>${badge(s.status)}</div>
+      <div class="scard-img">${imgTag(s)}${s.demo ? '<span class="demo-tag">Demo Listing</span>' : ''}${badge(s.status)}</div>
       <div class="scard-body">
         <h3>${esc(s.venue)}</h3>
         <div class="scard-loc">${icon('pin')} ${esc(s.suburb)} · ${esc(s.type)}</div>
@@ -1667,7 +1771,7 @@ $$('[data-view]').forEach(b => b.addEventListener('click', () => {
   $$('[data-view]').forEach(x => x.classList.toggle('on', x === b));
   $('#mapView').classList.toggle('hidden', view !== 'map');
   $('#listView').classList.toggle('hidden', view !== 'list');
-  if (view === 'map' && map) setTimeout(() => map.invalidateSize(), 30);
+  if (view === 'map' && mainMap) mainMap.refreshSize();
 }));
 
 /* ---------- Map search: screens, suburbs, landmarks, then any Adelaide address ---------- */
@@ -1715,7 +1819,7 @@ $$('[data-view]').forEach(b => b.addEventListener('click', () => {
     else if (e.key === 'Escape') { close(); inp.blur(); }
   });
   drop.addEventListener('click', e => { const b = e.target.closest('[data-sd]'); if (!b) return; const fn = actions[+b.dataset.sd]; if (fn === geocode) { geocode(); return; } close(); inp.blur(); fn && fn(); });
-  $('#mapSearchClear').addEventListener('click', () => { inp.value = ''; box.classList.remove('has'); close(); if (pinLayer) pinLayer.clearLayers(); if (map) map.closePopup(); inp.focus(); });
+  $('#mapSearchClear').addEventListener('click', () => { inp.value = ''; box.classList.remove('has'); close(); if (mainMap) mainMap.clearPins(); inp.focus(); });
   document.addEventListener('click', e => { if (!box.contains(e.target)) close(); });
 })();
 
@@ -1723,17 +1827,16 @@ $$('[data-view]').forEach(b => b.addEventListener('click', () => {
 function openPanel(id){
   const s = screens.find(x => x.id === id); if (!s) return;
   const prev = selectedId; selectedId = id;
-  if (markers[prev]) markers[prev].setIcon(pinIcon(screens.find(x => x.id === prev) || s, false));
-  if (markers[id]) markers[id].setIcon(pinIcon(s, true));
+  screenMaps.forEach(m => { if (prev) m.setSelected(prev, false); m.setSelected(id, true); });
   const canEnquire = s.status !== 'Inactive';
   const R = REGIONS[s.region] || REGIONS[ACTIVE_REGION];
   const cityD = window.L ? dist(s, R.cityCentre) : 0;
   const nearL = window.L ? nearestLandmarks(s, 3) : [];
-  if (map) map.closePopup();
+  screenMaps.forEach(m => m.map.closePopup());
   $('#panel').innerHTML = `
     <span class="panel-grab"></span>
     <div class="panel-scroll">
-      <div class="panel-img">${imgTag(s)}<button class="panel-close" data-close-panel aria-label="Close details">${icon('x')}</button><span class="demo-tag">Demo Listing</span></div>
+      <div class="panel-img">${imgTag(s)}<button class="panel-close" data-close-panel aria-label="Close details">${icon('x')}</button>${s.demo ? '<span class="demo-tag">Demo Listing</span>' : ''}</div>
       <div class="panel-body">
         ${badge(s.status)}
         <h2>${esc(s.name)}</h2>
@@ -1762,19 +1865,15 @@ function openPanel(id){
     </div>
     <div class="panel-foot">
       ${canEnquire ? `<button class="btn btn-primary btn-block" data-enquire="${s.id}">Enquire About This Screen ${icon('arrow')}</button>` : `<div class="note">${icon('info')}<span>This screen is currently inactive and hidden from the public map.</span></div>`}
-      <p class="fine">Demo listing. Audience figures are indicative estimates based on available information.</p>
+      <p class="fine">${s.demo ? 'Demo listing. ' : ''}Audience figures are indicative estimates based on available information.</p>
     </div>`;
   $('#panel').classList.add('open'); $('#panel').setAttribute('aria-hidden','false');
   $('#panelBackdrop').classList.add('show');
-  if (map && $('.page.active')?.dataset.page === 'map' && view === 'map') {
-    const off = window.innerWidth > 768 ? [-(Math.min(410, window.innerWidth*.4))/2, 0] : [0, window.innerHeight*.25];
-    const pt = map.project([s.lat, s.lng], Math.max(map.getZoom(), 14)).subtract(off);
-    map.flyTo(map.unproject(pt, Math.max(map.getZoom(), 14)), Math.max(map.getZoom(), 14), { duration:.6 });
-  }
+  const vm = visibleMap(); if (vm) vm.focus(s);
 }
 function closePanel(){
   $('#panel').classList.remove('open'); $('#panel').setAttribute('aria-hidden','true'); $('#panelBackdrop').classList.remove('show');
-  if (selectedId && markers[selectedId]) { const s = screens.find(x => x.id === selectedId); if (s) markers[selectedId].setIcon(pinIcon(s, false)); }
+  if (selectedId) screenMaps.forEach(m => m.setSelected(selectedId, false));
   selectedId = null;
 }
 function focusScreen(id){ openPanel(id); }
@@ -1888,12 +1987,19 @@ document.addEventListener('input', e => { const f = e.target.closest('.field.inv
 
 /* ---------- Admin ---------- */
 let authed = false, adminTab = 'overview', editingId = null;
-$('#loginForm').addEventListener('submit', e => {
+try { authed = sessionStorage.getItem('oora.authed') === '1'; } catch (e) {}
+async function sha256(text){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+}
+$('#loginForm').addEventListener('submit', async e => {
   e.preventDefault();
-  if ($('#adminPw').value === ADMIN_PASS) { authed = true; $('#adminPw').value = ''; $('#pwField').classList.remove('invalid'); renderAdmin(); toast('Signed in to demo dashboard'); }
+  if (!window.crypto || !crypto.subtle) { toast('Please open the site over https to sign in'); return; }
+  const ok = (await sha256($('#adminPw').value)) === (siteSettings.adminPasswordHash || DEFAULT_ADMIN_HASH);
+  if (ok) { authed = true; try { sessionStorage.setItem('oora.authed','1'); } catch (e) {} $('#adminPw').value = ''; $('#pwField').classList.remove('invalid'); renderAdmin(); toast('Signed in'); }
   else { $('#pwField').classList.add('invalid'); $('#adminPw').select(); }
 });
-$('#logoutBtn').addEventListener('click', () => { authed = false; renderAdmin(); });
+$('#logoutBtn').addEventListener('click', () => { authed = false; try { sessionStorage.removeItem('oora.authed'); } catch (e) {} renderAdmin(); });
 $$('.admin-side [data-tab]').forEach(b => b.addEventListener('click', () => { adminTab = b.dataset.tab; renderAdmin(); window.scrollTo(0,0); }));
 
 const enqClass = st => ({'New':'s-new','Approved':'s-good','Confirmed':'s-good','Rejected':'s-bad','Closed':'s-bad','Contacted':'s-mid','Meeting Scheduled':'s-mid','Proposal Sent':'s-mid','Negotiating':'s-mid'})[st] || '';
@@ -1909,13 +2015,15 @@ function renderAdmin(){
   $('#cntPartners').textContent = partnerEnquiries.length;
   $('#cntAdv').textContent = advertiserEnquiries.length;
   $('#cntMsg').textContent = messages.length;
+  const dirty = isDirty();
+  $('#cntPub').classList.toggle('hidden', !dirty);
   const main = $('#adminMain');
   const head = (t, p, action='') => `<div class="admin-top"><div><h1>${t}</h1><p>${p}</p></div>${action}</div>`;
   const addBtn = `<button class="btn btn-primary btn-sm" data-add-screen>${icon('plus')} Add Screen</button>`;
 
   if (adminTab === 'overview') {
     const recent = [...screens].sort((a,b) => b.added.localeCompare(a.added)).slice(0,5);
-    main.innerHTML = head('Overview', 'Demo Mode · data is held in this browser session only.', addBtn) + `
+    main.innerHTML = head('Overview', dataSource === 'live' ? 'Screens are loaded from your live website data.' : 'Showing built-in demo screens (live data file not found).', addBtn) + `
       <div class="kpis">
         <div class="kpi dark"><div class="ic">${icon('monitor')}</div><b>${screens.length}</b><small>Total Screens</small></div>
         <div class="kpi"><div class="ic">${icon('check')}</div><b>${screens.filter(s => s.status === 'Available').length}</b><small>Available Screens</small></div>
@@ -1929,7 +2037,7 @@ function renderAdmin(){
   }
   else if (adminTab === 'screens') {
     const rows = [...screens].sort((a,b) => b.added.localeCompare(a.added));
-    main.innerHTML = head('Screen Management', 'Changes appear on the public map and list immediately.', addBtn) + `
+    main.innerHTML = head('Screen Management', 'Changes are saved on this device straight away. Publish them to update the live website.', addBtn) + `
       <div class="tcard"><div class="tcard-head"><h3>All screens (${screens.length})</h3></div><div class="table-wrap"><table style="min-width:980px"><thead><tr><th></th><th>Screen / Venue</th><th>Suburb</th><th>Position</th><th>Size</th><th>Status</th><th>Added</th><th>Actions</th></tr></thead><tbody>
       ${rows.length ? rows.map(s => `<tr>
         <td style="width:72px">${imgTag(s,'thumb')}</td>
@@ -1978,6 +2086,67 @@ function renderAdmin(){
       ${messages.length ? messages.map(m => `<tr><td><span class="strong">${esc(m.name)}${sampleTag(m)}</span><span class="sub">${esc(m.email)}</span>${m.phone ? `<span class="sub">${esc(m.phone)}</span>` : ''}</td><td>${esc(m.company) || '<span class="sub">—</span>'}</td><td class="msg-cell">${esc(m.message)}</td><td style="white-space:nowrap">${fmtDate(m.date)}</td></tr>`).join('') : `<tr><td colspan="4" class="admin-empty">No messages yet.</td></tr>`}
       </tbody></table></div></div>`;
   }
+  else if (adminTab === 'publishing') {
+    const c = ghCfg();
+    main.innerHTML = head('Publishing', 'Save your screen changes to the live website.') + `
+      <div class="pub-grid">
+        <div class="pub-card">
+          <h3>${icon('upload')} Website status</h3>
+          <p>Edits are kept on this device until you publish. Publishing saves them to your GitHub repository, and the live site updates about a minute later.</p>
+          <div class="status-list">
+            <div><span>Unpublished changes</span><span>${dirty ? '<span class="badge b-coming">Yes</span>' : '<span class="badge b-available">None</span>'}</span></div>
+            <div><span>Screens</span><span>${screens.length} (${publicScreens().length} visible to the public)</span></div>
+            <div><span>Last published</span><span>${publishedUpdated ? fmtDate(publishedUpdated) + ', ' + new Date(publishedUpdated).toLocaleTimeString('en-AU', {hour:'numeric', minute:'2-digit'}) : '—'}</span></div>
+            <div><span>Data loaded from</span><span>${dataSource === 'live' ? 'Live data file' : 'Built-in demo data'}</span></div>
+          </div>
+          <div class="btns">
+            <button class="btn btn-primary btn-sm" data-publish ${dirty ? '' : 'disabled style="opacity:.5"'}>${icon('upload')} Publish to live site</button>
+            <button class="btn btn-ghost btn-sm" data-discard ${dirty ? '' : 'disabled style="opacity:.5"'}>Discard changes</button>
+            <button class="btn btn-ghost btn-sm" data-download>${icon('download')} Download backup</button>
+          </div>
+        </div>
+        <div class="pub-card">
+          <h3>${icon('github')} GitHub connection <span class="conn ${c.token ? 'ok' : 'no'}">${c.token ? 'Connected' : 'Not connected'}</span></h3>
+          <p>Needed once per device. Your access key is saved only in this browser and is never included in the website.</p>
+          ${c.token ? '' : `<ol>
+            <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → New fine-grained token</a>.</li>
+            <li>Name it <code>Oora admin</code> and pick an expiry date.</li>
+            <li>Under <b>Repository access</b> choose <b>Only select repositories</b> → <code>${esc(c.repo)}</code>.</li>
+            <li>Under <b>Permissions → Repository permissions</b>, set <b>Contents</b> to <b>Read and write</b>.</li>
+            <li>Generate the token, copy it, and paste it below.</li>
+          </ol>`}
+          <div class="form-grid" style="gap:0 14px">
+            <div class="field"><label for="ghOwner">GitHub account</label><input id="ghOwner" value="${esc(c.owner)}" autocomplete="off"></div>
+            <div class="field"><label for="ghRepo">Repository</label><input id="ghRepo" value="${esc(c.repo)}" autocomplete="off"></div>
+            <div class="field"><label for="ghBranch">Branch</label><input id="ghBranch" value="${esc(c.branch)}" autocomplete="off"></div>
+            <div class="field"><label for="ghToken">Access key (token)</label><input id="ghToken" type="password" placeholder="${c.token ? '•••••••• saved' : 'github_pat_…'}" autocomplete="off"></div>
+          </div>
+          <div class="btns">
+            <button class="btn btn-dark btn-sm" data-gh-save>Save &amp; test connection</button>
+            ${c.token ? '<button class="btn btn-ghost btn-sm" data-gh-forget>Disconnect this device</button>' : ''}
+          </div>
+        </div>
+        <div class="pub-card">
+          <h3>${icon('lock')} Admin password</h3>
+          <p>Change the dashboard password. The new password takes effect on all devices after you publish.</p>
+          <div class="field"><label for="pwNew">New password</label><input id="pwNew" type="password" autocomplete="new-password" minlength="8"></div>
+          <div class="field"><label for="pwNew2">Confirm new password</label><input id="pwNew2" type="password" autocomplete="new-password"></div>
+          <div class="btns"><button class="btn btn-dark btn-sm" data-pw-change>Change password</button></div>
+        </div>
+        <div class="pub-card">
+          <h3>${icon('info')} Good to know</h3>
+          <p style="margin-bottom:10px">Screens, photos and the admin password are published. Enquiries and contact messages are <b>not</b> saved yet. They only exist until the page reloads, until a form service (such as Formspree) is connected.</p>
+          <p style="margin:0">If you edit on two devices, publish from one before editing on the other. The latest publish wins.</p>
+        </div>
+      </div>`;
+  }
+  // Label each cell with its column heading (used by the stacked phone layout) and keep the active tab in view
+  $$('table', main).forEach(t => { const heads = $$('th', t).map(th => th.textContent.trim()); $$('tbody tr', t).forEach(tr => [...tr.children].forEach((td, i) => {
+    if (heads[i] && !td.hasAttribute('colspan')) td.dataset.label = heads[i];
+    if (!td.classList.contains('msg-cell') && !td.hasAttribute('colspan')) td.innerHTML = `<div class="cell">${td.innerHTML}</div>`;
+  })); });
+  const onTab = $('.admin-side [data-tab].on'); if (onTab && window.innerWidth <= 860) onTab.scrollIntoView({ block:'nearest', inline:'center' });
+  if (dirty && adminTab !== 'publishing') main.insertAdjacentHTML('afterbegin', `<div class="pub-banner"><div><b>You have unpublished changes</b><span>They're saved on this device only. Publish to update the live website for everyone.</span></div><div class="btns"><button class="btn btn-ghost btn-sm" data-discard>Discard</button><button class="btn btn-primary btn-sm" data-publish>${icon('upload')} Publish to live site</button></div></div>`);
 }
 
 $('#adminMain').addEventListener('change', e => {
@@ -1990,7 +2159,13 @@ $('#adminMain').addEventListener('change', e => {
 $('#adminMain').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   const d = b.dataset;
-  if ('addScreen' in d) openScreenModal(null);
+  if ('publish' in d) publish(b);
+  else if ('discard' in d) confirmDialog('Discard unpublished changes?', 'Your screen edits on this device will be removed and the live website version reloaded.', () => { store.del(DRAFT_KEY); location.reload(); }, 'Discard changes');
+  else if ('download' in d) downloadBackup();
+  else if ('ghSave' in d) saveGithub(b);
+  else if ('ghForget' in d) { const c = ghCfg(); c.token = ''; store.set(GH_KEY, JSON.stringify(c)); renderAdmin(); toast('GitHub key removed from this device'); }
+  else if ('pwChange' in d) changePassword();
+  else if ('addScreen' in d) openScreenModal(null);
   else if (d.gotoTab) { adminTab = d.gotoTab; renderAdmin(); }
   else if (d.editScreen) openScreenModal(d.editScreen);
   else if (d.viewScreen) { pendingPanel = d.viewScreen; location.hash = '#/map'; }
@@ -2012,28 +2187,91 @@ function showModal(id){ const m = $('#' + id); m.classList.add('show'); m.setAtt
 function closeModals(){ $$('.modal.show').forEach(m => { m.classList.remove('show'); m.setAttribute('aria-hidden','true'); }); document.body.style.overflow = ''; }
 $$('.modal').forEach(m => m.addEventListener('mousedown', e => { if (e.target === m) closeModals(); }));
 let confirmCb = null;
-function confirmDialog(title, text, cb){ $('#confirmTitle').textContent = title; $('#confirmText').textContent = text; confirmCb = cb; showModal('confirmModal'); }
+function confirmDialog(title, text, cb, yesLabel='Delete'){ $('#confirmTitle').textContent = title; $('#confirmText').textContent = text; $('#confirmYes').textContent = yesLabel; confirmCb = cb; showModal('confirmModal'); }
 $('#confirmYes').addEventListener('click', () => { closeModals(); if (confirmCb) confirmCb(); confirmCb = null; });
 
 const SF = ['Name','Venue','Type','Status','Address','Suburb','Lat','Lng','Size','Orient','AudLow','AudHigh','Days','Hours','Vis','Desc','Image'];
 const SF_KEY = {Name:'name',Venue:'venue',Type:'type',Status:'status',Address:'address',Suburb:'suburb',Lat:'lat',Lng:'lng',Size:'size',Orient:'orientation',AudLow:'audLow',AudHigh:'audHigh',Days:'days',Hours:'hours',Vis:'visibility',Desc:'description',Image:'image'};
+let sfPhotoData = '';   // newly uploaded photo (data URL) — uploaded to the repo on publish
 function openScreenModal(id){
   editingId = id;
-  const s = id ? screens.find(x => x.id === id) : { type:'Café', status:'Available', orientation:'Landscape', visibility:4, lat:'', lng:'', size:'', audLow:'', audHigh:'', days:'Mon–Sun', hours:'' };
+  const s = id ? screens.find(x => x.id === id) : { type:'Café', status:'Available', orientation:'Landscape', visibility:4, lat:'', lng:'', size:'', audLow:'', audHigh:'', days:'Mon–Sun', hours:'', demo:false, image:'' };
   $('#screenModalTitle').textContent = id ? 'Edit Screen' : 'Add Screen';
   SF.forEach(k => { $('#sf' + k).value = s[SF_KEY[k]] ?? ''; });
+  sfPhotoData = (s.image || '').startsWith('data:') ? s.image : '';
+  if (sfPhotoData) $('#sfImage').value = '';
+  $('#sfDemo').checked = !!s.demo;
+  $('#sfPhoto').value = '';
   $$('#screenForm .field').forEach(f => f.classList.remove('invalid'));
   updateImgPrev();
   showModal('screenModal');
-  setTimeout(() => $('#sfName').focus(), 100);
+  setTimeout(() => { initPickMap(parseFloat(s.lat), parseFloat(s.lng)); if (!id) $('#sfName').focus(); }, 250);
 }
 function updateImgPrev(){
   const url = $('#sfImage').value.trim();
   const tmp = { venue:$('#sfVenue').value || 'Venue', type:$('#sfType').value, orientation:$('#sfOrient').value, size:$('#sfSize').value || '—' };
   const prev = $('#sfImgPrev'); prev.onerror = () => { prev.onerror = null; prev.src = placeholderImg(tmp); };
-  prev.src = url || placeholderImg(tmp);
+  prev.src = sfPhotoData || url || placeholderImg(tmp);
+  $('#sfPhotoRemove').classList.toggle('hidden', !(sfPhotoData || url));
 }
 ['sfImage','sfVenue','sfType','sfOrient','sfSize'].forEach(id => $('#' + id).addEventListener('input', updateImgPrev));
+$('#sfImage').addEventListener('input', () => { if ($('#sfImage').value.trim()) sfPhotoData = ''; updateImgPrev(); });
+$('#sfPhotoRemove').addEventListener('click', () => { sfPhotoData = ''; $('#sfImage').value = ''; $('#sfPhoto').value = ''; updateImgPrev(); });
+$('#sfPhoto').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  if (!f.type.startsWith('image/')) { toast('Please choose an image file'); return; }
+  const r = new FileReader();
+  r.onload = () => { const img = new Image(); img.onload = () => {
+    const k = Math.min(1, 1200 / img.width), c = document.createElement('canvas');
+    c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    sfPhotoData = c.toDataURL('image/jpeg', .82); $('#sfImage').value = ''; updateImgPrev();
+  }; img.onerror = () => toast('That image could not be read'); img.src = r.result; };
+  r.readAsDataURL(f);
+});
+
+/* Location picker inside the screen form */
+let sfMap, sfMarker;
+function initPickMap(lat, lng){
+  if (!window.L) { $('#sfMap').innerHTML = '<div class="sd-empty">Map unavailable — enter latitude and longitude manually.</div>'; return; }
+  const has = isFinite(lat) && isFinite(lng), R = REGIONS[ACTIVE_REGION], pos = has ? [lat, lng] : R.center;
+  if (!sfMap) {
+    sfMap = L.map('sfMap', { center:pos, zoom:has ? 16 : 11, tap:false });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:OSM_ATTR }).addTo(sfMap);
+    sfMarker = L.marker(pos, { draggable:true, autoPan:true, icon:L.divIcon({ className:'pin-wrap', html:'<span class="drop-pin"></span>', iconSize:[30,30], iconAnchor:[15,34] }) }).addTo(sfMap);
+    sfMarker.on('dragend', () => setPickLL(sfMarker.getLatLng(), false));
+    sfMap.on('click', e => setPickLL(e.latlng, false));
+  }
+  sfMap.invalidateSize(); sfMap.setView(pos, has ? 16 : 11);
+  sfMarker.setLatLng(pos).setOpacity(has ? 1 : .45);
+}
+function setPickLL(ll, pan){
+  $('#sfLat').value = (+ll.lat).toFixed(6); $('#sfLng').value = (+ll.lng).toFixed(6);
+  ['Lat','Lng'].forEach(k => $('#sf' + k).closest('.field').classList.remove('invalid'));
+  if (sfMarker) { sfMarker.setLatLng(ll).setOpacity(1); if (pan) sfMap.setView(ll, 17); }
+}
+['sfLat','sfLng'].forEach(id => $('#' + id).addEventListener('change', () => {
+  const a = parseFloat($('#sfLat').value), b = parseFloat($('#sfLng').value);
+  if (sfMarker && isFinite(a) && isFinite(b)) { sfMarker.setLatLng([a, b]).setOpacity(1); sfMap.setView([a, b], 16); }
+}));
+$('#sfFind').addEventListener('click', async () => {
+  const q = $('#sfAddress').value.trim(), btn = $('#sfFind');
+  if (!q) { $('#sfAddress').closest('.field').classList.add('invalid'); $('#sfAddress').focus(); return; }
+  btn.classList.add('busy');
+  const [[s, w], [n, e]] = REGIONS[ACTIVE_REGION].bounds;
+  try {
+    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&countrycodes=au&viewbox=${w},${n},${e},${s}&bounded=1&q=${encodeURIComponent(q)}`, { headers:{ 'Accept-Language':'en-AU' } });
+    const [d] = await r.json();
+    if (!d) toast('Address not found — try adding the suburb, or click the map');
+    else {
+      setPickLL({ lat:+d.lat, lng:+d.lon }, true);
+      const a = d.address || {}, sub = a.suburb || a.town || a.village || a.city_district || a.neighbourhood;
+      if (sub && !$('#sfSuburb').value.trim()) $('#sfSuburb').value = sub;
+      toast('Pin placed — drag it to fine-tune');
+    }
+  } catch (err) { toast('Address lookup unavailable — click the map to place the pin'); }
+  btn.classList.remove('busy');
+});
 $('#screenForm').addEventListener('submit', e => {
   e.preventDefault();
   const get = k => $('#sf' + k).value.trim();
@@ -2047,18 +2285,143 @@ $('#screenForm').addEventListener('submit', e => {
   bad = inv('AudLow', !(lo >= 0)) || bad;
   bad = inv('AudHigh', !(hi >= 0 && hi >= lo)) || bad;
   if (bad) { const f = $('#screenForm .field.invalid input'); if (f) f.focus(); return; }
-  const data = { name:get('Name'), venue:get('Venue'), type:get('Type'), status:get('Status'), address:get('Address'), suburb:get('Suburb'), lat, lng, size, orientation:get('Orient'), audLow:lo, audHigh:hi, days:get('Days'), hours:get('Hours'), visibility:parseInt(get('Vis'),10), description:get('Desc'), image:get('Image') };
+  const data = { name:get('Name'), venue:get('Venue'), type:get('Type'), status:get('Status'), address:get('Address'), suburb:get('Suburb'), lat, lng, size, orientation:get('Orient'), audLow:lo, audHigh:hi, days:get('Days'), hours:get('Hours'), visibility:parseInt(get('Vis'),10), description:get('Desc'), image:sfPhotoData || get('Image'), demo:$('#sfDemo').checked };
   if (editingId) Object.assign(screens.find(x => x.id === editingId), data);
   else screens.push(S({ id:uid('s'), added:new Date().toISOString(), ...data }));
   closeModals(); refreshAll(); if (!editingId) fitToResults();
-  toast(editingId ? 'Screen updated — map refreshed' : 'Screen added — now live on the map');
+  toast(editingId ? 'Screen updated — remember to publish' : 'Screen added — remember to publish');
 });
+
+/* =====================================================================
+   Content storage
+   - Live data:  data/site-data.json in the GitHub repo (served by GitHub Pages)
+   - Drafts:     unpublished admin edits are kept in this browser's localStorage
+   - Publishing: commits the data file (and any new photos) via the GitHub API
+   ===================================================================== */
+const DRAFT_KEY = 'oora.draft.v1', GH_KEY = 'oora.github.v1', DATA_PATH = 'data/site-data.json';
+const store = {
+  get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: (k, v) => { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } },
+  del: k => { try { localStorage.removeItem(k); } catch (e) {} }
+};
+let siteSettings = { adminPasswordHash: DEFAULT_ADMIN_HASH };
+let dataSource = 'built-in', publishedUpdated = null, dataReady = false;
+const stable = v => Array.isArray(v) ? '[' + v.map(stable).join(',') + ']'
+  : v && typeof v === 'object' ? '{' + Object.keys(v).sort().map(k => JSON.stringify(k) + ':' + stable(v[k])).join(',') + '}' : JSON.stringify(v);
+const snapshot = () => stable({ settings:siteSettings, screens });
+let publishedSnapshot = snapshot();
+const isDirty = () => dataReady && snapshot() !== publishedSnapshot;
+
+async function loadSiteData(){
+  try {
+    const r = await fetch(`${DATA_PATH}?v=${Date.now()}`, { cache:'no-store' });
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    if (!Array.isArray(d.screens)) throw new Error('bad data');
+    screens = d.screens.map(S);
+    siteSettings = Object.assign({ adminPasswordHash: DEFAULT_ADMIN_HASH }, d.settings);
+    publishedUpdated = d.updated || null; dataSource = 'live';
+  } catch (err) { /* e.g. opened as a local file — keep the built-in demo screens */ }
+  publishedSnapshot = snapshot();
+  const draft = store.get(DRAFT_KEY);
+  if (draft) { try { const d = JSON.parse(draft); if (Array.isArray(d.screens)) { screens = d.screens.map(S); siteSettings = Object.assign({}, siteSettings, d.settings); } } catch (e) { store.del(DRAFT_KEY); } }
+  dataReady = true;
+  refreshAll();
+  fitAllMaps();
+}
+function syncDraft(){
+  if (!dataReady) return;
+  const dirty = isDirty();
+  if (dirty) { if (!store.set(DRAFT_KEY, JSON.stringify({ savedAt:new Date().toISOString(), settings:siteSettings, screens }))) toast('Could not save on this device — storage may be full. Publish now to keep your changes.'); }
+  else store.del(DRAFT_KEY);
+  $('#draftChip').classList.toggle('hidden', !dirty || $('.page.active')?.dataset.page === 'admin');
+}
+
+function ghCfg(){
+  const def = { owner:'Akash3312', repo:'OORAMedia-website', branch:'main', token:'' };
+  try { return Object.assign(def, JSON.parse(store.get(GH_KEY) || '{}')); } catch (e) { return def; }
+}
+async function gh(path, opts={}){
+  const c = ghCfg();
+  const r = await fetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}${path}`, {
+    ...opts, cache:'no-store',
+    headers:{ 'Accept':'application/vnd.github+json', 'Authorization':`Bearer ${c.token}`, 'X-GitHub-Api-Version':'2022-11-28', ...(opts.body ? { 'Content-Type':'application/json' } : {}) }
+  });
+  if (!r.ok) {
+    const j = await r.json().catch(() => ({}));
+    const hint = r.status === 401 ? 'The access key is invalid or has expired.' : r.status === 403 ? 'The access key does not have permission to change this repository (Contents: Read and write).' : r.status === 404 ? 'Repository not found — check the account and repository names, and that the key has access to it.' : (j.message || 'GitHub error');
+    const err = new Error(hint); err.status = r.status; throw err;
+  }
+  return r.status === 204 ? null : r.json();
+}
+const b64utf8 = str => { const bytes = new TextEncoder().encode(str); let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(bin); };
+async function putFile(path, base64, message){
+  const { branch } = ghCfg(); let sha;
+  try { sha = (await gh(`/contents/${path}?ref=${encodeURIComponent(branch)}`)).sha; } catch (e) { if (e.status !== 404) throw e; }
+  return gh(`/contents/${path}`, { method:'PUT', body:JSON.stringify({ message, content:base64, branch, ...(sha ? { sha } : {}) }) });
+}
+function setBusy(btn, busy, label){ if (!btn) return; if (busy) { btn.dataset.label = btn.innerHTML; btn.innerHTML = label; btn.classList.add('busy'); } else { btn.innerHTML = btn.dataset.label || btn.innerHTML; btn.classList.remove('busy'); } }
+
+async function publish(btn){
+  const c = ghCfg();
+  if (!c.token) { adminTab = 'publishing'; renderAdmin(); toast('Connect GitHub first (one-time setup)'); return; }
+  setBusy(btn, true, 'Publishing…');
+  try {
+    const out = screens.map(s => ({ ...s }));
+    for (const s of out) {
+      if (s.image && s.image.startsWith('data:image/')) {
+        const path = `images/screens/${s.id}-${Date.now().toString(36)}.jpg`;
+        await putFile(path, s.image.split(',')[1], `Add photo for ${s.venue}`);
+        s.image = path;
+      }
+    }
+    const now = new Date().toISOString();
+    const data = { version:1, updated:now, settings:siteSettings, screens:out };
+    await putFile(DATA_PATH, b64utf8(JSON.stringify(data, null, 2) + '\n'), `Update screens from admin dashboard (${out.length} screens)`);
+    screens = out.map(S); publishedUpdated = now; dataSource = 'live';
+    publishedSnapshot = snapshot(); store.del(DRAFT_KEY);
+    refreshAll();
+    toast('Published! The live website updates in about a minute.');
+  } catch (err) {
+    setBusy(btn, false);
+    confirmDialog('Publishing failed', err.message + ' Your changes are still saved on this device.', () => { adminTab = 'publishing'; renderAdmin(); }, 'Open settings');
+    return;
+  }
+  setBusy(btn, false);
+}
+async function saveGithub(btn){
+  const c = ghCfg();
+  c.owner = $('#ghOwner').value.trim() || c.owner; c.repo = $('#ghRepo').value.trim() || c.repo; c.branch = $('#ghBranch').value.trim() || 'main';
+  const t = $('#ghToken').value.trim(); if (t) c.token = t;
+  if (!c.token) { toast('Paste your GitHub access key first'); $('#ghToken').focus(); return; }
+  store.set(GH_KEY, JSON.stringify(c));
+  setBusy(btn, true, 'Testing…');
+  try {
+    const repo = await gh('');
+    await gh(`/branches/${encodeURIComponent(c.branch)}`);
+    renderAdmin(); toast(`Connected to ${repo.full_name}`);
+  } catch (err) { setBusy(btn, false); confirmDialog('Could not connect', err.message, () => {}, 'OK'); }
+}
+function downloadBackup(){
+  const blob = new Blob([JSON.stringify({ version:1, updated:new Date().toISOString(), settings:siteSettings, screens }, null, 2)], { type:'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `oora-screens-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+async function changePassword(){
+  const a = $('#pwNew').value, b = $('#pwNew2').value;
+  if (a.length < 8) { toast('Use at least 8 characters'); $('#pwNew').focus(); return; }
+  if (a !== b) { toast('The two passwords do not match'); $('#pwNew2').focus(); return; }
+  siteSettings = { ...siteSettings, adminPasswordHash: await sha256(a) };
+  refreshAll(); toast('Password changed — publish to apply it on all devices');
+}
 
 /* ---------- Refresh everything that depends on data ---------- */
 function refreshAll(){
+  syncDraft();
+  const demoCount = publicScreens().filter(s => s.demo).length;
+  $('#mapDemoTag').classList.toggle('hidden', !demoCount);
   renderFilterOptions();
   applyFilters(false);
-  renderPreviewMarkers(false);
   refreshAdvChips(); renderSelScreens();
   $('#suburbList').innerHTML = allSuburbs().map(s => `<option value="${esc(s)}">`).join('');
   const pub = publicScreens();
@@ -2079,6 +2442,8 @@ $('#sfType').innerHTML = VENUE_TYPES.map(t => `<option>${t}</option>`).join('');
 buildChips($('#aTypes'), VENUE_TYPES.filter(t => t !== 'Other'));
 refreshAll();
 route();
+loadSiteData();
+window.addEventListener('hashchange', syncDraft);
 })();
 </script>
 </body>
