@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-08T10:21:11.833Z",
+  "updated": "2026-10-08T10:38:41.981Z",
   "settings": {
     "adminPasswordHash": "7c2cf745fd9c5fdc4a0469c58cb802db79d02e5c82c1f81ffc27e4cf58ad2fdb"
   },
@@ -280,6 +280,29 @@
       "status": "Available",
       "added": "2026-09-25T23:30:00.000Z",
       "description": "Large atrium screen in a busy student hub. High foot traffic during semester."
+    },
+    {
+      "region": "adelaide",
+      "demo": false,
+      "image": "",
+      "id": "smuzelkbtbx8t",
+      "added": "2026-10-08T10:38:37.097Z",
+      "name": "lights view",
+      "venue": "cafe",
+      "type": "Other",
+      "status": "Coming Soon",
+      "address": "lightsview",
+      "suburb": "lightsview",
+      "lat": -34.863469,
+      "lng": 138.618866,
+      "size": 55,
+      "orientation": "Landscape",
+      "audLow": 500,
+      "audHigh": 600,
+      "days": "Mon–Sun",
+      "hours": "7:30am – 9:00pm",
+      "visibility": 4,
+      "description": ""
     }
   ]
 }
