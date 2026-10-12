@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "updated": "2026-10-08T10:38:41.981Z",
+  "updated": "2026-10-12T09:13:22.918Z",
   "settings": {
     "adminPasswordHash": "7c2cf745fd9c5fdc4a0469c58cb802db79d02e5c82c1f81ffc27e4cf58ad2fdb"
   },
   "screens": [
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s1",
       "name": "Front Counter Display",
@@ -30,7 +30,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s2",
       "name": "Main Floor Screen",
@@ -53,7 +53,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s3",
       "name": "Dining Room Display",
@@ -76,7 +76,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s4",
       "name": "Styling Station Screen",
@@ -99,7 +99,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s5",
       "name": "Waiting Bench Screen",
@@ -122,7 +122,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s6",
       "name": "Reception Screen",
@@ -145,7 +145,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s7",
       "name": "Lounge Display",
@@ -168,7 +168,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s8",
       "name": "Window-Facing Screen",
@@ -191,7 +191,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s9",
       "name": "Bar Screen",
@@ -214,7 +214,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s10",
       "name": "Checkout Display",
@@ -237,7 +237,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s11",
       "name": "Entry Screen",
@@ -260,7 +260,7 @@
     },
     {
       "region": "adelaide",
-      "demo": true,
+      "demo": false,
       "image": "",
       "id": "s12",
       "name": "Atrium Display",
