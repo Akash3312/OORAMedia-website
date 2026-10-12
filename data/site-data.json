@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-12T09:13:22.918Z",
+  "updated": "2026-10-12T09:21:37.616Z",
   "settings": {
     "adminPasswordHash": "7c2cf745fd9c5fdc4a0469c58cb802db79d02e5c82c1f81ffc27e4cf58ad2fdb"
   },
@@ -302,6 +302,29 @@
       "days": "Mon–Sun",
       "hours": "7:30am – 9:00pm",
       "visibility": 4,
+      "description": ""
+    },
+    {
+      "region": "adelaide",
+      "demo": false,
+      "image": "",
+      "id": "smv51lr4xkhjn",
+      "added": "2026-10-12T09:21:27.969Z",
+      "name": "Newton",
+      "venue": "Newton Shopping Center",
+      "type": "Other",
+      "status": "Coming Soon",
+      "address": "Newton",
+      "suburb": "Newton",
+      "lat": -34.885861,
+      "lng": 138.690805,
+      "size": 60,
+      "orientation": "Landscape",
+      "audLow": 500,
+      "audHigh": 800,
+      "days": "Mon–Sun",
+      "hours": "8:00am – 6:00pm",
+      "visibility": 5,
       "description": ""
     }
   ]
