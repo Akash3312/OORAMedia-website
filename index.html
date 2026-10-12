@@ -1012,7 +1012,7 @@ tr:hover td{background:#FAFBFD}
         <p class="lead" style="margin-top:14px">Share a few details and we'll come back with suitable screen options for your campaign.</p>
         <ul class="checklist">
           <li><span class="tick"><i data-i="check"></i></span><div><b>No payment now</b><span>This is an enquiry only — nothing is booked or charged.</span></div></li>
-          <li><span class="tick"><i data-i="check"></i></span><div><b>We suggest locations</b><span>Based on your goals, area and budget.</span></div></li>
+          <li><span class="tick"><i data-i="check"></i></span><div><b>We suggest locations</b><span>Based on your goals and preferred areas.</span></div></li>
           <li><span class="tick"><i data-i="check"></i></span><div><b>We help coordinate</b><span>From your ad creative to going live on screen.</span></div></li>
         </ul>
         <a href="#/map" class="link-arrow">Browse screens on the map first <i data-i="arrow"></i></a>
@@ -1035,7 +1035,6 @@ tr:hover td{background:#FAFBFD}
             <div class="field full"><label>Preferred venue types <span class="opt">(select any)</span></label><div class="chips" id="aTypes"></div></div>
             <div class="field full"><label>Campaign duration</label><div class="chips" id="aDuration" data-single>
               <button type="button" class="chip">1 Week</button><button type="button" class="chip">2 Weeks</button><button type="button" class="chip on">1 Month</button><button type="button" class="chip">Custom</button></div></div>
-            <div class="field full"><label for="aBudget">Approximate budget <span class="opt">(optional)</span></label><select id="aBudget"><option value="">Prefer not to say</option><option>Under A$500</option><option>A$500 – A$1,000</option><option>A$1,000 – A$2,500</option><option>A$2,500 – A$5,000</option><option>A$5,000+</option></select></div>
             <div class="field full"><label for="aInfo">Additional information <span class="opt">(optional)</span></label><textarea id="aInfo" placeholder="Tell us about your business, timing, or anything else that would help."></textarea></div>
           </div>
           <div class="form-submit">
@@ -1934,7 +1933,7 @@ $('#advForm').addEventListener('submit', e => {
   e.preventDefault(); if (!validateForm(e.target)) return;
   advertiserEnquiries.unshift({ id:uid('a'), business:$('#aBusiness').value.trim(), contact:$('#aContact').value.trim(), email:$('#aEmail').value.trim(), phone:$('#aPhone').value.trim(), goal:$('#aGoal').value,
     suburbs:$$('#aSuburbs .chip.on').map(c => c.dataset.v), types:$$('#aTypes .chip.on').map(c => c.dataset.v), screens:[...selScreens],
-    duration:($('#aDuration .chip.on')||{}).textContent || '', budget:$('#aBudget').value, info:$('#aInfo').value.trim(), date:new Date().toISOString(), status:'New' });
+    duration:($('#aDuration .chip.on')||{}).textContent || '', info:$('#aInfo').value.trim(), date:new Date().toISOString(), status:'New' });
   e.target.classList.add('hidden'); $('#advSuccess').classList.remove('hidden');
   e.target.reset(); resetAdvChips(); refreshAll();
   $('#advSuccess').scrollIntoView({ behavior:'smooth', block:'center' });
@@ -2068,15 +2067,14 @@ function renderAdmin(){
   }
   else if (adminTab === 'advertisers') {
     main.innerHTML = head('Advertiser Enquiries', 'Campaign enquiries submitted from the Advertisers page.') + `
-      <div class="tcard"><div class="table-wrap"><table style="min-width:1050px"><thead><tr><th>Business</th><th>Contact</th><th>Campaign goal</th><th>Preferred locations</th><th>Budget</th><th>Submitted</th><th>Status</th></tr></thead><tbody>
+      <div class="tcard"><div class="table-wrap"><table style="min-width:1050px"><thead><tr><th>Business</th><th>Contact</th><th>Campaign goal</th><th>Preferred locations</th><th>Submitted</th><th>Status</th></tr></thead><tbody>
       ${advertiserEnquiries.length ? advertiserEnquiries.map(a => { const scr = a.screens.map(id => screens.find(s => s.id === id)).filter(Boolean); return `<tr>
         <td><span class="strong">${esc(a.business)}${sampleTag(a)}</span>${a.info ? `<span class="sub" style="max-width:240px">“${esc(a.info)}”</span>` : ''}</td>
         <td><span class="strong">${esc(a.contact)}</span><span class="sub">${esc(a.email)}</span><span class="sub">${esc(a.phone)}</span></td>
         <td>${esc(a.goal)}<span class="sub">${esc(a.duration)}</span></td>
         <td style="max-width:260px">${a.suburbs.length ? esc(a.suburbs.join(', ')) : '<span class="sub">Any</span>'}${a.types.length ? `<span class="sub">${esc(a.types.join(', '))}</span>` : ''}${scr.length ? `<span class="sub"><b>Screens:</b> ${esc(scr.map(s => s.venue).join(', '))}</span>` : ''}</td>
-        <td>${a.budget ? esc(a.budget) : '<span class="sub">Not stated</span>'}</td>
         <td style="white-space:nowrap">${fmtDate(a.date)}</td>
-        <td>${statusSelect('adv', a.id, a.status, ADV_STATUS)}</td></tr>`; }).join('') : `<tr><td colspan="7" class="admin-empty">No advertiser enquiries yet.</td></tr>`}
+        <td>${statusSelect('adv', a.id, a.status, ADV_STATUS)}</td></tr>`; }).join('') : `<tr><td colspan="6" class="admin-empty">No advertiser enquiries yet.</td></tr>`}
       </tbody></table></div></div>`;
   }
   else if (adminTab === 'messages') {
