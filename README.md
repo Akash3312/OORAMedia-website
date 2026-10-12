@@ -19,6 +19,20 @@ A static website for Oora Media, a local digital advertising network starting in
 
 The first time you publish on a new device, the **Publishing** tab asks for a GitHub fine-grained access token. The token must cover this repository only, with **Contents: Read and write** permission. It is stored only in that browser.
 
+## Opening hours format
+
+Each screen stores its hours as a structured `schedule`: one key per day (`mon` to `sun`), each holding a list of `[open, close]` periods in 24-hour `HH:MM`. An empty list means closed, and `24:00` means midnight at the end of the day.
+
+```json
+"schedule": {
+  "mon": [["08:00", "12:00"], ["14:00", "18:00"]],
+  "tue": [],
+  "wed": [["09:00", "18:00"]]
+}
+```
+
+Older screens that only have text `days` / `hours` fields still display correctly. They are converted to a `schedule` the first time their hours are edited in the admin dashboard.
+
 ## Hosting
 
 Turn on GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / root**.

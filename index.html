@@ -630,6 +630,81 @@ tr:hover td{background:#FAFBFD}
 .btn.busy{opacity:.7;pointer-events:none}
 @media(max-width:600px){.photo-row{grid-template-columns:1fr}.inline-input{flex-direction:column}.inline-input .btn{height:46px}}
 
+/* Opening hours — public display */
+.open-badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:3px 9px;border-radius:999px;text-transform:none;letter-spacing:0;white-space:nowrap}
+.open-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.open-badge.is-open{background:var(--green-soft);color:var(--green)}
+.open-badge.is-closed{background:var(--grey-2);color:var(--muted)}
+.hours-spec small{display:flex!important;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px!important}
+.hours-table div{display:flex;justify-content:space-between;gap:14px;padding:5px 0;font-size:14.5px;border-top:1px dashed #D9DFE8}
+.hours-table div:first-child{border-top:0}
+.hours-table span:first-child{color:var(--muted)}
+.hours-table span:last-child{font-weight:600;color:var(--ink);text-align:right}
+.hours-table .closed span:last-child{font-weight:400;color:var(--muted)}
+.hours-table .today span:first-child{color:var(--ink);font-weight:700}
+.scard-hours{font-size:13.5px;color:var(--muted);display:flex;gap:7px;align-items:flex-start;margin:-6px 0 14px;line-height:1.45}
+.scard-hours .svg-i{margin-top:3px}
+.scard-hours b.is-open{color:var(--green)}
+.scard-hours b.is-closed{color:var(--text)}
+
+/* Opening hours — weekly schedule editor */
+.sched-bulk{background:var(--grey);border-radius:14px;padding:16px;margin-bottom:14px}
+.sched-h{font-family:var(--display);font-weight:600;font-size:14.5px;color:var(--ink);margin-bottom:10px}
+.sched-h span{font-family:var(--body);font-weight:400;color:var(--muted);font-size:13.5px}
+.sched-days .chip{height:38px;padding:0 13px;font-size:14px}
+.sched-short{display:flex;gap:4px 10px;flex-wrap:wrap;margin:10px 0 12px}
+.sched-short button{font-size:13.5px;font-weight:600;color:var(--blue);text-decoration:underline;padding:4px 2px}
+.sched-bulk-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.sched-period{display:flex;align-items:center;gap:8px}
+.sched-period > span{color:var(--muted);font-size:14px}
+.sched select{width:auto!important;height:44px!important;font-size:15px!important;padding:0 34px 0 12px!important;background-position:right 11px center!important;border-radius:10px!important}
+.sched select.sched-preset{width:100%!important;max-width:470px}
+.sched .icon-btn{width:40px;height:40px;flex-shrink:0}
+.sched-msg{font-size:13.5px;color:var(--green);font-weight:600;margin-top:8px}
+.sched-msg:empty{display:none}
+.sched-msg.bad{color:var(--red)}
+.sched-rows{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.sched-row{display:grid;grid-template-columns:140px 1fr auto;gap:10px 16px;align-items:start;padding:14px 16px;border-top:1px solid var(--line);background:#fff}
+.sched-row:first-child{border-top:0}
+.sched-row.is-closed{background:#FAFBFD}
+.sched-row.has-err{background:#FFF7F7;box-shadow:inset 3px 0 0 var(--red)}
+.sched-day b{display:block;color:var(--ink);margin-bottom:6px;font-weight:600}
+.sched-periods{display:grid;gap:8px;min-width:0;justify-items:start}
+.sched-closed{color:var(--muted);font-size:15px;padding:10px 0}
+.sched-add{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--blue);padding:4px 0}
+.sched-add:hover{text-decoration:underline}
+.sched-err{color:var(--red);font-size:13.5px;font-weight:600}
+.sched-err:empty{display:none}
+.sched-copy select{color:var(--muted)}
+.switch{display:inline-flex!important;align-items:center;gap:8px;cursor:pointer;font-size:13.5px!important;font-weight:600!important;color:var(--muted)!important;margin:0!important;position:relative}
+.switch input{position:absolute;opacity:0;width:1px!important;height:1px!important;padding:0!important}
+.switch i{width:38px;height:22px;border-radius:999px;background:#C5CDD9;position:relative;transition:.2s;flex-shrink:0}
+.switch i::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch input:checked + i{background:var(--green)}
+.switch input:checked + i::after{left:19px}
+.switch input:focus-visible + i{box-shadow:0 0 0 4px rgba(245,184,46,.4)}
+.sched-preview{margin-top:14px;background:var(--navy);border-radius:14px;padding:16px 18px}
+.sched-preview .sched-h{color:#fff}
+.sched-preview .sched-h span{color:rgba(255,255,255,.55)}
+#schedPreview div{display:flex;justify-content:space-between;gap:16px;padding:7px 0;border-top:1px solid rgba(255,255,255,.09);font-size:15px}
+#schedPreview div:first-child{border-top:0}
+#schedPreview span:first-child{color:rgba(255,255,255,.72)}
+#schedPreview span:last-child{font-weight:600;text-align:right;color:#fff}
+#schedPreview .closed span:last-child{color:rgba(255,255,255,.45);font-weight:400}
+#schedPreview .bad span:last-child{color:#FF9B9B}
+#sfSchedField .err{font-weight:600;margin-top:10px}
+#sfSchedField .err:empty{display:none}
+@media(max-width:700px){
+  .sched-row{grid-template-columns:1fr auto;padding:14px 12px}
+  .sched-day{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .sched-day b{margin:0}
+  .sched-periods{grid-column:1/-1;order:3;justify-items:stretch}
+  .sched-period{width:100%}
+  .sched-period select{flex:1;min-width:0;width:100%!important}
+  .sched-bulk-row .btn{flex:1 1 100%}
+  .sched-bulk{padding:14px 12px}
+}
+
 /* Modal */
 .modal{position:fixed;inset:0;z-index:3000;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;background:rgba(10,22,40,.6);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s}
 .modal.show{opacity:1;pointer-events:auto}
@@ -1251,8 +1326,7 @@ tr:hover td{background:#FAFBFD}
         <div class="field"><label for="sfOrient">Orientation</label><select id="sfOrient"><option>Landscape</option><option>Portrait</option></select></div>
         <div class="field"><label for="sfAudLow">Est. daily audience — from</label><input id="sfAudLow" type="number" min="0" inputmode="numeric" required><div class="err">Enter a number</div></div>
         <div class="field"><label for="sfAudHigh">Est. daily audience — to</label><input id="sfAudHigh" type="number" min="0" inputmode="numeric" required><div class="err">Must be ≥ the "from" value</div></div>
-        <div class="field"><label for="sfDays">Opening days</label><input id="sfDays" required placeholder="e.g. Mon–Sun"><div class="err">Required</div></div>
-        <div class="field"><label for="sfHours">Opening hours</label><input id="sfHours" required placeholder="e.g. 7:00am – 4:00pm"><div class="err">Required</div></div>
+        <div class="field full" id="sfSchedField"><label>Opening hours</label><div id="sfSchedule" class="sched"></div><div class="err" id="sfSchedErr"></div></div>
         <div class="field"><label for="sfVis">Visibility rating</label><select id="sfVis"><option value="5">5 — Excellent</option><option value="4">4 — Very good</option><option value="3">3 — Good</option><option value="2">2 — Fair</option><option value="1">1 — Limited</option></select></div>
         <div class="field full"><label for="sfDesc">Description</label><textarea id="sfDesc" style="min-height:90px"></textarea></div>
         <div class="field full"><label>Screen photo <span class="opt">(optional — a placeholder is shown if blank)</span></label>
@@ -1370,6 +1444,7 @@ function hydrateIcons(root=document){ $$('i[data-i]', root).forEach(el => { el.o
 /* ---------- Config (structured for future expansion beyond Adelaide) ---------- */
 const REGIONS = { adelaide: { name:'Adelaide', state:'SA', center:[-34.9285,138.6007], zoom:11,
   bounds:[[-35.45,138.25],[-34.55,139.05]],            // map is kept within Greater Adelaide
+  timeZone:'Australia/Adelaide',
   cityCentre:{ name:'Victoria Square', lat:-34.9285, lng:138.6007 },
   cbd:[[-34.9208,138.5925],[-34.9208,138.6115],[-34.9362,138.6115],[-34.9362,138.5925]] } };
 /* Key Adelaide places shown on the map and used for "What's nearby" (approximate positions). */
@@ -1539,12 +1614,115 @@ function renderHow(mode){
 $$('[data-how]').forEach(b => b.addEventListener('click', () => { $$('[data-how]').forEach(x => x.classList.toggle('on', x === b)); renderHow(b.dataset.how); }));
 renderHow('partner');
 
+/* =====================================================================
+   Opening hours
+   Structured format, saved on each screen as `schedule`:
+     { mon:[["08:00","12:00"],["14:00","18:00"]], tue:[], ... , sun:[] }
+   - one key per day (mon…sun); each value is a list of [open, close] periods
+   - times are 24-hour "HH:MM"; "24:00" means midnight at the end of the day
+   - an empty list means the venue is closed that day
+   Older screens only have free-text `days` / `hours`. Those are read by
+   parseLegacyHours() and are never overwritten unless the schedule is edited.
+   ===================================================================== */
+const DAYS = [['mon','Mon','Monday'],['tue','Tue','Tuesday'],['wed','Wed','Wednesday'],['thu','Thu','Thursday'],['fri','Fri','Friday'],['sat','Sat','Saturday'],['sun','Sun','Sunday']];
+const DAY_KEYS = DAYS.map(d => d[0]);
+const WEEKDAYS = DAY_KEYS.slice(0, 5), WEEKEND = DAY_KEYS.slice(5);
+const toMin = t => { const [h, m] = String(t).split(':').map(Number); return h * 60 + m; };
+const fmtTime = t => { if (t === '24:00') return 'midnight'; const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}:${String(m).padStart(2,'0')} ${h < 12 ? 'am' : 'pm'}`; };
+const isAllDay = ps => ps.length === 1 && ps[0][0] === '00:00' && ps[0][1] === '24:00';
+const fmtPeriods = ps => !ps.length ? 'Closed' : isAllDay(ps) ? 'Open 24 hours' : ps.map(p => `${fmtTime(p[0])}–${fmtTime(p[1])}`).join(', ');
+const emptySchedule = () => Object.fromEntries(DAY_KEYS.map(k => [k, []]));
+const validTime = t => /^([01]\d|2[0-3]):[0-5]\d$|^24:00$/.test(t);
+function normSchedule(sc){
+  const o = emptySchedule();
+  DAY_KEYS.forEach(k => { o[k] = (sc && Array.isArray(sc[k]) ? sc[k] : []).filter(p => Array.isArray(p) && validTime(p[0]) && validTime(p[1]) && toMin(p[1]) > toMin(p[0])).map(p => [p[0], p[1]]).sort((a, b) => toMin(a[0]) - toMin(b[0])); });
+  return o;
+}
+
+/* Read old free-text hours such as days "Mon–Fri" / hours "8:30am – 5:30pm". Returns null if unsure. */
+function parseLegacyHours(daysText, hoursText){
+  const dt = String(daysText || '').toLowerCase().trim(), ht = String(hoursText || '').toLowerCase().trim();
+  if (!dt && !ht) return null;
+  const idx = w => DAY_KEYS.findIndex(k => w.trim().startsWith(k));
+  let days = [];
+  if (!dt || /daily|every ?day|7 days|all week/.test(dt)) days = [...DAY_KEYS];
+  else for (const part of dt.split(/[,&;]|\band\b/)) {
+    const ends = part.split(/\s*(?:–|—|-|\bto\b)\s*/).filter(Boolean);
+    const a = idx(ends[0] || ''), b = ends.length > 1 ? idx(ends[1]) : a;
+    if (a < 0 || b < 0 || ends.length > 2) return null;
+    for (let i = a; ; i = (i + 1) % 7) { if (!days.includes(DAY_KEYS[i])) days.push(DAY_KEYS[i]); if (i === b) break; }
+  }
+  let period;
+  if (/24\s*\/\s*7|24 ?hours?/.test(ht)) period = ['00:00', '24:00'];
+  else {
+    const m = ht.match(/^(\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)\s*(?:–|—|-|to)\s*(\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)$/);
+    if (!m) return null;
+    const t = (h, mm, ap) => { h = +h % 12 + (ap === 'pm' ? 12 : 0); return `${String(h).padStart(2,'0')}:${mm || '00'}`; };
+    period = [t(m[1], m[2], m[3]), t(m[4], m[5], m[6])];
+    if (period[1] === '00:00') period[1] = '24:00';
+    if (toMin(period[1]) <= toMin(period[0])) return null;
+  }
+  const sc = emptySchedule(); days.forEach(k => sc[k] = [[...period]]);
+  return sc;
+}
+const getSchedule = s => s.schedule ? normSchedule(s.schedule) : parseLegacyHours(s.days, s.hours);
+
+/* Merge consecutive days with identical hours: "Monday–Friday: 8:00 am–6:00 pm" */
+function groupSchedule(sc, long){
+  const out = [], n = long ? 2 : 1;
+  DAYS.forEach((d, i) => {
+    const text = fmtPeriods(sc[d[0]]), last = out[out.length - 1];
+    if (last && last.text === text) { last.to = d[n]; last.keys.push(d[0]); }
+    else out.push({ from:d[n], to:d[n], text, keys:[d[0]], closed:!sc[d[0]].length });
+  });
+  return out.map(g => ({ ...g, label: g.from === g.to ? g.from : `${g.from}–${g.to}` }));
+}
+/* Text fallbacks kept alongside the structured schedule, for older code and exports */
+function scheduleToLegacy(sc){
+  const open = groupSchedule(sc, false).filter(g => !g.closed);
+  if (!open.length) return { days:'Closed', hours:'Closed' };
+  const texts = [...new Set(open.map(g => g.text))];
+  const runs = [];  // consecutive open days, whatever their hours: "Mon, Wed–Sat"
+  DAYS.forEach((d, i) => { if (!sc[d[0]].length) return; const last = runs[runs.length - 1]; if (last && last.end === i - 1) { last.end = i; last.to = d[1]; } else runs.push({ end:i, from:d[1], to:d[1] }); });
+  return { days: runs.map(r => r.from === r.to ? r.from : `${r.from}–${r.to}`).join(', '), hours: texts.length === 1 ? texts[0] : 'Varies by day' };
+}
+function regionNow(){
+  const tz = (REGIONS[ACTIVE_REGION] || {}).timeZone || 'Australia/Adelaide';
+  try {
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-AU', { timeZone:tz, weekday:'short', hour:'2-digit', minute:'2-digit', hour12:false }).formatToParts(new Date()).map(x => [x.type, x.value]));
+    return { key:p.weekday.toLowerCase().slice(0, 3), min:(+p.hour % 24) * 60 + +p.minute };
+  } catch (e) { const d = new Date(); return { key:DAY_KEYS[(d.getDay() + 6) % 7], min:d.getHours() * 60 + d.getMinutes() }; }
+}
+function openStatus(sc){
+  const { key, min } = regionNow(), today = sc[key];
+  const cur = today.find(p => toMin(p[0]) <= min && min < toMin(p[1]));
+  if (cur) return { open:true, text: isAllDay(today) ? 'Open now' : `Open now · closes ${fmtTime(cur[1])}` };
+  const later = today.find(p => toMin(p[0]) > min);
+  if (later) return { open:false, text:`Closed now · opens ${fmtTime(later[0])}` };
+  const i = DAY_KEYS.indexOf(key);
+  for (let n = 1; n <= 7; n++) { const d = DAYS[(i + n) % 7]; if (sc[d[0]].length) return { open:false, text:`Closed now · opens ${n === 1 ? 'tomorrow' : d[1]} ${fmtTime(sc[d[0]][0][0])}` }; }
+  return { open:false, text:'Closed' };
+}
+/* Everything the site needs to display a screen's hours, from one place */
+function hoursInfo(s){
+  const sc = getSchedule(s);
+  if (!sc) return { structured:false, text:[s.days, s.hours].filter(Boolean).join(' · ') || 'Hours not provided' };
+  const { key } = regionNow(), st = openStatus(sc);
+  return { structured:true, sc, todayKey:key, long:groupSchedule(sc, true), short:groupSchedule(sc, false),
+    summary: groupSchedule(sc, false).filter(g => !g.closed).map(g => `${g.label} ${g.text}`).join(' · ') || 'Closed',
+    today:`Today: ${fmtPeriods(sc[key])}`, open:st.open, status:st.text };
+}
+const openBadge = h => h.structured ? `<span class="open-badge ${h.open ? 'is-open' : 'is-closed'}">${esc(h.status)}</span>` : '';
+const hoursTable = h => h.structured
+  ? `<div class="hours-table">${h.long.map(g => `<div class="${g.keys.includes(h.todayKey) ? 'today' : ''} ${g.closed ? 'closed' : ''}"><span>${g.label}</span><span>${g.text}</span></div>`).join('')}</div>`
+  : `<b>${esc(h.text)}</b>`;
+
 /* ---------- Pins ---------- */
 function pinIcon(s, selected){
   const c = STATUS_COLOR[s.status];
   return L.divIcon({ className:'pin-wrap', html:`<span class="pin ${s.status==='Available'?'pulse':''} ${selected?'sel':''}" style="--pc:${c}"></span>`, iconSize:[26,26], iconAnchor:[13,13], tooltipAnchor:[0,-12] });
 }
-const tipHtml = s => `<strong>${esc(s.venue)}</strong><br><small>${esc(s.suburb)} · ${esc(s.status)}</small>`;
+const tipHtml = s => { const h = hoursInfo(s); return `<strong>${esc(s.venue)}</strong><br><small>${esc(s.suburb)} · ${esc(s.status)}</small><br><small>${h.structured ? (h.open ? 'Open now' : 'Closed now') + ' · ' + esc(h.today) : esc(h.text)}</small>`; };
 
 /* =====================================================================
    Screen map component
@@ -1687,7 +1865,7 @@ function createScreenMap(elId, opt={}){
       pinLayer.clearLayers();
       const near = nearestScreens({ lat, lng }, 3);
       const html = `<div class="pop-h">${esc(title)}</div><div class="pop-sub">${esc(sub)}</div>
-        ${near.length ? `<div class="pop-sub" style="margin:0;font-weight:600;color:var(--ink)">Nearest screens</div>` + near.map(({s,d}) => `<button class="near-btn" data-open="${s.id}"><span><b>${esc(s.venue)}</b><small>${esc(s.suburb)} · ${audRange(s)}/day</small></span><em>${fmtDist(d)}</em></button>`).join('') : ''}`;
+        ${near.length ? `<div class="pop-sub" style="margin:0;font-weight:600;color:var(--ink)">Nearest screens</div>` + near.map(({s,d}) => `<button class="near-btn" data-open="${s.id}"><span><b>${esc(s.venue)}</b><small>${esc(s.suburb)} · ${audRange(s)}/day${(h => h.structured ? ' · ' + (h.open ? 'Open now' : 'Closed now') : '')(hoursInfo(s))}</small></span><em>${fmtDist(d)}</em></button>`).join('') : ''}`;
       if (isMe || !LANDMARKS.some(l => l.lat === lat && l.lng === lng)) {
         const ic = isMe ? L.divIcon({ className:'pin-wrap', html:'<span class="me-dot"></span>', iconSize:[20,20], iconAnchor:[10,10], popupAnchor:[0,-10] })
                         : L.divIcon({ className:'pin-wrap', html:'<span class="drop-pin"></span>', iconSize:[30,30], iconAnchor:[15,34], popupAnchor:[0,-32] });
@@ -1738,6 +1916,7 @@ function renderList(){
       <div class="scard-body">
         <h3>${esc(s.venue)}</h3>
         <div class="scard-loc">${icon('pin')} ${esc(s.suburb)} · ${esc(s.type)}</div>
+        ${(h => `<div class="scard-hours">${icon('clock')}<span>${h.structured ? `<b class="${h.open ? 'is-open' : 'is-closed'}">${h.open ? 'Open now' : 'Closed now'}</b> · ${esc(h.summary)}` : esc(h.text)}</span></div>`)(hoursInfo(s))}
         <div class="meta-row">
           <span class="meta">${icon('monitor')} ${s.size}" ${esc(s.orientation)}</span>
           <span class="meta">${icon('users')} ${audRange(s)} / day</span>
@@ -1826,7 +2005,7 @@ function openPanel(id){
   const s = screens.find(x => x.id === id); if (!s) return;
   const prev = selectedId; selectedId = id;
   screenMaps.forEach(m => { if (prev) m.setSelected(prev, false); m.setSelected(id, true); });
-  const canEnquire = s.status !== 'Inactive';
+  const canEnquire = s.status !== 'Inactive', hrs = hoursInfo(s);
   const R = REGIONS[s.region] || REGIONS[ACTIVE_REGION];
   const cityD = window.L ? dist(s, R.cityCentre) : 0;
   const nearL = window.L ? nearestLandmarks(s, 3) : [];
@@ -1845,8 +2024,7 @@ function openPanel(id){
           <div class="spec"><small>Screen size</small><b>${s.size}"</b></div>
           <div class="spec"><small>Orientation</small><b>${esc(s.orientation)}</b></div>
           <div class="spec full"><small>Est. daily audience</small><b>${audRange(s)} people / day</b></div>
-          <div class="spec"><small>Operating days</small><b>${esc(s.days)}</b></div>
-          <div class="spec"><small>Opening hours</small><b>${esc(s.hours)}</b></div>
+          <div class="spec full hours-spec"><small><span>Opening hours</span>${openBadge(hrs)}</small>${hoursTable(hrs)}</div>
           <div class="spec full"><small>Visibility</small><b>${dots(s.visibility)} &nbsp;${visLabel(s.visibility)}</b></div>
           <div class="spec full"><small>Address</small><b>${esc(s.address)}</b></div>
           <div class="spec full"><small>Distance to city centre</small><b>${fmtDist(cityD)} from ${esc(R.cityCentre.name)}</b></div>
@@ -2187,17 +2365,155 @@ let confirmCb = null;
 function confirmDialog(title, text, cb, yesLabel='Delete'){ $('#confirmTitle').textContent = title; $('#confirmText').textContent = text; $('#confirmYes').textContent = yesLabel; confirmCb = cb; showModal('confirmModal'); }
 $('#confirmYes').addEventListener('click', () => { closeModals(); if (confirmCb) confirmCb(); confirmCb = null; });
 
-const SF = ['Name','Venue','Type','Status','Address','Suburb','Lat','Lng','Size','Orient','AudLow','AudHigh','Days','Hours','Vis','Desc','Image'];
-const SF_KEY = {Name:'name',Venue:'venue',Type:'type',Status:'status',Address:'address',Suburb:'suburb',Lat:'lat',Lng:'lng',Size:'size',Orient:'orientation',AudLow:'audLow',AudHigh:'audHigh',Days:'days',Hours:'hours',Vis:'visibility',Desc:'description',Image:'image'};
+/* ---------- Weekly schedule editor (Add / Edit Screen form) ---------- */
+// Editing state. Periods may be incomplete here ('' = not chosen yet); they are validated before saving.
+let sfSched = emptySchedule(), sfOpen = {}, sfSchedTouched = false, sfLegacyText = '', sfSchedAttempted = false;
+const TIME_STEPS = Array.from({ length: 97 }, (_, i) => `${String(Math.floor(i / 4)).padStart(2,'0')}:${String(i % 4 * 15).padStart(2,'0')}`); // 00:00 … 24:00
+const timeOptions = (val, isClose) => `<option value="">${isClose ? 'Closes…' : 'Opens…'}</option>` +
+  TIME_STEPS.filter(t => isClose ? t !== '00:00' : t !== '24:00').map(t => `<option value="${t}" ${t === val ? 'selected' : ''}>${t === '24:00' ? 'Midnight' : fmtTime(t)}</option>`).join('');
+const SCHED_PRESETS = {
+  weekdays: { label:'Mon–Fri 9:00 am–5:00 pm, weekend closed', build:() => { const s = emptySchedule(); WEEKDAYS.forEach(k => s[k] = [['09:00','17:00']]); return s; } },
+  everyday: { label:'Every day 9:00 am–5:00 pm', build:() => { const s = emptySchedule(); DAY_KEYS.forEach(k => s[k] = [['09:00','17:00']]); return s; } },
+  retail:   { label:'Mon–Fri 9:00 am–5:30 pm, Sat–Sun 10:00 am–4:00 pm', build:() => { const s = emptySchedule(); WEEKDAYS.forEach(k => s[k] = [['09:00','17:30']]); WEEKEND.forEach(k => s[k] = [['10:00','16:00']]); return s; } },
+  hospo:    { label:'Every day 7:00 am–3:00 pm (café)', build:() => { const s = emptySchedule(); DAY_KEYS.forEach(k => s[k] = [['07:00','15:00']]); return s; } },
+  always:   { label:'Open 24 hours, every day', build:() => { const s = emptySchedule(); DAY_KEYS.forEach(k => s[k] = [['00:00','24:00']]); return s; } }
+};
+const dayGroup = v => v === 'all' ? DAY_KEYS : v === 'weekdays' ? WEEKDAYS : v === 'weekend' ? WEEKEND : DAY_KEYS.includes(v) ? [v] : [];
+const clonePeriods = ps => ps.map(p => [p[0], p[1]]);
+
+function loadSchedEditor(s, isNew){
+  sfSchedTouched = false; sfSchedAttempted = false; sfLegacyText = '';
+  let sc = isNew ? SCHED_PRESETS.weekdays.build() : getSchedule(s);
+  if (isNew) sfSchedTouched = true;            // new screens always save a structured schedule
+  if (!sc) { sfLegacyText = [s.days, s.hours].filter(Boolean).join(' · '); sc = emptySchedule(); }
+  sfSched = sc; sfOpen = Object.fromEntries(DAY_KEYS.map(k => [k, sc[k].length > 0]));
+  renderSchedEditor();
+}
+/* Returns { day: message } for every day that cannot be saved as entered */
+function validateSched(){
+  const errs = {};
+  DAY_KEYS.forEach(k => {
+    if (!sfOpen[k]) return;
+    const ps = sfSched[k];
+    if (!ps.length) { errs[k] = 'Add opening times, or mark this day as closed.'; return; }
+    if (ps.some(p => !p[0] || !p[1])) { errs[k] = 'Choose both an opening and a closing time.'; return; }
+    if (ps.some(p => toMin(p[1]) <= toMin(p[0]))) { errs[k] = 'Closing time must be later than opening time.'; return; }
+    const sorted = clonePeriods(ps).sort((a, b) => toMin(a[0]) - toMin(b[0]));
+    if (sorted.some((p, i) => i && toMin(p[0]) < toMin(sorted[i - 1][1]))) errs[k] = 'These opening periods overlap. Adjust the times or remove one.';
+  });
+  return errs;
+}
+const schedResult = () => { const sc = emptySchedule(); DAY_KEYS.forEach(k => { if (sfOpen[k]) sc[k] = clonePeriods(sfSched[k]); }); return normSchedule(sc); };
+
+function renderSchedEditor(){
+  const selDays = new Set($$('#sfSchedule [data-sd-day].on').map(b => b.dataset.sdDay));
+  const bulkFrom = ($('#sfSchedule [data-bulk="from"]') || {}).value || '09:00', bulkTo = ($('#sfSchedule [data-bulk="to"]') || {}).value || '17:00';
+  $('#sfSchedule').innerHTML = `
+    ${sfLegacyText ? `<div class="note" style="margin-bottom:14px">${icon('info')}<span>This screen's hours were saved as text: <b>${esc(sfLegacyText)}</b>. They'll be kept as they are unless you set a schedule below.</span></div>` : ''}
+    <div class="sched-bulk">
+      <div class="sched-h">Quick set <span>— choose days, pick the hours, then apply</span></div>
+      <div class="chips sched-days">${DAYS.map(d => `<button type="button" class="chip ${selDays.has(d[0]) ? 'on' : ''}" data-sd-day="${d[0]}">${d[1]}</button>`).join('')}</div>
+      <div class="sched-short">
+        <button type="button" data-sd-pick="weekdays">Weekdays</button><button type="button" data-sd-pick="weekend">Weekend</button><button type="button" data-sd-pick="all">Every day</button><button type="button" data-sd-pick="none">Clear</button>
+      </div>
+      <div class="sched-bulk-row">
+        <div class="sched-period"><select data-bulk="from" aria-label="Opening time">${timeOptions(bulkFrom, false)}</select><span>to</span><select data-bulk="to" aria-label="Closing time">${timeOptions(bulkTo, true)}</select></div>
+        <button type="button" class="btn btn-dark btn-sm" data-sd-apply>Apply to selected days</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-sd-closeall>Mark selected closed</button>
+      </div>
+      <div class="sched-bulk-row">
+        <select data-sd-preset aria-label="Common schedules" class="sched-preset"><option value="">Or start from a common schedule…</option>${Object.entries(SCHED_PRESETS).map(([k, p]) => `<option value="${k}">${p.label}</option>`).join('')}</select>
+      </div>
+      <div class="sched-msg" id="schedBulkMsg" role="status"></div>
+    </div>
+    <div class="sched-rows">
+      ${DAYS.map(d => { const k = d[0], open = sfOpen[k]; return `
+        <div class="sched-row ${open ? '' : 'is-closed'}" data-day="${k}">
+          <div class="sched-day"><b>${d[2]}</b>
+            <label class="switch"><input type="checkbox" data-sd-open ${open ? 'checked' : ''} aria-label="${d[2]} open"><i></i><span>${open ? 'Open' : 'Closed'}</span></label>
+          </div>
+          <div class="sched-periods">
+            ${open ? sfSched[k].map((p, i) => `<div class="sched-period"><select data-sd-from="${i}" aria-label="${d[2]} opening time">${timeOptions(p[0], false)}</select><span>to</span><select data-sd-to="${i}" aria-label="${d[2]} closing time">${timeOptions(p[1], true)}</select><button type="button" class="icon-btn danger" data-sd-del="${i}" title="Remove this period" aria-label="Remove this period">${icon('x')}</button></div>`).join('')
+              + `<button type="button" class="sched-add" data-sd-add>${icon('plus')} Add another opening period</button>` : `<span class="sched-closed">Closed all day</span>`}
+            <div class="sched-err" role="alert"></div>
+          </div>
+          <div class="sched-copy"><select data-sd-copy aria-label="Copy ${d[2]} hours to other days"><option value="">Copy to…</option><option value="all">All other days</option><option value="weekdays">Weekdays (Mon–Fri)</option><option value="weekend">Weekend (Sat–Sun)</option>${DAYS.filter(x => x[0] !== k).map(x => `<option value="${x[0]}">${x[2]}</option>`).join('')}</select></div>
+        </div>`; }).join('')}
+    </div>
+    <div class="sched-preview"><div class="sched-h">Weekly schedule preview <span>— this is how it will appear on the website</span></div><div id="schedPreview"></div></div>`;
+  updateSchedFeedback();
+}
+/* Refresh error messages and the preview without rebuilding the inputs (keeps focus and entered values) */
+function updateSchedFeedback(){
+  const errs = validateSched();
+  DAY_KEYS.forEach(k => { const row = $(`#sfSchedule .sched-row[data-day="${k}"]`); if (!row) return; row.classList.toggle('has-err', !!errs[k]); $('.sched-err', row).textContent = errs[k] || ''; });
+  const valid = emptySchedule(); DAY_KEYS.forEach(k => { if (sfOpen[k] && !errs[k]) valid[k] = clonePeriods(sfSched[k]); });
+  const sc = normSchedule(valid);
+  const rows = [];
+  DAYS.forEach(d => { const k = d[0], text = errs[k] ? 'Needs attention' : fmtPeriods(sc[k]), cls = errs[k] ? 'bad' : (!sc[k].length ? 'closed' : ''), last = rows[rows.length - 1];
+    if (last && last.text === text) last.to = d[2]; else rows.push({ from:d[2], to:d[2], text, cls }); });
+  $('#schedPreview').innerHTML = rows.map(r => `<div class="${r.cls}"><span>${r.from === r.to ? r.from : r.from + '–' + r.to}</span><span>${r.text}</span></div>`).join('');
+  const n = Object.keys(errs).length;
+  if (!n) $('#sfSchedField').classList.remove('invalid');
+  $('#sfSchedErr').textContent = n ? `Please fix the opening hours for ${n === 1 ? DAYS.find(d => errs[d[0]])[2] : n + ' days'} before saving.` : '';
+  return errs;
+}
+const schedMsg = (t, bad) => { const m = $('#schedBulkMsg'); m.textContent = t; m.classList.toggle('bad', !!bad); };
+
+$('#sfSchedule').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const d = b.dataset, row = b.closest('.sched-row'), k = row && row.dataset.day;
+  if (d.sdPick) { const want = dayGroup(d.sdPick); $$('#sfSchedule [data-sd-day]').forEach(c => c.classList.toggle('on', want.includes(c.dataset.sdDay))); schedMsg(''); return; }
+  if ('sdApply' in d || 'sdCloseall' in d) {
+    // chip toggling is handled by the page's global chip handler, which has already run
+    const days = $$('#sfSchedule [data-sd-day].on').map(c => c.dataset.sdDay);
+    if (!days.length) return schedMsg('Select at least one day first.', true);
+    if ('sdCloseall' in d) { days.forEach(x => { sfOpen[x] = false; sfSched[x] = []; }); }
+    else {
+      const from = $('#sfSchedule [data-bulk="from"]').value, to = $('#sfSchedule [data-bulk="to"]').value;
+      if (!from || !to) return schedMsg('Choose both an opening and a closing time.', true);
+      if (toMin(to) <= toMin(from)) return schedMsg('Closing time must be later than opening time.', true);
+      days.forEach(x => { sfOpen[x] = true; sfSched[x] = [[from, to]]; });
+    }
+    sfSchedTouched = true; renderSchedEditor();
+    schedMsg(`${'sdCloseall' in d ? 'Marked closed' : 'Hours applied'}: ${days.map(x => DAYS.find(y => y[0] === x)[1]).join(', ')}.`);
+    return;
+  }
+  if (!k) return;
+  if ('sdAdd' in d) { const last = sfSched[k][sfSched[k].length - 1]; sfSched[k].push([last && last[1] && last[1] !== '24:00' ? TIME_STEPS[Math.min(96, TIME_STEPS.indexOf(last[1]) + 4)] : '', '']); }
+  else if (d.sdDel !== undefined) { sfSched[k].splice(+d.sdDel, 1); if (!sfSched[k].length) sfOpen[k] = false; }
+  else return;
+  sfSchedTouched = true; renderSchedEditor();
+});
+$('#sfSchedule').addEventListener('change', e => {
+  const t = e.target, d = t.dataset, row = t.closest('.sched-row'), k = row && row.dataset.day;
+  if ('sdPreset' in d) { if (!t.value) return; sfSched = SCHED_PRESETS[t.value].build(); sfOpen = Object.fromEntries(DAY_KEYS.map(x => [x, sfSched[x].length > 0])); sfSchedTouched = true; const label = SCHED_PRESETS[t.value].label; renderSchedEditor(); schedMsg(`Applied: ${label}. Adjust any day below.`); return; }
+  if (d.bulk) { schedMsg(''); return; }
+  if (!k) return;
+  sfSchedTouched = true;
+  if ('sdOpen' in d) { sfOpen[k] = t.checked; if (t.checked && !sfSched[k].length) sfSched[k] = [['09:00', '17:00']]; renderSchedEditor(); return; }
+  if ('sdCopy' in d) {
+    const targets = dayGroup(t.value).filter(x => x !== k); if (!targets.length) return;
+    targets.forEach(x => { sfOpen[x] = sfOpen[k]; sfSched[x] = clonePeriods(sfSched[k]); });
+    renderSchedEditor(); schedMsg(`Copied ${DAYS.find(y => y[0] === k)[2]}'s hours to ${targets.map(x => DAYS.find(y => y[0] === x)[1]).join(', ')}.`); return;
+  }
+  if (d.sdFrom !== undefined) sfSched[k][+d.sdFrom][0] = t.value;
+  else if (d.sdTo !== undefined) sfSched[k][+d.sdTo][1] = t.value;
+  updateSchedFeedback();
+});
+
+const SF = ['Name','Venue','Type','Status','Address','Suburb','Lat','Lng','Size','Orient','AudLow','AudHigh','Vis','Desc','Image'];
+const SF_KEY = {Name:'name',Venue:'venue',Type:'type',Status:'status',Address:'address',Suburb:'suburb',Lat:'lat',Lng:'lng',Size:'size',Orient:'orientation',AudLow:'audLow',AudHigh:'audHigh',Vis:'visibility',Desc:'description',Image:'image'};
 let sfPhotoData = '';   // newly uploaded photo (data URL) — uploaded to the repo on publish
 function openScreenModal(id){
   editingId = id;
-  const s = id ? screens.find(x => x.id === id) : { type:'Café', status:'Available', orientation:'Landscape', visibility:4, lat:'', lng:'', size:'', audLow:'', audHigh:'', days:'Mon–Sun', hours:'', demo:false, image:'' };
+  const s = id ? screens.find(x => x.id === id) : { type:'Café', status:'Available', orientation:'Landscape', visibility:4, lat:'', lng:'', size:'', audLow:'', audHigh:'', demo:false, image:'' };
   $('#screenModalTitle').textContent = id ? 'Edit Screen' : 'Add Screen';
   SF.forEach(k => { $('#sf' + k).value = s[SF_KEY[k]] ?? ''; });
   sfPhotoData = (s.image || '').startsWith('data:') ? s.image : '';
   if (sfPhotoData) $('#sfImage').value = '';
   $('#sfDemo').checked = !!s.demo;
+  loadSchedEditor(s, !id);
   $('#sfPhoto').value = '';
   $$('#screenForm .field').forEach(f => f.classList.remove('invalid'));
   updateImgPrev();
@@ -2274,15 +2590,18 @@ $('#screenForm').addEventListener('submit', e => {
   const get = k => $('#sf' + k).value.trim();
   const inv = (k, bad) => { $('#sf' + k).closest('.field').classList.toggle('invalid', bad); return bad; };
   let bad = false;
-  ['Name','Venue','Address','Suburb','Days','Hours'].forEach(k => { bad = inv(k, !get(k)) || bad; });
+  ['Name','Venue','Address','Suburb'].forEach(k => { bad = inv(k, !get(k)) || bad; });
   const lat = parseFloat(get('Lat')), lng = parseFloat(get('Lng')), size = parseInt(get('Size'),10), lo = parseInt(get('AudLow'),10), hi = parseInt(get('AudHigh'),10);
   bad = inv('Lat', !(lat >= -44 && lat <= -10)) || bad;
   bad = inv('Lng', !(lng >= 112 && lng <= 154)) || bad;
   bad = inv('Size', !(size >= 10 && size <= 200)) || bad;
   bad = inv('AudLow', !(lo >= 0)) || bad;
   bad = inv('AudHigh', !(hi >= 0 && hi >= lo)) || bad;
-  if (bad) { const f = $('#screenForm .field.invalid input'); if (f) f.focus(); return; }
-  const data = { name:get('Name'), venue:get('Venue'), type:get('Type'), status:get('Status'), address:get('Address'), suburb:get('Suburb'), lat, lng, size, orientation:get('Orient'), audLow:lo, audHigh:hi, days:get('Days'), hours:get('Hours'), visibility:parseInt(get('Vis'),10), description:get('Desc'), image:sfPhotoData || get('Image'), demo:$('#sfDemo').checked };
+  // Opening hours: only validated/saved when set here, so untouched legacy text hours are left exactly as they were
+  if (sfSchedTouched) { sfSchedAttempted = true; const schedErrs = updateSchedFeedback(); if (Object.keys(schedErrs).length) { bad = true; $('#sfSchedField').classList.add('invalid'); } }
+  if (bad) { const f = $('#screenForm .field.invalid'); if (f) { f.scrollIntoView({ behavior:'smooth', block:'center' }); const i = $('input:not([type=checkbox]),select', f); if (i) i.focus({ preventScroll:true }); } return; }
+  const data = { name:get('Name'), venue:get('Venue'), type:get('Type'), status:get('Status'), address:get('Address'), suburb:get('Suburb'), lat, lng, size, orientation:get('Orient'), audLow:lo, audHigh:hi, visibility:parseInt(get('Vis'),10), description:get('Desc'), image:sfPhotoData || get('Image'), demo:$('#sfDemo').checked };
+  if (sfSchedTouched) { const sc = schedResult(); Object.assign(data, { schedule:sc }, scheduleToLegacy(sc)); }
   if (editingId) Object.assign(screens.find(x => x.id === editingId), data);
   else screens.push(S({ id:uid('s'), added:new Date().toISOString(), ...data }));
   closeModals(); refreshAll(); if (!editingId) fitToResults();
