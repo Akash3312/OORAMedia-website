@@ -9,6 +9,8 @@ A static website for Oora Media, a local digital advertising network starting in
 | `index.html` | The whole website (pages, styles and scripts) |
 | `data/site-data.json` | The live screen listings and admin settings. The admin dashboard publishes to this file. |
 | `images/screens/` | Screen photos uploaded from the admin dashboard |
+| `api/` | Enquiry service (PHP): saves enquiries and emails them |
+| `hosting/` | Setup guide, settings template and tests for the enquiry service (blocked from public access) |
 
 ## Managing screens
 
@@ -35,8 +37,8 @@ Older screens that only have text `days` / `hours` fields still display correctl
 
 ## Hosting
 
-Turn on GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / root**.
+The site is hosted on Hostinger at https://ooramedia.com. Hostinger deploys automatically from this GitHub repository (`main` branch) whenever it changes.
 
-## Not yet persistent
+## Enquiries and email notifications
 
-Enquiry forms and contact messages are held in memory only. Connect a form service (for example Formspree) before using the site with real customers.
+Website enquiries are handled by `api/index.php` on the Hostinger hosting. It saves each enquiry in MySQL and emails it to admin@ooramedia.com from the Hostinger mailbox. One-time setup (a private settings file and a database) is described in [hosting/README.md](hosting/README.md). Until enquiry emails are switched on in **Admin → Publishing**, the forms only keep enquiries in the visitor's browser.

@@ -1,0 +1,5 @@
+Options -Indexes
+# Hide dotfiles and any config/sample/log files if they ever end up here
+<FilesMatch "(^\.|\.(sql|log|ini|sample|md)$|config)">
+  Require all denied
+</FilesMatch>

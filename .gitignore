@@ -11,3 +11,7 @@ desktop.ini
 node_modules/
 dist/
 .env
+
+# Enquiry service: never commit the real settings file; local test database
+oora-config.php
+hosting/tests/*.sqlite

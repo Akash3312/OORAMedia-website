@@ -714,6 +714,17 @@ tr:hover td{background:#FAFBFD}
   .sched-bulk{padding:14px 12px}
 }
 
+/* Enquiry forms: spam trap, errors, reference */
+.hp{position:absolute!important;left:-10000px!important;width:1px;height:1px;overflow:hidden}
+.form-error{background:var(--red-soft);border:1px solid #F0B7B7;color:#8E2424;border-radius:12px;padding:14px 16px;font-size:15px;line-height:1.5;margin-top:22px}
+.form-error a{color:#8E2424;text-decoration:underline}
+.admin-main > .form-error{margin:0 0 18px}
+.ref-line{font-size:15px;color:var(--text)!important;margin:-14px auto 22px!important}
+.ref-line b{font-family:ui-monospace,Consolas,monospace;background:var(--grey);padding:2px 8px;border-radius:6px;color:var(--ink)}
+.link-btn{color:var(--blue);font-weight:600;text-decoration:underline;font-size:inherit;padding:0 2px}
+td .link-btn{display:block;margin-top:6px;font-size:13.5px}
+.mono-ref{font-family:ui-monospace,Consolas,monospace;font-size:12px!important;margin-top:4px}
+
 /* Modal */
 .modal{position:fixed;inset:0;z-index:3000;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;background:rgba(10,22,40,.6);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s}
 .modal.show{opacity:1;pointer-events:auto}
@@ -1001,7 +1012,6 @@ tr:hover td{background:#FAFBFD}
         <div class="card card-hover"><div class="icon-badge"><i data-i="pin"></i></div><h3>Local Advertising Opportunities</h3><p>Ads come from local businesses — the kind of content your customers are likely to find relevant.</p></div>
         <div class="card card-hover"><div class="icon-badge"><i data-i="shield"></i></div><h3>You Stay Involved</h3><p>You'll know what's shown at your venue, and you can raise any content you're not comfortable with.</p></div>
       </div>
-      <div class="note" style="margin-top:32px"><i data-i="info"></i><span>Any advertising income is indicative only. Actual income depends on campaign demand, your location and the agreed partnership arrangement, and is not guaranteed.</span></div>
     </div>
   </div>
 
@@ -1584,7 +1594,7 @@ function route(){
   else window.scrollTo(0,0);
   if (target === 'home') initHomeMap();
   if (target === 'map') { initMap(); if (pendingPanel) { const id = pendingPanel; pendingPanel = null; setTimeout(() => focusScreen(id), 250); } }
-  if (target === 'admin') renderAdmin();
+  if (target === 'admin') { serverEnq.loaded = false; renderAdmin(); }
 }
 window.addEventListener('hashchange', route);
 $('#burger').addEventListener('click', () => { const o = $('#navLinks').classList.toggle('open'); $('#burger').setAttribute('aria-expanded', o); });
@@ -2079,7 +2089,7 @@ document.addEventListener('click', e => {
   else if (t.dataset.enquire) enquire(t.dataset.enquire);
   else if (t.hasAttribute('data-close-panel')) closePanel();
   else if (t.hasAttribute('data-reset-filters')) resetFilters();
-  else if (t.dataset.reset) { const f = $('#' + t.dataset.reset); f.reset(); f.classList.remove('hidden'); t.closest('.success').classList.add('hidden'); if (t.dataset.reset === 'partnerForm') resetPhoto(); if (t.dataset.reset === 'advForm') resetAdvChips(); }
+  else if (t.dataset.reset) { const f = $('#' + t.dataset.reset); f.reset(); armForm(f); f.classList.remove('hidden'); t.closest('.success').classList.add('hidden'); if (t.dataset.reset === 'partnerForm') resetPhoto(); if (t.dataset.reset === 'advForm') resetAdvChips(); }
   else if (t.hasAttribute('data-close-modal')) closeModals();
   else if (t.classList.contains('chip')) {
     const group = t.parentElement;
@@ -2116,14 +2126,59 @@ function enquire(id){
   toast(`${s.venue} added to your enquiry`);
   location.hash = '#/advertisers?form';
 }
+/* ---------- Sending enquiries ----------
+   When enquiry emails are switched on (Admin → Publishing), every form posts to api/index.php on this website
+   (Hostinger). The server saves the enquiry first, then emails it from the admin@ooramedia.com mailbox.
+   The visitor only sees "sent" once it is saved. Switched off, the forms keep the old demo behaviour. */
+const enquiryOn = () => siteSettings.enquiryService === true;
+const ENQ_URL = route => 'api/index.php?route=' + route;
+const newFormKey = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (uid('k') + uid('k')).replace(/[^\w-]/g, '');
+function armForm(form){ form.dataset.key = newFormKey(); form.dataset.started = String(Date.now()); const eb = $('.form-error', form); if (eb) eb.hidden = true; }
+['advForm', 'partnerForm', 'contactForm'].forEach(id => {
+  const f = $('#' + id);
+  // Hidden from people, tempting to bots: if it's filled in, the server silently drops the submission
+  f.insertAdjacentHTML('afterbegin', '<div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="oora_hp" tabindex="-1" autocomplete="off"></label></div>');
+  $('.form-submit', f).insertAdjacentHTML('beforebegin', '<div class="form-error" role="alert" hidden></div>');
+  armForm(f);
+});
+async function submitEnquiry(form, type, data, successId, { saveLocal, afterReset }){
+  const btn = $('button[type=submit]', form), errBox = $('.form-error', form);
+  if (btn.classList.contains('busy')) return;              // ignore double-clicks while sending
+  errBox.hidden = true;
+  let reference = '';
+  if (enquiryOn()) {
+    setBusy(btn, true, 'Sending…');
+    try {
+      const r = await fetch(ENQ_URL('enquiries'), { method:'POST', headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ type, data, idempotencyKey: form.dataset.key, startedAt: +form.dataset.started, website: form.elements.oora_hp ? form.elements.oora_hp.value : '' }) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || !j.ok) throw new Error(j.error || `Our server returned an error (${r.status}).`);
+      reference = j.reference || '';
+    } catch (err) {
+      setBusy(btn, false);
+      const net = err instanceof TypeError;                 // fetch() itself failed: offline or server unreachable
+      errBox.innerHTML = `<b>Sorry — your enquiry wasn't sent.</b> ${esc(net ? 'We couldn’t reach our server. Please check your internet connection and try again.' : err.message)} Your details are still filled in below. If this keeps happening, email <a href="mailto:admin@ooramedia.com">admin@ooramedia.com</a>.`;
+      errBox.hidden = false; errBox.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    setBusy(btn, false);
+  } else saveLocal();
+  const ok = $('#' + successId);
+  let ref = $('.ref-line', ok); if (!ref) { $('h3', ok).insertAdjacentHTML('afterend', '<p class="ref-line"></p>'); ref = $('.ref-line', ok); }
+  ref.innerHTML = reference ? `Your reference: <b>${esc(reference)}</b>` : ''; ref.hidden = !reference;
+  form.classList.add('hidden'); ok.classList.remove('hidden');
+  form.reset(); if (afterReset) afterReset(); armForm(form); refreshAll();
+  ok.scrollIntoView({ behavior:'smooth', block:'center' });
+}
 $('#advForm').addEventListener('submit', e => {
   e.preventDefault(); if (!validateForm(e.target)) return;
-  advertiserEnquiries.unshift({ id:uid('a'), business:$('#aBusiness').value.trim(), contact:$('#aContact').value.trim(), email:$('#aEmail').value.trim(), phone:$('#aPhone').value.trim(), goal:$('#aGoal').value,
-    suburbs:$$('#aSuburbs .chip.on').map(c => c.dataset.v), types:$$('#aTypes .chip.on').map(c => c.dataset.v), screens:[...selScreens],
-    duration:($('#aDuration .chip.on')||{}).textContent || '', info:$('#aInfo').value.trim(), date:new Date().toISOString(), status:'New' });
-  e.target.classList.add('hidden'); $('#advSuccess').classList.remove('hidden');
-  e.target.reset(); resetAdvChips(); refreshAll();
-  $('#advSuccess').scrollIntoView({ behavior:'smooth', block:'center' });
+  const d = { business:$('#aBusiness').value.trim(), contact:$('#aContact').value.trim(), email:$('#aEmail').value.trim(), phone:$('#aPhone').value.trim(), goal:$('#aGoal').value,
+    suburbs:$$('#aSuburbs .chip.on').map(c => c.dataset.v), types:$$('#aTypes .chip.on').map(c => c.dataset.v),
+    duration:($('#aDuration .chip.on')||{}).textContent || '', info:$('#aInfo').value.trim() };
+  const picked = selScreens.map(id => screens.find(s => s.id === id)).filter(Boolean);
+  submitEnquiry(e.target, 'advertiser', { ...d, screens: picked.map(s => ({ id:s.id, venue:s.venue, suburb:s.suburb })) }, 'advSuccess', {
+    saveLocal: () => advertiserEnquiries.unshift({ id:uid('a'), ...d, screens:picked.map(s => s.id), date:new Date().toISOString(), status:'New' }),
+    afterReset: resetAdvChips });
 });
 
 /* ---------- Partner form ---------- */
@@ -2142,19 +2197,19 @@ $('#pPhoto').addEventListener('change', e => {
 $('#partnerForm').addEventListener('submit', e => {
   e.preventDefault(); if (!validateForm(e.target)) return;
   const v = id => $('#' + id).value.trim();
-  partnerEnquiries.unshift({ id:uid('p'), business:v('pBusiness'), contact:v('pContact'), phone:v('pPhone'), email:v('pEmail'), address:v('pAddress'), suburb:v('pSuburb'), type:v('pType'), screens:v('pScreens'), size:v('pSize'), traffic:v('pTraffic'), hours:v('pHours'), comments:v('pComments'), photo:partnerPhoto, date:new Date().toISOString(), status:'New' });
-  e.target.classList.add('hidden'); $('#partnerSuccess').classList.remove('hidden');
-  e.target.reset(); resetPhoto(); refreshAll();
-  $('#partnerSuccess').scrollIntoView({ behavior:'smooth', block:'center' });
+  const d = { business:v('pBusiness'), contact:v('pContact'), phone:v('pPhone'), email:v('pEmail'), address:v('pAddress'), suburb:v('pSuburb'), type:v('pType'), screens:v('pScreens'), size:v('pSize'), traffic:v('pTraffic'), hours:v('pHours'), comments:v('pComments'), photo:partnerPhoto };
+  submitEnquiry(e.target, 'partner', d, 'partnerSuccess', {
+    saveLocal: () => partnerEnquiries.unshift({ id:uid('p'), ...d, date:new Date().toISOString(), status:'New' }),
+    afterReset: resetPhoto });
 });
 
 /* ---------- Contact form ---------- */
 $('#contactForm').addEventListener('submit', e => {
   e.preventDefault(); if (!validateForm(e.target)) return;
   const v = id => $('#' + id).value.trim();
-  messages.unshift({ id:uid('m'), name:v('cName'), email:v('cEmail'), phone:v('cPhone'), company:v('cCompany'), message:v('cMessage'), date:new Date().toISOString() });
-  e.target.classList.add('hidden'); $('#contactSuccess').classList.remove('hidden');
-  e.target.reset(); refreshAll();
+  const d = { name:v('cName'), email:v('cEmail'), phone:v('cPhone'), company:v('cCompany'), message:v('cMessage') };
+  submitEnquiry(e.target, 'contact', d, 'contactSuccess', {
+    saveLocal: () => messages.unshift({ id:uid('m'), ...d, date:new Date().toISOString() }) });
 });
 
 /* Simple validation: highlight invalid fields, focus the first one */
@@ -2185,7 +2240,7 @@ $('#loginForm').addEventListener('submit', async e => {
   else { $('#pwField').classList.add('invalid'); $('#adminPw').select(); }
 });
 $('#logoutBtn').addEventListener('click', () => { authed = false; try { sessionStorage.removeItem('oora.authed'); } catch (e) {} renderAdmin(); });
-$$('.admin-side [data-tab]').forEach(b => b.addEventListener('click', () => { adminTab = b.dataset.tab; renderAdmin(); window.scrollTo(0,0); }));
+$$('.admin-side [data-tab]').forEach(b => b.addEventListener('click', () => { adminTab = b.dataset.tab; serverEnq.loaded = false; renderAdmin(); window.scrollTo(0,0); }));
 
 const enqClass = st => ({'New':'s-new','Approved':'s-good','Confirmed':'s-good','Rejected':'s-bad','Closed':'s-bad','Contacted':'s-mid','Meeting Scheduled':'s-mid','Proposal Sent':'s-mid','Negotiating':'s-mid'})[st] || '';
 const statusSelect = (kind, id, st, opts) => `<select class="status-select ${enqClass(st)}" data-enq="${kind}" data-id="${id}" aria-label="Status">${opts.map(o => `<option ${o===st?'selected':''}>${o}</option>`).join('')}</select>`;
@@ -2200,6 +2255,7 @@ function renderAdmin(){
   $('#cntPartners').textContent = partnerEnquiries.length;
   $('#cntAdv').textContent = advertiserEnquiries.length;
   $('#cntMsg').textContent = messages.length;
+  if (serverMode() && !serverEnq.loaded && !serverEnq.loading && !serverEnq.error && ['overview','partners','advertisers','messages'].includes(adminTab)) loadServerEnquiries();
   const dirty = isDirty();
   $('#cntPub').classList.toggle('hidden', !dirty);
   const main = $('#adminMain');
@@ -2241,33 +2297,36 @@ function renderAdmin(){
       </tbody></table></div></div>`;
   }
   else if (adminTab === 'partners') {
-    main.innerHTML = head('Screen Partner Enquiries', 'Applications submitted from the Screen Partners page.') + `
-      <div class="tcard"><div class="table-wrap"><table style="min-width:1000px"><thead><tr><th>Business</th><th>Contact</th><th>Location</th><th>Screen details</th><th>Submitted</th><th>Status</th></tr></thead><tbody>
+    const sm = serverMode();
+    main.innerHTML = head('Screen Partner Enquiries', 'Applications submitted from the Screen Partners page.', enqRefreshBtn()) + enqNotice() + `
+      <div class="tcard"><div class="table-wrap"><table style="min-width:1000px"><thead><tr><th>Business</th><th>Contact</th><th>Location</th><th>Screen details</th><th>Submitted</th><th>Status</th>${sm ? '<th>Email</th>' : ''}</tr></thead><tbody>
       ${partnerEnquiries.length ? partnerEnquiries.map(p => `<tr>
-        <td>${p.photo ? `<img class="thumb" src="${p.photo}" alt="" style="margin-bottom:6px">` : ''}<span class="strong">${esc(p.business)}${sampleTag(p)}</span><span class="sub">${esc(p.type)} · ${esc(p.hours)}</span>${p.comments ? `<span class="sub" style="max-width:260px">“${esc(p.comments)}”</span>` : ''}</td>
-        <td><span class="strong">${esc(p.contact)}</span><span class="sub">${esc(p.email)}</span><span class="sub">${esc(p.phone)}</span></td>
+        <td>${p.photo ? `<img class="thumb" src="${esc(p.photo)}" alt="" style="margin-bottom:6px">` : ''}<span class="strong">${esc(p.business)}${sampleTag(p)}</span><span class="sub">${esc(p.type)} · ${esc(p.hours)}</span>${p.comments ? `<span class="sub" style="max-width:260px">“${esc(p.comments)}”</span>` : ''}${p.reference ? `<span class="sub mono-ref">${esc(p.reference)}</span>` : ''}</td>
+        <td><span class="strong">${esc(p.contact)}</span><span class="sub"><a href="mailto:${esc(p.email)}">${esc(p.email)}</a></span><span class="sub">${esc(p.phone)}</span></td>
         <td>${esc(p.address)}<span class="sub">${esc(p.suburb)}</span></td>
         <td>${esc(p.screens)} screen${p.screens==='1'?'':'s'} · ${esc(p.size)}<span class="sub">${esc(p.traffic)} customers / day</span></td>
         <td style="white-space:nowrap">${fmtDate(p.date)}</td>
-        <td>${statusSelect('partner', p.id, p.status, PARTNER_STATUS)}</td></tr>`).join('') : `<tr><td colspan="6" class="admin-empty">No Screen Partner enquiries yet.</td></tr>`}
+        <td>${statusSelect('partner', p.id, p.status, PARTNER_STATUS)}</td>${sm ? `<td>${notifyCell(p)}</td>` : ''}</tr>`).join('') : `<tr><td colspan="${sm ? 7 : 6}" class="admin-empty">${serverEnq.loading ? 'Loading enquiries…' : 'No Screen Partner enquiries yet.'}</td></tr>`}
       </tbody></table></div></div>`;
   }
   else if (adminTab === 'advertisers') {
-    main.innerHTML = head('Advertiser Enquiries', 'Campaign enquiries submitted from the Advertisers page.') + `
-      <div class="tcard"><div class="table-wrap"><table style="min-width:1050px"><thead><tr><th>Business</th><th>Contact</th><th>Campaign goal</th><th>Preferred locations</th><th>Submitted</th><th>Status</th></tr></thead><tbody>
-      ${advertiserEnquiries.length ? advertiserEnquiries.map(a => { const scr = a.screens.map(id => screens.find(s => s.id === id)).filter(Boolean); return `<tr>
-        <td><span class="strong">${esc(a.business)}${sampleTag(a)}</span>${a.info ? `<span class="sub" style="max-width:240px">“${esc(a.info)}”</span>` : ''}</td>
-        <td><span class="strong">${esc(a.contact)}</span><span class="sub">${esc(a.email)}</span><span class="sub">${esc(a.phone)}</span></td>
+    const sm = serverMode();
+    main.innerHTML = head('Advertiser Enquiries', 'Campaign enquiries submitted from the Advertisers page.', enqRefreshBtn()) + enqNotice() + `
+      <div class="tcard"><div class="table-wrap"><table style="min-width:1050px"><thead><tr><th>Business</th><th>Contact</th><th>Campaign goal</th><th>Preferred locations</th><th>Submitted</th><th>Status</th>${sm ? '<th>Email</th>' : ''}</tr></thead><tbody>
+      ${advertiserEnquiries.length ? advertiserEnquiries.map(a => { const scr = a.screensDetail ? a.screensDetail.map(x => x.venue) : (a.screens || []).map(id => (screens.find(x => x.id === id) || {}).venue).filter(Boolean); return `<tr>
+        <td><span class="strong">${esc(a.business)}${sampleTag(a)}</span>${a.info ? `<span class="sub" style="max-width:240px">“${esc(a.info)}”</span>` : ''}${a.reference ? `<span class="sub mono-ref">${esc(a.reference)}</span>` : ''}</td>
+        <td><span class="strong">${esc(a.contact)}</span><span class="sub"><a href="mailto:${esc(a.email)}">${esc(a.email)}</a></span><span class="sub">${esc(a.phone)}</span></td>
         <td>${esc(a.goal)}<span class="sub">${esc(a.duration)}</span></td>
-        <td style="max-width:260px">${a.suburbs.length ? esc(a.suburbs.join(', ')) : '<span class="sub">Any</span>'}${a.types.length ? `<span class="sub">${esc(a.types.join(', '))}</span>` : ''}${scr.length ? `<span class="sub"><b>Screens:</b> ${esc(scr.map(s => s.venue).join(', '))}</span>` : ''}</td>
+        <td style="max-width:260px">${(a.suburbs || []).length ? esc(a.suburbs.join(', ')) : '<span class="sub">Any</span>'}${(a.types || []).length ? `<span class="sub">${esc(a.types.join(', '))}</span>` : ''}${scr.length ? `<span class="sub"><b>Screens:</b> ${esc(scr.join(', '))}</span>` : ''}</td>
         <td style="white-space:nowrap">${fmtDate(a.date)}</td>
-        <td>${statusSelect('adv', a.id, a.status, ADV_STATUS)}</td></tr>`; }).join('') : `<tr><td colspan="6" class="admin-empty">No advertiser enquiries yet.</td></tr>`}
+        <td>${statusSelect('adv', a.id, a.status, ADV_STATUS)}</td>${sm ? `<td>${notifyCell(a)}</td>` : ''}</tr>`; }).join('') : `<tr><td colspan="${sm ? 7 : 6}" class="admin-empty">${serverEnq.loading ? 'Loading enquiries…' : 'No advertiser enquiries yet.'}</td></tr>`}
       </tbody></table></div></div>`;
   }
   else if (adminTab === 'messages') {
-    main.innerHTML = head('Contact Messages', 'Messages submitted through the public Contact form.') + `
-      <div class="tcard"><div class="table-wrap"><table><thead><tr><th>From</th><th>Company</th><th>Message</th><th>Received</th></tr></thead><tbody>
-      ${messages.length ? messages.map(m => `<tr><td><span class="strong">${esc(m.name)}${sampleTag(m)}</span><span class="sub">${esc(m.email)}</span>${m.phone ? `<span class="sub">${esc(m.phone)}</span>` : ''}</td><td>${esc(m.company) || '<span class="sub">—</span>'}</td><td class="msg-cell">${esc(m.message)}</td><td style="white-space:nowrap">${fmtDate(m.date)}</td></tr>`).join('') : `<tr><td colspan="4" class="admin-empty">No messages yet.</td></tr>`}
+    const sm = serverMode();
+    main.innerHTML = head('Contact Messages', 'Messages submitted through the public Contact form.', enqRefreshBtn()) + enqNotice() + `
+      <div class="tcard"><div class="table-wrap"><table><thead><tr><th>From</th><th>Company</th><th>Message</th><th>Received</th>${sm ? '<th>Status</th><th>Email</th>' : ''}</tr></thead><tbody>
+      ${messages.length ? messages.map(m => `<tr><td><span class="strong">${esc(m.name)}${sampleTag(m)}</span><span class="sub"><a href="mailto:${esc(m.email)}">${esc(m.email)}</a></span>${m.phone ? `<span class="sub">${esc(m.phone)}</span>` : ''}${m.reference ? `<span class="sub mono-ref">${esc(m.reference)}</span>` : ''}</td><td>${esc(m.company) || '<span class="sub">—</span>'}</td><td class="msg-cell">${esc(m.message)}</td><td style="white-space:nowrap">${fmtDate(m.date)}</td>${sm ? `<td>${statusSelect('contact', m.id, m.status || 'New', CONTACT_STATUS)}</td><td>${notifyCell(m)}</td>` : ''}</tr>`).join('') : `<tr><td colspan="${sm ? 6 : 4}" class="admin-empty">${serverEnq.loading ? 'Loading messages…' : 'No messages yet.'}</td></tr>`}
       </tbody></table></div></div>`;
   }
   else if (adminTab === 'publishing') {
@@ -2317,9 +2376,25 @@ function renderAdmin(){
           <div class="field"><label for="pwNew2">Confirm new password</label><input id="pwNew2" type="password" autocomplete="new-password"></div>
           <div class="btns"><button class="btn btn-dark btn-sm" data-pw-change>Change password</button></div>
         </div>
+        <div class="pub-card full-span">
+          <h3>${icon('mail')} Enquiry emails <span class="conn ${enquiryOn() ? 'ok' : 'no'}">${enquiryOn() ? 'On' : 'Off'}</span></h3>
+          <p>When on, every enquiry from the website is saved on your Hostinger hosting and emailed to your business address from the admin@ooramedia.com mailbox. It needs the one-time setup in the guide (a private <code>oora-config.php</code> file and a database). The admin token below must match the one in that file, and is stored only on this device.</p>
+          <div class="form-grid" style="gap:0 14px">
+            <div class="field full"><label for="enqToken">Admin access token <span class="opt">(this device only)</span></label>
+              <div class="inline-input"><input id="enqToken" type="password" placeholder="${enqToken() ? '•••••••• saved on this device' : 'Paste the admin_token from oora-config.php'}" autocomplete="off" spellcheck="false"><button type="button" class="btn btn-ghost btn-sm" data-enq-gen>Generate a new token</button></div>
+              <div class="hint">New setup? Click <b>Generate</b>, copy the token into <code>admin_token</code> in oora-config.php, then save it here too.</div></div>
+          </div>
+          <div class="btns">
+            <button class="btn btn-dark btn-sm" data-enq-save>Save &amp; check connection</button>
+            ${serverMode() ? '<button class="btn btn-ghost btn-sm" data-enq-test>Send a test email</button>' : ''}
+            ${enquiryOn() ? '<button class="btn btn-ghost btn-sm" data-enq-toggle="off">Turn enquiry emails off</button>' : `<button class="btn btn-primary btn-sm" data-enq-toggle="on" ${enqHealthOk ? '' : 'disabled style="opacity:.5" title="Check the connection first"'}>Turn enquiry emails on</button>`}
+            ${enqToken() ? '<button class="btn btn-ghost btn-sm" data-enq-forget>Remove token from this device</button>' : ''}
+          </div>
+          <div class="sched-msg" id="enqStatus" role="status"></div>
+        </div>
         <div class="pub-card">
           <h3>${icon('info')} Good to know</h3>
-          <p style="margin-bottom:10px">Screens, photos and the admin password are published. Enquiries and contact messages are <b>not</b> saved yet. They only exist until the page reloads, until a form service (such as Formspree) is connected.</p>
+          <p style="margin-bottom:10px">Screens, photos, the admin password and the enquiry-emails on/off switch are published. ${enquiryOn() ? 'Enquiries are stored on your Hostinger hosting and emailed to you.' : 'While enquiry emails are off, enquiries are <b>not</b> saved: they only exist in the visitor\'s browser.'}</p>
           <p style="margin:0">If you edit on two devices, publish from one before editing on the other. The latest publish wins.</p>
         </div>
       </div>`;
@@ -2333,11 +2408,75 @@ function renderAdmin(){
   if (dirty && adminTab !== 'publishing') main.insertAdjacentHTML('afterbegin', `<div class="pub-banner"><div><b>You have unpublished changes</b><span>They're saved on this device only. Publish to update the live website for everyone.</span></div><div class="btns"><button class="btn btn-ghost btn-sm" data-discard>Discard</button><button class="btn btn-primary btn-sm" data-publish>${icon('upload')} Publish to live site</button></div></div>`);
 }
 
-$('#adminMain').addEventListener('change', e => {
+/* ---------- Admin ↔ enquiry server ---------- */
+const ENQ_TOKEN_KEY = 'oora.enqtoken.v1';
+const CONTACT_STATUS = ['New', 'Replied', 'Closed'];
+let serverEnq = { loaded:false, loading:false, error:'' };
+const enqToken = () => store.get(ENQ_TOKEN_KEY) || '';
+let enqHealthOk = false;
+const serverMode = () => !!enqToken();   // token saved on this device → the dashboard reads enquiries from the server
+async function enqAdmin(route, opts = {}, query = ''){
+  const r = await fetch(ENQ_URL(route) + query, { ...opts, cache:'no-store', headers:{ 'X-Admin-Token': enqToken(), ...(opts.body ? { 'Content-Type':'application/json' } : {}) } });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || `The enquiry server returned an error (${r.status}).`);
+  return j;
+}
+async function loadServerEnquiries(){
+  if (!serverMode() || serverEnq.loading) return;
+  serverEnq = { loaded:false, loading:true, error:'' };
+  try {
+    const { enquiries } = await enqAdmin('admin/enquiries', {}, '&limit=500');
+    const row = e => ({ ...e.data, id:e.id, reference:e.reference, date:e.created_at, status:e.status, notify:e.notify, server:true });
+    partnerEnquiries = enquiries.filter(e => e.type === 'partner').map(row);
+    advertiserEnquiries = enquiries.filter(e => e.type === 'advertiser').map(e => ({ ...row(e), screensDetail:e.data.screens || [], screens:(e.data.screens || []).map(x => x.id) }));
+    messages = enquiries.filter(e => e.type === 'contact').map(row);
+    serverEnq = { loaded:true, loading:false, error:'' };
+  } catch (err) {
+    const net = err instanceof TypeError;
+    serverEnq = { loaded:false, loading:false, error: net ? 'Could not reach the website’s enquiry service. Check your internet connection.' : err.message };
+  }
+  renderAdmin();
+}
+const enqRefreshBtn = () => serverMode() ? `<button class="btn btn-ghost btn-sm" data-enq-refresh>${serverEnq.loading ? 'Loading…' : 'Refresh'}</button>` : '';
+const enqNotice = () => serverEnq.error && serverMode() ? `<div class="form-error" role="alert"><b>Couldn't load enquiries.</b> ${esc(serverEnq.error)} <button class="link-btn" data-enq-refresh>Try again</button></div>`
+  : !serverMode() ? `<div class="note" style="margin-bottom:18px">${icon('info')}<span>Showing sample and this-browser-only enquiries. Set up enquiry emails in <button class="link-btn" data-goto-tab="publishing">Publishing</button> to receive real enquiries by email and see them here.</span></div>` : '';
+const NOTIFY_LABEL = { sent:['b-good','Emailed'], pending:['b-new','Sending soon'], sending:['b-new','Sending'], failed:['b-mid','Retrying'], failed_final:['b-bad','Not sent'] };
+const notifyCell = r => { if (!r.notify) return '<span class="sub">—</span>'; const [cls, label] = NOTIFY_LABEL[r.notify.status] || ['', r.notify.status];
+  return `<span class="badge ${cls}" title="${esc(r.notify.error || (r.notify.sent_at ? 'Sent ' + new Date(r.notify.sent_at).toLocaleString('en-AU') : ''))}">${label}</span>${/^failed/.test(r.notify.status) ? `<button class="link-btn" data-retry-email="${r.id}">Send now</button>` : ''}`; };
+async function saveEnquiryService(btn){
+  const tok = $('#enqToken').value.trim(), say = (html, bad) => { const m = $('#enqStatus'); if (m) { m.innerHTML = html; m.classList.toggle('bad', !!bad); } };
+  if (tok && tok.length < 24) { say('That token is too short — use the full admin_token from oora-config.php (at least 24 characters).', true); return; }
+  if (tok) store.set(ENQ_TOKEN_KEY, tok);
+  serverEnq = { loaded:false, loading:false, error:'' }; enqHealthOk = false;
+  setBusy(btn, true, 'Checking…');
+  let line = '', bad = false;
+  try {
+    const r = await fetch(ENQ_URL('health'), { cache:'no-store' });
+    const h = await r.json().catch(() => null);
+    if (!h) { line = 'The enquiry service wasn’t found on this website yet (it goes live with the next deploy from GitHub).'; bad = true; }
+    else if (!h.configured) { line = 'The service is installed, but <b>oora-config.php hasn’t been set up</b> yet. Follow the setup guide, then check again.'; bad = true; }
+    else if (!h.ok) { line = esc(h.error || 'The service reported a problem — check the database settings in oora-config.php.'); bad = true; }
+    else {
+      line = `Service found. Email sending is ${h.email ? 'configured' : '<b>not configured</b> (mailbox password missing)'}${h.notifyTo ? ', delivering to ' + esc(h.notifyTo) : ''}.`;
+      if (!enqToken()) { line += ' Paste the admin token to finish.'; bad = true; }
+      else {
+        try { await enqAdmin('admin/enquiries', {}, '&limit=1'); line += ' Admin token accepted.'; enqHealthOk = !!h.email; if (!enquiryOn() && enqHealthOk) line += ' Next: send a test email, then turn enquiry emails on.'; }
+        catch (e) { line += ` <b>Admin token rejected</b> — it must match admin_token in oora-config.php.`; bad = true; }
+      }
+    }
+  } catch (err) { line = 'Could not reach the website’s enquiry service. Check your internet connection.'; bad = true; }
+  setBusy(btn, false); refreshAll(); say(line, bad);
+}
+$('#adminMain').addEventListener('change', async e => {
   const sel = e.target.closest('[data-enq]'); if (!sel) return;
-  const list = sel.dataset.enq === 'partner' ? partnerEnquiries : advertiserEnquiries;
+  const list = sel.dataset.enq === 'partner' ? partnerEnquiries : sel.dataset.enq === 'adv' ? advertiserEnquiries : messages;
   const r = list.find(x => x.id === sel.dataset.id); if (!r) return;
+  const prev = r.status;
   r.status = sel.value; sel.className = 'status-select ' + enqClass(r.status);
+  if (r.server) {
+    try { await enqAdmin('admin/status', { method:'POST', body:JSON.stringify({ status:r.status }) }, '&id=' + encodeURIComponent(r.id)); }
+    catch (err) { r.status = prev; sel.value = prev; sel.className = 'status-select ' + enqClass(prev); toast('Status not saved: ' + err.message); return; }
+  }
   toast(`Status updated to “${r.status}”`);
 });
 $('#adminMain').addEventListener('click', e => {
@@ -2349,6 +2488,13 @@ $('#adminMain').addEventListener('click', e => {
   else if ('ghSave' in d) saveGithub(b);
   else if ('ghForget' in d) { const c = ghCfg(); c.token = ''; store.set(GH_KEY, JSON.stringify(c)); renderAdmin(); toast('GitHub key removed from this device'); }
   else if ('pwChange' in d) changePassword();
+  else if ('enqSave' in d) saveEnquiryService(b);
+  else if ('enqGen' in d) { const a = new Uint8Array(24); crypto.getRandomValues(a); const t = [...a].map(x => x.toString(16).padStart(2, '0')).join(''); const f = $('#enqToken'); f.type = 'text'; f.value = t; f.select(); $('#enqStatus').innerHTML = 'New token generated. Copy it into <code>admin_token</code> in oora-config.php, then click <b>Save &amp; check connection</b>.'; $('#enqStatus').classList.remove('bad'); }
+  else if (d.enqToggle) { siteSettings = { ...siteSettings, enquiryService: d.enqToggle === 'on' }; refreshAll(); toast(d.enqToggle === 'on' ? 'Enquiry emails turned on — publish to apply to the live site' : 'Enquiry emails turned off — publish to apply'); }
+  else if ('enqForget' in d) { store.del(ENQ_TOKEN_KEY); serverEnq = { loaded:false, loading:false, error:'' }; enqHealthOk = false; refreshAll(); toast('Token removed from this device'); }
+  else if ('enqRefresh' in d) loadServerEnquiries();
+  else if ('enqTest' in d) { setBusy(b, true, 'Sending…'); enqAdmin('admin/test-email', { method:'POST' }).then(() => { setBusy(b, false); toast('Test email sent — check your inbox (and spam folder)'); }, err => { setBusy(b, false); confirmDialog('Test email not sent', err.message, () => {}, 'OK'); }); }
+  else if (d.retryEmail) { setBusy(b, true, 'Sending…'); enqAdmin('admin/notify', { method:'POST' }, '&id=' + encodeURIComponent(d.retryEmail)).then(() => { toast('Notification email sent'); loadServerEnquiries(); }, err => { setBusy(b, false); toast('Still not sent: ' + err.message); }); }
   else if ('addScreen' in d) openScreenModal(null);
   else if (d.gotoTab) { adminTab = d.gotoTab; renderAdmin(); }
   else if (d.editScreen) openScreenModal(d.editScreen);
