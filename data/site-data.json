@@ -1,9 +1,8 @@
 {
   "version": 1,
-  "updated": "2026-10-16T00:58:32.249Z",
+  "updated": "2026-10-16T10:54:27.154Z",
   "settings": {
-    "adminPasswordHash": "7c2cf745fd9c5fdc4a0469c58cb802db79d02e5c82c1f81ffc27e4cf58ad2fdb",
-    "enquiryService": true
+    "adminPasswordHash": "c9ead274c3d3c87fbccc4c3e5db6ba229a26e2a045923095effc55f66838fb4d"
   },
   "screens": [
     {
@@ -12,7 +11,7 @@
       "image": "",
       "id": "s1",
       "name": "Front Counter Display",
-      "venue": "North Adelaide",
+      "venue": "Ivy & Oak Café",
       "type": "Café",
       "address": "O'Connell Street, North Adelaide SA 5006",
       "suburb": "North Adelaide",
@@ -26,7 +25,7 @@
       "hours": "7:00am – 4:00pm",
       "visibility": 5,
       "status": "Available",
-      "added": "2026-07-28T23:30:00.000Z",
+      "added": "2026-08-15T10:36:45.793Z",
       "description": "Wall-mounted screen directly above the ordering counter. Every customer sees it while they order and wait for coffee."
     },
     {
@@ -35,7 +34,7 @@
       "image": "",
       "id": "s2",
       "name": "Main Floor Screen",
-      "venue": "Rundle Mall",
+      "venue": "Rundle Fitness Studio",
       "type": "Gym",
       "address": "Grenfell Street, Adelaide SA 5000",
       "suburb": "Adelaide CBD",
@@ -49,7 +48,7 @@
       "hours": "5:30am – 9:00pm",
       "visibility": 4,
       "status": "Available",
-      "added": "2026-08-01T23:30:00.000Z",
+      "added": "2026-08-19T10:36:45.793Z",
       "description": "Large screen facing the cardio area — members typically spend 30–60 minutes in view."
     },
     {
@@ -58,7 +57,7 @@
       "image": "",
       "id": "s3",
       "name": "Dining Room Display",
-      "venue": "Glenelg Beach",
+      "venue": "Bayside Brunch House",
       "type": "Restaurant",
       "address": "Jetty Road, Glenelg SA 5045",
       "suburb": "Glenelg",
@@ -72,7 +71,7 @@
       "hours": "7:00am – 9:00pm",
       "visibility": 5,
       "status": "Available",
-      "added": "2026-08-04T23:30:00.000Z",
+      "added": "2026-08-22T10:36:45.793Z",
       "description": "Beachside brunch spot with steady weekend crowds. Screen is visible from most tables."
     },
     {
@@ -81,7 +80,7 @@
       "image": "",
       "id": "s4",
       "name": "Styling Station Screen",
-      "venue": "Parade",
+      "venue": "Parade Hair Studio",
       "type": "Salon",
       "address": "The Parade, Norwood SA 5067",
       "suburb": "Norwood",
@@ -95,16 +94,16 @@
       "hours": "9:00am – 6:00pm",
       "visibility": 4,
       "status": "Available",
-      "added": "2026-08-10T23:30:00.000Z",
+      "added": "2026-08-28T10:36:45.793Z",
       "description": "Portrait screen in the waiting and styling area. Clients are seated for 45+ minutes on average."
     },
     {
       "region": "adelaide",
-      "demo": false,
+      "demo": true,
       "image": "",
       "id": "s5",
       "name": "Waiting Bench Screen",
-      "venue": "Prospect Road",
+      "venue": "Prospect Road Barber Co.",
       "type": "Barber",
       "address": "Prospect Road, Prospect SA 5082",
       "suburb": "Prospect",
@@ -118,7 +117,7 @@
       "hours": "9:00am – 7:00pm",
       "visibility": 3,
       "status": "Coming Soon",
-      "added": "2026-08-19T23:30:00.000Z",
+      "added": "2026-09-06T10:36:45.793Z",
       "description": "Screen beside the waiting bench, with a mostly local, repeat clientele."
     },
     {
@@ -127,7 +126,7 @@
       "image": "",
       "id": "s6",
       "name": "Reception Screen",
-      "venue": "Unley",
+      "venue": "Unley Family Medical",
       "type": "Medical Centre",
       "address": "Unley Road, Unley SA 5061",
       "suburb": "Unley",
@@ -141,7 +140,7 @@
       "hours": "8:00am – 6:00pm",
       "visibility": 5,
       "status": "Available",
-      "added": "2026-08-23T23:30:00.000Z",
+      "added": "2026-09-10T10:36:45.793Z",
       "description": "Waiting-room screen with high dwell time. Suited to health, family and local service messages."
     },
     {
@@ -150,7 +149,7 @@
       "image": "",
       "id": "s7",
       "name": "Lounge Display",
-      "venue": "Burnside",
+      "venue": "Burnside Wellness Clinic",
       "type": "Waiting Room",
       "address": "Greenhill Road, Burnside SA 5066",
       "suburb": "Burnside",
@@ -164,7 +163,7 @@
       "hours": "8:30am – 5:30pm",
       "visibility": 4,
       "status": "Temporarily Unavailable",
-      "added": "2026-08-28T23:30:00.000Z",
+      "added": "2026-09-15T10:36:45.793Z",
       "description": "Calm waiting lounge for a physio and wellness clinic. Temporarily unavailable during renovation."
     },
     {
@@ -173,7 +172,7 @@
       "image": "",
       "id": "s8",
       "name": "Window-Facing Screen",
-      "venue": "Henley Beach",
+      "venue": "Seaside Gelato Bar",
       "type": "Café",
       "address": "Henley Square, Henley Beach SA 5022",
       "suburb": "Henley Beach",
@@ -187,7 +186,7 @@
       "hours": "11:00am – 10:00pm",
       "visibility": 4,
       "status": "Available",
-      "added": "2026-09-02T23:30:00.000Z",
+      "added": "2026-09-20T10:36:45.793Z",
       "description": "Portrait screen visible from inside the store and from the square outside. Busy on summer evenings."
     },
     {
@@ -196,7 +195,7 @@
       "image": "",
       "id": "s9",
       "name": "Bar Screen",
-      "venue": "Port Side",
+      "venue": "Harbourside Kitchen",
       "type": "Restaurant",
       "address": "Commercial Road, Port Adelaide SA 5015",
       "suburb": "Port Adelaide",
@@ -210,16 +209,16 @@
       "hours": "11:30am – 10:00pm",
       "visibility": 4,
       "status": "Available",
-      "added": "2026-09-08T23:30:00.000Z",
+      "added": "2026-09-26T10:36:45.793Z",
       "description": "Screen above the bar in a popular dining venue near the historic Port precinct."
     },
     {
       "region": "adelaide",
-      "demo": false,
+      "demo": true,
       "image": "",
       "id": "s10",
       "name": "Checkout Display",
-      "venue": "Stirling",
+      "venue": "Hills Provisions Store",
       "type": "Retail Store",
       "address": "Mount Barker Road, Stirling SA 5152",
       "suburb": "Stirling",
@@ -233,7 +232,7 @@
       "hours": "8:00am – 6:00pm",
       "visibility": 3,
       "status": "Coming Soon",
-      "added": "2026-09-14T23:30:00.000Z",
+      "added": "2026-10-02T10:36:45.793Z",
       "description": "Local providore in the Adelaide Hills. Portrait screen near the checkout queue."
     },
     {
@@ -242,7 +241,7 @@
       "image": "",
       "id": "s11",
       "name": "Entry Screen",
-      "venue": "Mawson Lakes",
+      "venue": "Lakes Fitness Hub",
       "type": "Gym",
       "address": "Main Street, Mawson Lakes SA 5095",
       "suburb": "Mawson Lakes",
@@ -256,7 +255,7 @@
       "hours": "5:00am – 10:00pm",
       "visibility": 4,
       "status": "Available",
-      "added": "2026-09-20T23:30:00.000Z",
+      "added": "2026-10-08T10:36:45.793Z",
       "description": "Screen at the entry and check-in area. Members pass it on every visit."
     },
     {
@@ -265,7 +264,7 @@
       "image": "",
       "id": "s12",
       "name": "Atrium Display",
-      "venue": "North Terrace",
+      "venue": "North Terrace Student Hub",
       "type": "University",
       "address": "North Terrace, Adelaide SA 5000",
       "suburb": "University Precinct",
@@ -279,54 +278,75 @@
       "hours": "7:30am – 9:00pm",
       "visibility": 5,
       "status": "Available",
-      "added": "2026-09-25T23:30:00.000Z",
+      "added": "2026-10-13T10:36:45.793Z",
       "description": "Large atrium screen in a busy student hub. High foot traffic during semester."
     },
     {
       "region": "adelaide",
       "demo": false,
       "image": "",
-      "id": "smuzelkbtbx8t",
-      "added": "2026-10-08T10:38:37.097Z",
+      "id": "smvauohfsban7",
+      "added": "2026-10-16T10:54:15.112Z",
       "name": "lights view",
-      "venue": "cafe",
-      "type": "Other",
+      "venue": "Lights view",
+      "type": "Café",
       "status": "Coming Soon",
-      "address": "lightsview",
+      "address": "Lights view",
       "suburb": "lightsview",
-      "lat": -34.863469,
-      "lng": 138.618866,
-      "size": 55,
-      "orientation": "Landscape",
-      "audLow": 500,
-      "audHigh": 600,
-      "days": "Mon–Sun",
-      "hours": "7:30am – 9:00pm",
-      "visibility": 4,
-      "description": ""
-    },
-    {
-      "region": "adelaide",
-      "demo": false,
-      "image": "",
-      "id": "smv51lr4xkhjn",
-      "added": "2026-10-12T09:21:27.969Z",
-      "name": "Newton",
-      "venue": "Newton Shopping Center",
-      "type": "Other",
-      "status": "Coming Soon",
-      "address": "Newton",
-      "suburb": "Newton",
-      "lat": -34.885861,
-      "lng": 138.690805,
+      "lat": -34.862694,
+      "lng": 138.625317,
       "size": 60,
       "orientation": "Landscape",
-      "audLow": 500,
-      "audHigh": 800,
-      "days": "Mon–Sun",
-      "hours": "8:00am – 6:00pm",
+      "audLow": 300,
+      "audHigh": 400,
       "visibility": 5,
-      "description": ""
+      "description": "",
+      "schedule": {
+        "mon": [
+          [
+            "09:00",
+            "20:00"
+          ]
+        ],
+        "tue": [
+          [
+            "09:00",
+            "20:00"
+          ]
+        ],
+        "wed": [
+          [
+            "09:00",
+            "20:00"
+          ]
+        ],
+        "thu": [
+          [
+            "09:00",
+            "20:00"
+          ]
+        ],
+        "fri": [
+          [
+            "09:00",
+            "20:00"
+          ]
+        ],
+        "sat": [
+          [
+            "10:00",
+            "21:00"
+          ]
+        ],
+        "sun": [
+          [
+            "10:00",
+            "21:00"
+          ]
+        ]
+      },
+      "days": "Mon–Sun",
+      "hours": "Varies by day"
     }
   ]
 }
