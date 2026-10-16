@@ -1,8 +1,9 @@
 {
   "version": 1,
-  "updated": "2026-10-12T09:21:37.616Z",
+  "updated": "2026-10-16T00:58:32.249Z",
   "settings": {
-    "adminPasswordHash": "7c2cf745fd9c5fdc4a0469c58cb802db79d02e5c82c1f81ffc27e4cf58ad2fdb"
+    "adminPasswordHash": "7c2cf745fd9c5fdc4a0469c58cb802db79d02e5c82c1f81ffc27e4cf58ad2fdb",
+    "enquiryService": true
   },
   "screens": [
     {
