@@ -20,6 +20,21 @@ const OORA_MIN_FILL_MS = 1500;       // faster than this is almost certainly a s
 const OORA_RETRY_MAX = 6;            // email attempts before giving up (admin can still "Send now")
 const OORA_RETRY_MIN_AGE_MS = 120000;
 const OORA_STALE_SENDING_MS = 600000;
+const OORA_SCREEN_ID_RE = '/^OORA-ADL-[A-Z][0-9]{2}$/';
+const OORA_MAX_SCREEN_IDS = 30;      // per enquiry
+
+/* Screens currently published on the website (data/site-data.json — the same file the map uses),
+   keyed by Screen ID. Returns null if the file can't be read. */
+function oora_listed_screens(): ?array {
+  static $cache = false;
+  if ($cache !== false) return $cache;
+  $path = oora_config()['site_data'] ?? dirname(__DIR__, 2) . '/data/site-data.json';
+  $json = is_file($path) ? json_decode((string) file_get_contents($path), true) : null;
+  if (!is_array($json) || !is_array($json['screens'] ?? null)) { oora_log('could not read screen list at ' . $path); return $cache = null; }
+  $out = [];
+  foreach ($json['screens'] as $s) { $sid = strtoupper(trim((string) ($s['screenId'] ?? ''))); if ($sid !== '') $out[$sid] = $s; }
+  return $cache = $out;
+}
 
 final class OoraInputError extends Exception {}
 
@@ -134,12 +149,36 @@ function oora_validate(string $type, $d): array {
     foreach (array_slice(is_array($d['screens'] ?? null) ? $d['screens'] : [], 0, 40) as $s) {
       if (!is_array($s)) continue;
       $id = oora_str($s['id'] ?? '', 'Screen', 40);
-      if ($id !== '') $screens[] = ['id' => $id, 'venue' => oora_str($s['venue'] ?? '', 'Screen', 120), 'suburb' => oora_str($s['suburb'] ?? '', 'Screen', 80)];
+      if ($id !== '') $screens[] = ['id' => $id, 'screenId' => strtoupper(oora_str($s['screenId'] ?? '', 'Screen ID', 20)), 'venue' => oora_str($s['venue'] ?? '', 'Screen', 120), 'suburb' => oora_str($s['suburb'] ?? '', 'Screen', 80)];
+    }
+    // Optional requested Screen IDs (any number, blanks ignored). Accepts the list `screenIds`, or a single `screenId` from older pages.
+    // Each must be a screen currently listed on the website, and none may repeat.
+    $rawIds = $d['screenIds'] ?? (isset($d['screenId']) ? [$d['screenId']] : []);
+    if (!is_array($rawIds)) $rawIds = [$rawIds];
+    if (count($rawIds) > OORA_MAX_SCREEN_IDS) throw new OoraInputError('Too many Screen IDs — please list up to ' . OORA_MAX_SCREEN_IDS . '.');
+    $screenIds = []; $requested = []; $listed = null; $listLoaded = false;
+    foreach ($rawIds as $raw) {
+      $sid = strtoupper(oora_str($raw, 'Screen ID', 20));
+      if ($sid === '') continue;
+      if (!preg_match(OORA_SCREEN_ID_RE, $sid)) throw new OoraInputError("“{$sid}” isn't a valid Screen ID. Screen IDs look like OORA-ADL-A01. Please check the ID, or leave it blank.");
+      if (in_array($sid, $screenIds, true)) throw new OoraInputError("$sid is listed more than once. Please remove the duplicate.");
+      if (!$listLoaded) { $listed = oora_listed_screens(); $listLoaded = true; }
+      $match = null;
+      if ($listed !== null) {   // if the screen list can't be read, accept well-formed IDs rather than lose the enquiry
+        $m = $listed[$sid] ?? null;
+        if (!$m || ($m['status'] ?? '') === 'Inactive') throw new OoraInputError("We couldn't find a screen with ID $sid. Check the ID on the Screen Map, or leave it blank and we'll recommend suitable screens.");
+        $match = ['id' => (string) ($m['id'] ?? ''), 'name' => (string) ($m['name'] ?? ''), 'venue' => (string) ($m['venue'] ?? ''), 'suburb' => (string) ($m['suburb'] ?? '')];
+      }
+      $screenIds[] = $sid; $requested[] = $match;
     }
     return ['business' => oora_str($d['business'] ?? '', 'Business name', 200, true), 'contact' => oora_str($d['contact'] ?? '', 'Contact name', 200, true),
       'email' => oora_email($d['email'] ?? ''), 'phone' => oora_phone($d['phone'] ?? ''), 'goal' => $goal,
       'suburbs' => oora_list($d['suburbs'] ?? null, 'Preferred locations'), 'types' => oora_list($d['types'] ?? null, 'Preferred venue types'), 'screens' => $screens,
-      'duration' => oora_str($d['duration'] ?? '', 'Campaign duration', 40), 'info' => oora_str($d['info'] ?? '', 'Additional information', 4000)];
+      'duration' => oora_str($d['duration'] ?? '', 'Campaign duration', 40),
+      'screenIds' => $screenIds, 'requestedScreens' => $requested,
+      // first ID kept in the original single fields so older enquiries and readers stay compatible
+      'screenId' => $screenIds[0] ?? '', 'requestedScreen' => $requested[0] ?? null,
+      'info' => oora_str($d['info'] ?? '', 'Additional information', 4000)];
   }
   if ($type === 'partner') {
     $photo = '';
@@ -160,12 +199,23 @@ function oora_validate(string $type, $d): array {
 }
 
 /* ---------- notification email ---------- */
+/* "Screen ID" email line — handles the list (`screenIds`) and older single-ID enquiries (`screenId`). */
+function oora_screen_ids_field(array $d): array {
+  $ids = $d['screenIds'] ?? (!empty($d['screenId']) ? [$d['screenId']] : []);
+  $reqs = $d['requestedScreens'] ?? (!empty($d['screenId']) ? [$d['requestedScreen'] ?? null] : []);
+  if (!$ids) return ['Screen ID', 'No specific screen selected'];
+  $lines = [];
+  foreach (array_values($ids) as $i => $sid) { $r = $reqs[$i] ?? null; $lines[] = $sid . ($r ? ' — ' . $r['venue'] . ', ' . $r['suburb'] : ''); }
+  return count($lines) === 1 ? ['Screen ID', $lines[0]] : ['Screen IDs (' . count($lines) . ')', implode("\n", $lines), 'block'];
+}
 function oora_email_fields(array $e): array {
   $d = $e['data']; $list = fn($a) => $a ? implode(', ', $a) : '—';
   if ($e['type'] === 'advertiser') return [
     ['Business', $d['business']], ['Contact name', $d['contact']], ['Email', $d['email'], 'mailto'], ['Phone', $d['phone'], 'tel'],
-    ['Campaign goal', $d['goal']], ['Campaign duration', $d['duration'] ?: '—'], ['Preferred locations', $list($d['suburbs'] ?? [])], ['Preferred venue types', $list($d['types'] ?? [])],
-    ['Screens selected', !empty($d['screens']) ? implode(', ', array_map(fn($s) => $s['venue'] . ($s['suburb'] ? ' (' . $s['suburb'] . ')' : ''), $d['screens'])) : '—'],
+    ['Campaign goal', $d['goal']], ['Campaign duration', $d['duration'] ?: '—'],
+    oora_screen_ids_field($d),
+    ['Preferred locations', $list($d['suburbs'] ?? [])], ['Preferred venue types', $list($d['types'] ?? [])],
+    ['Screens selected', !empty($d['screens']) ? implode(', ', array_map(fn($s) => $s['venue'] . ($s['suburb'] ? ' (' . $s['suburb'] . ')' : '') . (!empty($s['screenId']) ? ' [' . $s['screenId'] . ']' : ''), $d['screens'])) : '—'],
     ['Additional information', $d['info'] ?: '—', 'block']];
   if ($e['type'] === 'partner') return [
     ['Business', $d['business']], ['Contact name', $d['contact']], ['Email', $d['email'], 'mailto'], ['Phone', $d['phone'], 'tel'],

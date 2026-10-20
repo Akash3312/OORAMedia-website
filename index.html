@@ -725,6 +725,30 @@ tr:hover td{background:#FAFBFD}
 td .link-btn{display:block;margin-top:6px;font-size:13.5px}
 .mono-ref{font-family:ui-monospace,Consolas,monospace;font-size:12px!important;margin-top:4px}
 
+/* Screen IDs */
+.sid{display:inline-flex;align-items:center;gap:6px;font-family:ui-monospace,Consolas,"SFMono-Regular",monospace;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--ink);background:var(--amber-soft);border:1px solid #F1D48A;border-radius:7px;padding:3px 8px;white-space:nowrap}
+.sid-lg{font-size:14.5px;padding:4px 10px;gap:8px}
+.sid-lg small{font-family:var(--body);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-deep)}
+.panel-tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sid-link{cursor:pointer;text-decoration:underline;text-decoration-color:rgba(201,138,6,.5);text-underline-offset:3px}
+.sid-link:hover{background:#FFE9B0}
+.tip-sid{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--amber);font-weight:700;margin-left:4px}
+.meta-sid{font-family:ui-monospace,Consolas,monospace;background:var(--amber-soft)!important;color:var(--ink)!important}
+.sid-input{font-family:ui-monospace,Consolas,monospace!important;letter-spacing:.04em;text-transform:uppercase}
+.sid-input::placeholder{text-transform:none;letter-spacing:0;font-family:var(--body)}
+.sid-match{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--green);margin-top:7px}
+.sid-rows{display:grid;gap:12px}
+.sid-row-input{display:flex;gap:8px;align-items:center}
+.sid-row-input input{flex:1;min-width:0}
+.sid-row .sid-remove{width:46px;height:46px;flex-shrink:0;font-size:16px}
+.sid-row.invalid input{border-color:var(--red)}
+.sid-row.invalid .sid-match{display:none}
+.sid-err{color:var(--red);font-size:13px;margin-top:6px;font-weight:600}
+.sid-err:empty{display:none}
+.sid-add{margin-top:10px;font-size:14.5px}
+.sid-add:disabled{color:var(--muted);text-decoration:none;cursor:default}
+.sid-cell + .sid-cell{margin-top:8px}
+
 /* Modal */
 .modal{position:fixed;inset:0;z-index:3000;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;background:rgba(10,22,40,.6);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s}
 .modal.show{opacity:1;pointer-events:auto}
@@ -1129,6 +1153,11 @@ td .link-btn{display:block;margin-top:6px;font-size:13.5px}
             <div class="field full"><label>Preferred venue types <span class="opt">(select any)</span></label><div class="chips" id="aTypes"></div></div>
             <div class="field full"><label>Campaign duration</label><div class="chips" id="aDuration" data-single>
               <button type="button" class="chip">1 Week</button><button type="button" class="chip">2 Weeks</button><button type="button" class="chip on">1 Month</button><button type="button" class="chip">Custom</button></div></div>
+            <div class="field full" id="aScreenIdField"><label for="aScreenId0">Screen ID <span class="opt">(Optional)</span></label>
+              <div class="sid-rows" id="aScreenIdRows"></div>
+              <div class="hint">Enter a specific screen ID if you have a preferred screen. Leave blank if you would like us to recommend suitable screens.</div>
+              <button type="button" class="sched-add sid-add" id="aAddScreenId">+ Add Another Screen ID</button>
+              <div class="err"></div></div>
             <div class="field full"><label for="aInfo">Additional information <span class="opt">(optional)</span></label><textarea id="aInfo" placeholder="Tell us about your business, timing, or anything else that would help."></textarea></div>
           </div>
           <div class="form-submit">
@@ -1330,6 +1359,10 @@ td .link-btn{display:block;margin-top:6px;font-size:13.5px}
     <div class="modal-body">
       <div class="form-grid">
         <div class="modal-sec">Screen &amp; venue</div>
+        <div class="field full" id="sfScreenIdField"><label for="sfScreenId">Screen ID</label>
+          <div class="inline-input"><input id="sfScreenId" class="sid-input" placeholder="OORA-ADL-A01" maxlength="12" autocomplete="off" spellcheck="false" autocapitalize="characters"><button type="button" class="btn btn-ghost btn-sm" id="sfSuggestId">Use next free ID</button></div>
+          <div class="hint">Format <b>OORA-ADL-A01</b>: one capital letter and two digits after OORA-ADL-. Must be unique. Required unless the screen is Inactive.</div>
+          <div class="err" id="sfScreenIdErr"></div></div>
         <div class="field"><label for="sfName">Screen name</label><input id="sfName" required placeholder="e.g. Front Counter Display"><div class="err">Required</div></div>
         <div class="field"><label for="sfVenue">Venue name</label><input id="sfVenue" required><div class="err">Required</div></div>
         <div class="field"><label for="sfType">Venue type</label><select id="sfType" required></select></div>
@@ -1736,12 +1769,26 @@ const hoursTable = h => h.structured
   ? `<div class="hours-table">${h.long.map(g => `<div class="${g.keys.includes(h.todayKey) ? 'today' : ''} ${g.closed ? 'closed' : ''}"><span>${g.label}</span><span>${g.text}</span></div>`).join('')}</div>`
   : `<b>${esc(h.text)}</b>`;
 
+/* ---------- Screen IDs ----------
+   Each screen record has one `screenId` (e.g. OORA-ADL-A01). The same field is shown on the map,
+   managed in Screen Management, and referenced by advertiser enquiries. Matching ignores case. */
+const SCREEN_ID_RE = /^OORA-ADL-[A-Z][0-9]{2}$/;
+const normScreenId = v => String(v || '').trim().toUpperCase();
+const screenById = sid => { const k = normScreenId(sid); return k ? screens.find(x => normScreenId(x.screenId) === k) || null : null; };
+const sidChip = (s, cls = '') => s.screenId ? `<span class="sid ${cls}" title="Screen ID">${esc(s.screenId)}</span>` : '';
+/* First free ID in order A01…A99, B01…, never one that is already used */
+function nextScreenId(){
+  const used = new Set(screens.map(x => normScreenId(x.screenId)));
+  for (let c = 65; c <= 90; c++) for (let n = 1; n <= 99; n++) { const id = `OORA-ADL-${String.fromCharCode(c)}${String(n).padStart(2, '0')}`; if (!used.has(id)) return id; }
+  return '';
+}
+
 /* ---------- Pins ---------- */
 function pinIcon(s, selected){
   const c = STATUS_COLOR[s.status];
   return L.divIcon({ className:'pin-wrap', html:`<span class="pin ${s.status==='Available'?'pulse':''} ${selected?'sel':''}" style="--pc:${c}"></span>`, iconSize:[26,26], iconAnchor:[13,13], tooltipAnchor:[0,-12] });
 }
-const tipHtml = s => { const h = hoursInfo(s); return `<strong>${esc(s.venue)}</strong><br><small>${esc(s.suburb)} · ${esc(s.status)}</small><br><small>${h.structured ? (h.open ? 'Open now' : 'Closed now') + ' · ' + esc(h.today) : esc(h.text)}</small>`; };
+const tipHtml = s => { const h = hoursInfo(s); return `<strong>${esc(s.venue)}</strong>${s.screenId ? ` <span class="tip-sid">${esc(s.screenId)}</span>` : ''}<br><small>${esc(s.suburb)} · ${esc(s.status)}</small><br><small>${h.structured ? (h.open ? 'Open now' : 'Closed now') + ' · ' + esc(h.today) : esc(h.text)}</small>`; };
 
 /* =====================================================================
    Screen map component
@@ -1937,6 +1984,7 @@ function renderList(){
         <div class="scard-loc">${icon('pin')} ${esc(s.suburb)} · ${esc(s.type)}</div>
         ${(h => `<div class="scard-hours">${icon('clock')}<span>${h.structured ? `<b class="${h.open ? 'is-open' : 'is-closed'}">${h.open ? 'Open now' : 'Closed now'}</b> · ${esc(h.summary)}` : esc(h.text)}</span></div>`)(hoursInfo(s))}
         <div class="meta-row">
+          ${s.screenId ? `<span class="meta meta-sid">ID ${esc(s.screenId)}</span>` : ''}
           <span class="meta">${icon('monitor')} ${s.size}" ${esc(s.orientation)}</span>
           <span class="meta">${icon('users')} ${audRange(s)} / day</span>
         </div>
@@ -1981,10 +2029,10 @@ $$('[data-view]').forEach(b => b.addEventListener('click', () => {
     const q = inp.value.trim().toLowerCase(); box.classList.toggle('has', !!q);
     if (!q) { close(); return; }
     actions = []; hl = -1; let html = '';
-    const scr = publicScreens().filter(s => [s.venue, s.name, s.suburb, s.type, s.address].join(' ').toLowerCase().includes(q)).slice(0, 5);
+    const scr = publicScreens().filter(s => [s.screenId, s.venue, s.name, s.suburb, s.type, s.address].join(' ').toLowerCase().includes(q)).slice(0, 5);
     const subs = [...new Set(publicScreens().map(s => s.suburb))].filter(x => x.toLowerCase().includes(q)).slice(0, 3);
     const lms = LANDMARKS.filter(l => l.n.toLowerCase().includes(q)).slice(0, 4);
-    if (scr.length) html += `<div class="sd-h">Screens</div>` + scr.map(s => item(icon('monitor'), s.venue, `${s.suburb} · ${s.type} · ${s.status}`, () => openPanel(s.id))).join('');
+    if (scr.length) html += `<div class="sd-h">Screens</div>` + scr.map(s => item(icon('monitor'), s.venue, `${s.screenId ? s.screenId + ' · ' : ''}${s.suburb} · ${s.type} · ${s.status}`, () => openPanel(s.id))).join('');
     if (subs.length) html += `<div class="sd-h">Suburbs</div>` + subs.map(x => item(icon('pin'), x, `${publicScreens().filter(s => s.suburb === x).length} screen(s)`, () => { $('#fSuburb').value = x; applyFilters(true); })).join('');
     if (lms.length) html += `<div class="sd-h">Places</div>` + lms.map(l => item(icon(LM_CATS[l.c].i), l.n, LM_CATS[l.c].label, () => showPlace(l.lat, l.lng, l.n, LM_CATS[l.c].label))).join('');
     html += `<div class="sd-h">Address</div>` + item(icon('search'), `Search “${inp.value.trim()}”`, 'Find an address or place in Greater Adelaide', geocode);
@@ -2034,7 +2082,7 @@ function openPanel(id){
     <div class="panel-scroll">
       <div class="panel-img">${imgTag(s)}<button class="panel-close" data-close-panel aria-label="Close details">${icon('x')}</button>${s.demo ? '<span class="demo-tag">Demo Listing</span>' : ''}</div>
       <div class="panel-body">
-        ${badge(s.status)}
+        <div class="panel-tags">${badge(s.status)}${s.screenId ? `<span class="sid sid-lg"><small>Screen ID</small>${esc(s.screenId)}</span>` : ''}</div>
         <h2>${esc(s.name)}</h2>
         <div class="panel-venue">${esc(s.venue)} · ${esc(s.type)}</div>
         <div class="spec-grid">
@@ -2089,7 +2137,7 @@ document.addEventListener('click', e => {
   else if (t.dataset.enquire) enquire(t.dataset.enquire);
   else if (t.hasAttribute('data-close-panel')) closePanel();
   else if (t.hasAttribute('data-reset-filters')) resetFilters();
-  else if (t.dataset.reset) { const f = $('#' + t.dataset.reset); f.reset(); armForm(f); f.classList.remove('hidden'); t.closest('.success').classList.add('hidden'); if (t.dataset.reset === 'partnerForm') resetPhoto(); if (t.dataset.reset === 'advForm') resetAdvChips(); }
+  else if (t.dataset.reset) { const f = $('#' + t.dataset.reset); f.reset(); armForm(f); f.classList.remove('hidden'); t.closest('.success').classList.add('hidden'); if (t.dataset.reset === 'partnerForm') resetPhoto(); if (t.dataset.reset === 'advForm') { resetAdvChips(); resetScreenIdRows(); } }
   else if (t.hasAttribute('data-close-modal')) closeModals();
   else if (t.classList.contains('chip')) {
     const group = t.parentElement;
@@ -2119,6 +2167,7 @@ $('#selScreens').addEventListener('click', e => { const b = e.target.closest('[d
 function enquire(id){
   const s = screens.find(x => x.id === id); if (!s) return;
   if (!selScreens.includes(id)) selScreens.push(id);
+  if (s.screenId && !advScreenIds().includes(normScreenId(s.screenId))) { const empty = screenIdInputs().find(i => !i.value.trim()); if (empty) { empty.value = s.screenId; checkAdvScreenIds(true); } else addScreenIdRow(s.screenId); }
   renderSelScreens();
   const sc = $(`#aSuburbs .chip[data-v="${CSS.escape(s.suburb)}"]`); if (sc) sc.classList.add('on');
   const tc = $(`#aTypes .chip[data-v="${CSS.escape(s.type)}"]`); if (tc) tc.classList.add('on');
@@ -2170,15 +2219,79 @@ async function submitEnquiry(form, type, data, successId, { saveLocal, afterRese
   form.reset(); if (afterReset) afterReset(); armForm(form); refreshAll();
   ok.scrollIntoView({ behavior:'smooth', block:'center' });
 }
+/* Optional requested Screen IDs — any number of rows; blanks are ignored. Each filled-in ID must be a real,
+   currently listed screen, and the same ID can't be added twice. */
+const MAX_SCREEN_IDS = 30;
+let sidRowSeq = 0;
+const screenIdInputs = () => $$('#aScreenIdRows .sid-input');
+const advScreenIds = () => [...new Set(screenIdInputs().map(i => normScreenId(i.value)).filter(Boolean))];
+function advScreenIdProblem(v){
+  if (!v) return '';
+  if (!SCREEN_ID_RE.test(v)) return 'Screen IDs look like OORA-ADL-A01. Please check the ID, or leave it blank.';
+  const sc = screenById(v);
+  if (!sc || sc.status === 'Inactive') return `We couldn't find a screen with ID ${v}. Check the ID on the Screen Map, or leave it blank and we'll recommend suitable screens.`;
+  return '';
+}
+/* Checks every row; shows the matching venue or a message under each. Returns the first problem input, or null. */
+function checkAdvScreenIds(final){
+  const seen = new Set(); let firstBad = null;
+  screenIdInputs().forEach(inp => {
+    const row = inp.closest('.sid-row'), v = normScreenId(inp.value);
+    if (inp.value !== v) { const p = inp.selectionStart; inp.value = v; try { inp.setSelectionRange(p, p); } catch (e) {} }
+    const complete = v.length >= 12;
+    const dup = v && (complete || final) && seen.has(v);
+    const msg = dup ? `${v} is already listed above — each screen only needs to be added once.` : ((final || complete) ? advScreenIdProblem(v) : '');
+    if (v) seen.add(v);
+    const sc = !msg && complete ? screenById(v) : null;
+    $('.sid-err', row).textContent = msg; row.classList.toggle('invalid', !!msg);
+    const m = $('.sid-match', row); m.hidden = !sc;
+    if (sc) m.innerHTML = `${icon('check')}<span>Matches ${esc(sc.name)} at <b>${esc(sc.venue)}</b>, ${esc(sc.suburb)}</span>`;
+    if (msg && !firstBad) firstBad = inp;
+  });
+  return firstBad;
+}
+function updateScreenIdUi(){
+  const rows = $$('#aScreenIdRows .sid-row'), full = rows.length >= MAX_SCREEN_IDS;
+  $('#aAddScreenId').disabled = full; $('#aAddScreenId').title = full ? `Up to ${MAX_SCREEN_IDS} Screen IDs per enquiry` : '';
+  rows.forEach((r, i) => { const b = $('.sid-remove', r); b.setAttribute('aria-label', rows.length === 1 ? 'Clear this Screen ID' : `Remove Screen ID ${i + 1}`); b.title = rows.length === 1 ? 'Clear' : 'Remove'; $('input', r).setAttribute('aria-label', `Screen ID ${i + 1}`); });
+}
+function addScreenIdRow(value = '', focus = false){
+  if (screenIdInputs().length >= MAX_SCREEN_IDS) { toast(`You can add up to ${MAX_SCREEN_IDS} Screen IDs`); return null; }
+  const n = sidRowSeq++;
+  $('#aScreenIdRows').insertAdjacentHTML('beforeend', `<div class="sid-row">
+    <div class="sid-row-input"><input id="aScreenId${n}" class="sid-input" placeholder="e.g. OORA-ADL-A01" maxlength="12" autocomplete="off" spellcheck="false" autocapitalize="characters"><button type="button" class="icon-btn sid-remove" data-sid-remove>${icon('x')}</button></div>
+    <div class="sid-match" hidden></div><div class="sid-err" role="alert"></div></div>`);
+  const inp = $('#aScreenId' + n);
+  inp.value = value;
+  inp.addEventListener('input', () => checkAdvScreenIds(false));
+  inp.addEventListener('blur', () => checkAdvScreenIds(true));
+  updateScreenIdUi();
+  if (value) checkAdvScreenIds(true);
+  if (focus) inp.focus();
+  return inp;
+}
+function resetScreenIdRows(){ $('#aScreenIdRows').innerHTML = ''; sidRowSeq = 0; addScreenIdRow(); }
+$('#aAddScreenId').addEventListener('click', () => addScreenIdRow('', true));
+$('#aScreenIdRows').addEventListener('click', e => {
+  const b = e.target.closest('[data-sid-remove]'); if (!b) return;
+  const row = b.closest('.sid-row');
+  if (screenIdInputs().length === 1) { $('input', row).value = ''; $('input', row).focus(); } else row.remove();
+  updateScreenIdUi(); checkAdvScreenIds(false);
+});
+resetScreenIdRows();
 $('#advForm').addEventListener('submit', e => {
-  e.preventDefault(); if (!validateForm(e.target)) return;
+  e.preventDefault();
+  const badSid = checkAdvScreenIds(true);
+  if (!validateForm(e.target)) return;
+  if (badSid) { badSid.focus({ preventScroll:true }); badSid.closest('.sid-row').scrollIntoView({ behavior:'smooth', block:'center' }); return; }
+  const sids = advScreenIds();
   const d = { business:$('#aBusiness').value.trim(), contact:$('#aContact').value.trim(), email:$('#aEmail').value.trim(), phone:$('#aPhone').value.trim(), goal:$('#aGoal').value,
     suburbs:$$('#aSuburbs .chip.on').map(c => c.dataset.v), types:$$('#aTypes .chip.on').map(c => c.dataset.v),
-    duration:($('#aDuration .chip.on')||{}).textContent || '', info:$('#aInfo').value.trim() };
+    duration:($('#aDuration .chip.on')||{}).textContent || '', screenIds:sids, screenId:sids[0] || '', info:$('#aInfo').value.trim() };
   const picked = selScreens.map(id => screens.find(s => s.id === id)).filter(Boolean);
-  submitEnquiry(e.target, 'advertiser', { ...d, screens: picked.map(s => ({ id:s.id, venue:s.venue, suburb:s.suburb })) }, 'advSuccess', {
-    saveLocal: () => advertiserEnquiries.unshift({ id:uid('a'), ...d, screens:picked.map(s => s.id), date:new Date().toISOString(), status:'New' }),
-    afterReset: resetAdvChips });
+  submitEnquiry(e.target, 'advertiser', { ...d, screens: picked.map(s => ({ id:s.id, screenId:s.screenId || '', venue:s.venue, suburb:s.suburb })) }, 'advSuccess', {
+    saveLocal: () => { const req = sids.map(id => (sc => sc ? { venue:sc.venue, suburb:sc.suburb, name:sc.name } : null)(screenById(id))); advertiserEnquiries.unshift({ id:uid('a'), ...d, requestedScreens:req, requestedScreen:req[0] || null, screens:picked.map(s => s.id), date:new Date().toISOString(), status:'New' }); },
+    afterReset: () => { resetAdvChips(); resetScreenIdRows(); } });
 });
 
 /* ---------- Partner form ---------- */
@@ -2273,15 +2386,17 @@ function renderAdmin(){
       </div>
       <div class="tcard"><div class="tcard-head"><h3>Recently Added Screens</h3><button class="link-arrow" style="font-size:14.5px" data-goto-tab="screens">View all ${icon('arrow')}</button></div>
         <div class="table-wrap"><table><thead><tr><th></th><th>Screen</th><th>Suburb</th><th>Size</th><th>Status</th><th>Date added</th></tr></thead><tbody>
-        ${recent.map(s => `<tr><td style="width:72px">${imgTag(s,'thumb')}</td><td><span class="strong">${esc(s.name)}</span><span class="sub">${esc(s.venue)}</span></td><td>${esc(s.suburb)}</td><td>${s.size}"</td><td>${badge(s.status)}</td><td>${fmtDate(s.added)}</td></tr>`).join('')}
+        ${recent.map(s => `<tr><td style="width:72px">${imgTag(s,'thumb')}</td><td><span class="strong">${esc(s.name)}</span><span class="sub">${s.screenId ? esc(s.screenId) + ' · ' : ''}${esc(s.venue)}</span></td><td>${esc(s.suburb)}</td><td>${s.size}"</td><td>${badge(s.status)}</td><td>${fmtDate(s.added)}</td></tr>`).join('')}
         </tbody></table></div></div>`;
   }
   else if (adminTab === 'screens') {
     const rows = [...screens].sort((a,b) => b.added.localeCompare(a.added));
-    main.innerHTML = head('Screen Management', 'Changes are saved on this device straight away. Publish them to update the live website.', addBtn) + `
-      <div class="tcard"><div class="tcard-head"><h3>All screens (${screens.length})</h3></div><div class="table-wrap"><table style="min-width:980px"><thead><tr><th></th><th>Screen / Venue</th><th>Suburb</th><th>Position</th><th>Size</th><th>Status</th><th>Added</th><th>Actions</th></tr></thead><tbody>
+    const missingIds = screens.filter(x => x.status !== 'Inactive' && !x.screenId);
+    main.innerHTML = head('Screen Management', 'Changes are saved on this device straight away. Publish them to update the live website.', addBtn) + (missingIds.length ? `<div class="pub-banner"><div><b>${missingIds.length} active screen${missingIds.length === 1 ? '' : 's'} without a Screen ID</b><span>Every active screen needs an ID such as OORA-ADL-A01. Edit each screen, or fill in the missing ones automatically in order (existing IDs are never changed).</span></div><div class="btns"><button class="btn btn-dark btn-sm" data-assign-ids>Assign missing IDs</button></div></div>` : '') + `
+      <div class="tcard"><div class="tcard-head"><h3>All screens (${screens.length})</h3></div><div class="table-wrap"><table style="min-width:1080px"><thead><tr><th></th><th>Screen ID</th><th>Screen / Venue</th><th>Suburb</th><th>Position</th><th>Size</th><th>Status</th><th>Added</th><th>Actions</th></tr></thead><tbody>
       ${rows.length ? rows.map(s => `<tr>
         <td style="width:72px">${imgTag(s,'thumb')}</td>
+        <td>${s.screenId ? `<span class="sid">${esc(s.screenId)}</span>` : (s.status === 'Inactive' ? '<span class="sub">—</span>' : '<span class="badge b-bad" title="Active screens need a Screen ID">Missing</span>')}</td>
         <td><span class="strong">${esc(s.name)}</span><span class="sub">${esc(s.venue)} · ${esc(s.type)}</span></td>
         <td>${esc(s.suburb)}</td>
         <td class="mono">${s.lat.toFixed(4)},<br>${s.lng.toFixed(4)}</td>
@@ -2293,7 +2408,7 @@ function renderAdmin(){
           <button class="icon-btn" title="Edit" aria-label="Edit" data-edit-screen="${s.id}">${icon('edit')}</button>
           <button class="icon-btn ${s.status!=='Inactive'?'on':''}" title="${s.status==='Inactive'?'Activate':'Deactivate'}" aria-label="${s.status==='Inactive'?'Activate':'Deactivate'}" data-toggle-screen="${s.id}">${icon('power')}</button>
           <button class="icon-btn danger" title="Delete" aria-label="Delete" data-del-screen="${s.id}">${icon('trash')}</button>
-        </div></td></tr>`).join('') : `<tr><td colspan="8" class="admin-empty">No screens yet. Click “Add Screen” to create one.</td></tr>`}
+        </div></td></tr>`).join('') : `<tr><td colspan="9" class="admin-empty">No screens yet. Click “Add Screen” to create one.</td></tr>`}
       </tbody></table></div></div>`;
   }
   else if (adminTab === 'partners') {
@@ -2312,14 +2427,15 @@ function renderAdmin(){
   else if (adminTab === 'advertisers') {
     const sm = serverMode();
     main.innerHTML = head('Advertiser Enquiries', 'Campaign enquiries submitted from the Advertisers page.', enqRefreshBtn()) + enqNotice() + `
-      <div class="tcard"><div class="table-wrap"><table style="min-width:1050px"><thead><tr><th>Business</th><th>Contact</th><th>Campaign goal</th><th>Preferred locations</th><th>Submitted</th><th>Status</th>${sm ? '<th>Email</th>' : ''}</tr></thead><tbody>
-      ${advertiserEnquiries.length ? advertiserEnquiries.map(a => { const scr = a.screensDetail ? a.screensDetail.map(x => x.venue) : (a.screens || []).map(id => (screens.find(x => x.id === id) || {}).venue).filter(Boolean); return `<tr>
+      <div class="tcard"><div class="table-wrap"><table style="min-width:1150px"><thead><tr><th>Business</th><th>Contact</th><th>Campaign goal</th><th>Screen ID</th><th>Preferred locations</th><th>Submitted</th><th>Status</th>${sm ? '<th>Email</th>' : ''}</tr></thead><tbody>
+      ${advertiserEnquiries.length ? advertiserEnquiries.map(a => { const scr = a.screensDetail ? a.screensDetail.map(x => x.venue + (x.screenId ? ' (' + x.screenId + ')' : '')) : (a.screens || []).map(id => { const x = screens.find(y => y.id === id); return x ? x.venue + (x.screenId ? ' (' + x.screenId + ')' : '') : ''; }).filter(Boolean); const sidList = a.screenIds || (a.screenId ? [a.screenId] : []), reqList = a.requestedScreens || (a.screenId ? [a.requestedScreen || null] : []); return `<tr>
         <td><span class="strong">${esc(a.business)}${sampleTag(a)}</span>${a.info ? `<span class="sub" style="max-width:240px">“${esc(a.info)}”</span>` : ''}${a.reference ? `<span class="sub mono-ref">${esc(a.reference)}</span>` : ''}</td>
         <td><span class="strong">${esc(a.contact)}</span><span class="sub"><a href="mailto:${esc(a.email)}">${esc(a.email)}</a></span><span class="sub">${esc(a.phone)}</span></td>
         <td>${esc(a.goal)}<span class="sub">${esc(a.duration)}</span></td>
+        <td>${sidList.length ? sidList.map((sid, i) => { const cur = screenById(sid), r = reqList[i]; return `<div class="sid-cell"><button class="sid sid-link" data-goto-screen="${esc(sid)}" title="Open this screen in Screen Management">${esc(sid)}</button><span class="sub">${cur ? esc(cur.venue) + ' · ' + esc(cur.suburb) : (r ? esc(r.venue) + ' · no longer listed' : 'Not found in current screens')}</span></div>`; }).join('') : '<span class="sub">No specific screen selected</span>'}</td>
         <td style="max-width:260px">${(a.suburbs || []).length ? esc(a.suburbs.join(', ')) : '<span class="sub">Any</span>'}${(a.types || []).length ? `<span class="sub">${esc(a.types.join(', '))}</span>` : ''}${scr.length ? `<span class="sub"><b>Screens:</b> ${esc(scr.join(', '))}</span>` : ''}</td>
         <td style="white-space:nowrap">${fmtDate(a.date)}</td>
-        <td>${statusSelect('adv', a.id, a.status, ADV_STATUS)}</td>${sm ? `<td>${notifyCell(a)}</td>` : ''}</tr>`; }).join('') : `<tr><td colspan="${sm ? 7 : 6}" class="admin-empty">${serverEnq.loading ? 'Loading enquiries…' : 'No advertiser enquiries yet.'}</td></tr>`}
+        <td>${statusSelect('adv', a.id, a.status, ADV_STATUS)}</td>${sm ? `<td>${notifyCell(a)}</td>` : ''}</tr>`; }).join('') : `<tr><td colspan="${sm ? 8 : 7}" class="admin-empty">${serverEnq.loading ? 'Loading enquiries…' : 'No advertiser enquiries yet.'}</td></tr>`}
       </tbody></table></div></div>`;
   }
   else if (adminTab === 'messages') {
@@ -2498,9 +2614,16 @@ $('#adminMain').addEventListener('click', e => {
   else if ('addScreen' in d) openScreenModal(null);
   else if (d.gotoTab) { adminTab = d.gotoTab; renderAdmin(); }
   else if (d.editScreen) openScreenModal(d.editScreen);
+  else if (d.gotoScreen) { const sc = screenById(d.gotoScreen); if (!sc) { toast(`${d.gotoScreen} isn't in your current screens`); return; } adminTab = 'screens'; renderAdmin(); openScreenModal(sc.id); }
+  else if ('assignIds' in d) {
+    const missing = screens.filter(x => x.status !== 'Inactive' && !x.screenId).sort((a, b) => a.added.localeCompare(b.added));
+    missing.forEach(x => { x.screenId = nextScreenId(); });
+    refreshAll(); toast(`Assigned ${missing.length} Screen ID${missing.length === 1 ? '' : 's'} — remember to publish`);
+  }
   else if (d.viewScreen) { pendingPanel = d.viewScreen; location.hash = '#/map'; }
   else if (d.toggleScreen) {
     const s = screens.find(x => x.id === d.toggleScreen);
+    if (s.status === 'Inactive' && !s.screenId) { toast('Add a Screen ID before activating this screen'); openScreenModal(s.id); return; }
     s.status = s.status === 'Inactive' ? 'Available' : 'Inactive';
     refreshAll(); toast(`${s.venue} ${s.status === 'Inactive' ? 'deactivated — hidden from public map' : 'activated'}`);
   }
@@ -2657,8 +2780,8 @@ $('#sfSchedule').addEventListener('change', e => {
   updateSchedFeedback();
 });
 
-const SF = ['Name','Venue','Type','Status','Address','Suburb','Lat','Lng','Size','Orient','AudLow','AudHigh','Vis','Desc','Image'];
-const SF_KEY = {Name:'name',Venue:'venue',Type:'type',Status:'status',Address:'address',Suburb:'suburb',Lat:'lat',Lng:'lng',Size:'size',Orient:'orientation',AudLow:'audLow',AudHigh:'audHigh',Vis:'visibility',Desc:'description',Image:'image'};
+const SF = ['ScreenId','Name','Venue','Type','Status','Address','Suburb','Lat','Lng','Size','Orient','AudLow','AudHigh','Vis','Desc','Image'];
+const SF_KEY = {ScreenId:'screenId',Name:'name',Venue:'venue',Type:'type',Status:'status',Address:'address',Suburb:'suburb',Lat:'lat',Lng:'lng',Size:'size',Orient:'orientation',AudLow:'audLow',AudHigh:'audHigh',Vis:'visibility',Desc:'description',Image:'image'};
 let sfPhotoData = '';   // newly uploaded photo (data URL) — uploaded to the repo on publish
 function openScreenModal(id){
   editingId = id;
@@ -2671,6 +2794,7 @@ function openScreenModal(id){
   loadSchedEditor(s, !id);
   $('#sfPhoto').value = '';
   $$('#screenForm .field').forEach(f => f.classList.remove('invalid'));
+  $('#sfScreenIdErr').textContent = '';
   updateImgPrev();
   showModal('screenModal');
   setTimeout(() => { initPickMap(parseFloat(s.lat), parseFloat(s.lng)); if (!id) $('#sfName').focus(); }, 250);
@@ -2740,11 +2864,29 @@ $('#sfFind').addEventListener('click', async () => {
   } catch (err) { toast('Address lookup unavailable — click the map to place the pin'); }
   btn.classList.remove('busy');
 });
+/* Screen ID: returns an error message, or '' if the value is acceptable for this screen */
+function screenIdProblem(sid, status, selfId){
+  if (!sid) return status === 'Inactive' ? '' : 'A Screen ID is required for active screens (for example OORA-ADL-A01).';
+  if (!SCREEN_ID_RE.test(sid)) return 'Use the format OORA-ADL-A01: “OORA-ADL-”, then one capital letter and two digits.';
+  const other = screens.find(x => x.id !== selfId && normScreenId(x.screenId) === sid);
+  return other ? `${sid} is already used by “${other.name}” at ${other.venue}. Choose a different ID.` : '';
+}
+function checkScreenIdField(showEmptyError){
+  const f = $('#sfScreenId'), v = normScreenId(f.value);
+  if (f.value !== v) { const p = f.selectionStart; f.value = v; try { f.setSelectionRange(p, p); } catch (e) {} }
+  const msg = (!v && !showEmptyError) ? '' : screenIdProblem(v, $('#sfStatus').value, editingId);
+  $('#sfScreenIdErr').textContent = msg; $('#sfScreenIdField').classList.toggle('invalid', !!msg);
+  return msg;
+}
+$('#sfScreenId').addEventListener('input', () => checkScreenIdField(false));
+$('#sfStatus').addEventListener('change', () => { if ($('#sfScreenIdField').classList.contains('invalid')) checkScreenIdField(true); });
+$('#sfSuggestId').addEventListener('click', () => { const f = $('#sfScreenId'); if (f.value.trim() && !confirm('Replace the Screen ID you have entered with the next free ID?')) return; f.value = nextScreenId(); checkScreenIdField(true); });
 $('#screenForm').addEventListener('submit', e => {
   e.preventDefault();
   const get = k => $('#sf' + k).value.trim();
   const inv = (k, bad) => { $('#sf' + k).closest('.field').classList.toggle('invalid', bad); return bad; };
   let bad = false;
+  if (checkScreenIdField(true)) bad = true;
   ['Name','Venue','Address','Suburb'].forEach(k => { bad = inv(k, !get(k)) || bad; });
   const lat = parseFloat(get('Lat')), lng = parseFloat(get('Lng')), size = parseInt(get('Size'),10), lo = parseInt(get('AudLow'),10), hi = parseInt(get('AudHigh'),10);
   bad = inv('Lat', !(lat >= -44 && lat <= -10)) || bad;
@@ -2755,7 +2897,7 @@ $('#screenForm').addEventListener('submit', e => {
   // Opening hours: only validated/saved when set here, so untouched legacy text hours are left exactly as they were
   if (sfSchedTouched) { sfSchedAttempted = true; const schedErrs = updateSchedFeedback(); if (Object.keys(schedErrs).length) { bad = true; $('#sfSchedField').classList.add('invalid'); } }
   if (bad) { const f = $('#screenForm .field.invalid'); if (f) { f.scrollIntoView({ behavior:'smooth', block:'center' }); const i = $('input:not([type=checkbox]),select', f); if (i) i.focus({ preventScroll:true }); } return; }
-  const data = { name:get('Name'), venue:get('Venue'), type:get('Type'), status:get('Status'), address:get('Address'), suburb:get('Suburb'), lat, lng, size, orientation:get('Orient'), audLow:lo, audHigh:hi, visibility:parseInt(get('Vis'),10), description:get('Desc'), image:sfPhotoData || get('Image'), demo:$('#sfDemo').checked };
+  const data = { screenId:normScreenId(get('ScreenId')), name:get('Name'), venue:get('Venue'), type:get('Type'), status:get('Status'), address:get('Address'), suburb:get('Suburb'), lat, lng, size, orientation:get('Orient'), audLow:lo, audHigh:hi, visibility:parseInt(get('Vis'),10), description:get('Desc'), image:sfPhotoData || get('Image'), demo:$('#sfDemo').checked };
   if (sfSchedTouched) { const sc = schedResult(); Object.assign(data, { schedule:sc }, scheduleToLegacy(sc)); }
   if (editingId) Object.assign(screens.find(x => x.id === editingId), data);
   else screens.push(S({ id:uid('s'), added:new Date().toISOString(), ...data }));

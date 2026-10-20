@@ -70,6 +70,71 @@ test('every form: saved, one email via SSL SMTP to admin@ooramedia.com, reply-to
   }
 });
 
+test('advertiser Screen ID: matching ID is saved with its screen and shown in the email; blank says "No specific screen selected"', async () => {
+  await smtp('/reset');
+  const r = await call('enquiries', { method: 'POST', body: submission('advertiser', { ...FORMS.advertiser, screenId: ' oora-adl-a01 ' }) });
+  assert.equal(r.status, 201, JSON.stringify(r.json));
+  const row = (await call('admin/enquiries', { token: TOKEN, query: '&type=advertiser' })).json.enquiries.find(e => e.id === r.json.id);
+  assert.equal(row.data.screenId, 'OORA-ADL-A01', 'normalised to capitals');
+  assert.deepEqual(row.data.requestedScreen, { id: 't1', name: 'Test Screen One', venue: 'Test Venue One', suburb: 'Glenelg' });
+  assert.ok(parseMail((await smtp('/messages'))[0].raw).text.includes('Screen ID: OORA-ADL-A01 — Test Venue One, Glenelg'));
+  await smtp('/reset');
+  const b = await call('enquiries', { method: 'POST', body: submission('advertiser', { ...FORMS.advertiser, screenId: '' }) });
+  assert.equal(b.status, 201);
+  const rowB = (await call('admin/enquiries', { token: TOKEN, query: '&type=advertiser' })).json.enquiries.find(e => e.id === b.json.id);
+  assert.equal(rowB.data.screenId, ''); assert.equal(rowB.data.requestedScreen, null);
+  assert.ok(parseMail((await smtp('/messages'))[0].raw).text.includes('Screen ID: No specific screen selected'));
+});
+
+test('advertiser Screen ID: bad format, unknown ID and inactive screen are refused with a helpful message (nothing saved)', async () => {
+  const before = (await call('admin/enquiries', { token: TOKEN, query: '&limit=500' })).json.enquiries.length;
+  for (const [sid, msg] of [['OORA-ADL-1A', /look like OORA-ADL-A01/], ['ADL-A01', /look like/], ['OORA-ADL-A001', /look like/], ['OORA-ADL-Z99', /couldn't find a screen with ID OORA-ADL-Z99/], ['OORA-ADL-A02', /couldn't find/]]) {
+    const r = await call('enquiries', { method: 'POST', body: submission('advertiser', { ...FORMS.advertiser, screenId: sid }) });
+    assert.equal(r.status, 400, sid); assert.match(r.json.error, msg, sid);
+  }
+  assert.equal((await call('admin/enquiries', { token: TOKEN, query: '&limit=500' })).json.enquiries.length, before);
+});
+
+test('multiple Screen IDs: all saved (blanks ignored), each matched, listed in the email; first kept in the old single field', async () => {
+  await smtp('/reset');
+  const r = await call('enquiries', { method: 'POST', body: submission('advertiser', { ...FORMS.advertiser, screenIds: ['oora-adl-a01', '', ' OORA-ADL-A03 '], screenId: 'OORA-ADL-A01' }) });
+  assert.equal(r.status, 201, JSON.stringify(r.json));
+  const row = (await call('admin/enquiries', { token: TOKEN, query: '&type=advertiser' })).json.enquiries.find(e => e.id === r.json.id);
+  assert.deepEqual(row.data.screenIds, ['OORA-ADL-A01', 'OORA-ADL-A03']);
+  assert.deepEqual(row.data.requestedScreens.map(x => x.venue), ['Test Venue One', 'Test Venue Four']);
+  assert.equal(row.data.screenId, 'OORA-ADL-A01'); assert.equal(row.data.requestedScreen.venue, 'Test Venue One');
+  const mail = parseMail((await smtp('/messages'))[0].raw);
+  assert.ok(mail.text.includes('Screen IDs (2): OORA-ADL-A01 — Test Venue One, Glenelg\nOORA-ADL-A03 — Test Venue Four, Prospect'), mail.text);
+  assert.ok(mail.html.includes('OORA-ADL-A03 — Test Venue Four, Prospect'));
+});
+
+test('multiple Screen IDs: duplicates, one bad ID among good ones, and too many are refused (nothing saved)', async () => {
+  const before = (await call('admin/enquiries', { token: TOKEN, query: '&limit=500' })).json.enquiries.length;
+  const cases = [
+    [['OORA-ADL-A01', 'oora-adl-a01'], /OORA-ADL-A01 is listed more than once/],
+    [['OORA-ADL-A01', 'OORA-ADL-Z99'], /couldn't find a screen with ID OORA-ADL-Z99/],
+    [['OORA-ADL-A03', 'NOT-AN-ID'], /isn't a valid Screen ID/],
+    [['OORA-ADL-A01', 'OORA-ADL-A02'], /couldn't find a screen with ID OORA-ADL-A02/],
+    [Array.from({ length: 31 }, (_, i) => `OORA-ADL-B${String(i + 1).padStart(2, '0')}`), /Too many Screen IDs/]];
+  for (const [ids, msg] of cases) {
+    const r = await call('enquiries', { method: 'POST', body: submission('advertiser', { ...FORMS.advertiser, screenIds: ids }) });
+    assert.equal(r.status, 400, ids.join(',')); assert.match(r.json.error, msg);
+  }
+  assert.equal((await call('admin/enquiries', { token: TOKEN, query: '&limit=500' })).json.enquiries.length, before);
+});
+
+test('backward compatibility: an enquiry saved before this change (single screenId, no list) still emails correctly', async () => {
+  await smtp('/reset');
+  const id = '00000000-0000-4000-8000-legacy' + Date.now().toString().slice(-6);
+  const legacy = { ...FORMS.advertiser, screenId: 'OORA-ADL-A01', requestedScreen: { id: 't1', name: 'Test Screen One', venue: 'Test Venue One', suburb: 'Glenelg' } };
+  execFileSync(PHP, ['-r', `require 'api/lib/oora.php'; oora_insert(['id'=>'${id}','reference'=>'OM-ADV-261001-LGCY','type'=>'advertiser','idempotency_key'=>'legacy-key-${id}','data'=>json_decode('${JSON.stringify(legacy).replace(/'/g, "\\'")}', true),'name'=>'','business'=>'Harbour Lane Realty','email'=>'','phone'=>'','ip_hash'=>'x','created_at'=>'2026-10-01T00:00:00.000Z']); oora_finish('${id}','failed_final',null,'old',oora_iso(oora_now_ms()));`], { env: process.env });
+  const s = await call('admin/notify', { method: 'POST', token: TOKEN, query: `&id=${id}` });
+  assert.equal(s.status, 200, JSON.stringify(s.json));
+  assert.ok(parseMail((await smtp('/messages'))[0].raw).text.includes('Screen ID: OORA-ADL-A01 — Test Venue One, Glenelg'));
+  const row = (await call('admin/enquiries', { token: TOKEN, query: '&type=advertiser' })).json.enquiries.find(e => e.id === id);
+  assert.equal(row.data.screenId, 'OORA-ADL-A01'); assert.equal(row.data.screenIds, undefined, 'stored data left as it was');
+});
+
 test('same submission sent twice (double-click/refresh) → saved once, emailed once', async () => {
   await smtp('/reset');
   const body = submission('contact', FORMS.contact);

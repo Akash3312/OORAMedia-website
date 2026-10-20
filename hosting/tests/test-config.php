@@ -12,4 +12,5 @@ return [
   'cron_key' => 'test-cron-key-0123456789abcdef-local',
   'ip_salt' => 'test',
   'allowed_origins' => ['https://ooramedia.com', 'https://www.ooramedia.com'],
+  'site_data' => getenv('OORA_TEST_SITE_DATA') ?: __DIR__ . '/site-data.fixture.json',   // screen list used to check requested Screen IDs
 ];

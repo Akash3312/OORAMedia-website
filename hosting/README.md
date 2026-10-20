@@ -33,15 +33,15 @@ The enquiries table is created automatically the first time the service runs.
 1. Go to **hPanel → Files → File Manager**.
 2. Open the folder that **contains** `public_html`. This is usually `domains/ooramedia.com/`, one level **above** `public_html`. The file must **not** go inside `public_html`.
 3. Create a new file named **`oora-config.php`**.
-4. Copy the contents of [`hosting/oora-config.sample.php`](oora-config.sample.php) into it, then fill in:
+4. Copy the contents of [`hosting/oora-config.sample.php`](oora-config.sample.php) into it. The template deliberately has no comments: Hostinger's firewall can block saving files that contain folder paths or `<…>` text, and shows a `403 Forbidden` error. Then fill in:
 
 | Setting | What to put |
 |---|---|
-| `db` → `dsn` / `user` / `pass` | The full database name, username and password from step 2. Keep `host=localhost`. |
-| `smtp` → `pass` | The password for the **admin@ooramedia.com** mailbox, the same one you use for Hostinger Webmail. |
+| `db` → `YOUR_DB_NAME`, `YOUR_DB_USER`, `YOUR_DB_PASSWORD` | The full database name, username and password from step 2. Keep `host=localhost`. |
+| `YOUR_MAILBOX_PASSWORD` | The password for the **admin@ooramedia.com** mailbox, the same one you use for Hostinger Webmail. |
 | `notify_to` | Where notifications go. Leave as `admin@ooramedia.com`, or add more addresses separated by commas. |
 | `admin_token` | Leave a placeholder for now; step 5 generates the value. |
-| `cron_key`, `ip_salt` | Any long random text. You can reuse the **Generate** button from step 5 and copy what it gives you. |
+| `YOUR_CRON_KEY`, `YOUR_IP_SALT` | Any long random text, different for each. You can click **Generate a new token** (step 5) twice and copy each code. |
 
 5. Save the file. Reload the health link from step 1: it should now show `"ok":true,"configured":true,"email":true`.
 
@@ -93,6 +93,7 @@ On other devices (phone, laptop), paste the same admin token in **Publishing** t
 | "Could not connect to the mail server" | Keep `smtp.hostinger.com`, port `465`, `ssl`. Retries happen automatically. |
 | Health shows `"configured":false` | oora-config.php is missing, in the wrong folder, or has a typo. It must be next to `public_html`, not inside it. |
 | Health shows a database error | Check the `db` settings use the **full** prefixed names. |
+| File Manager shows `403 Forbidden` when saving | Hostinger's firewall disliked the text. Use the template exactly as provided, without extra comments. If a password contains `<` or `>`, create the file in Notepad and **Upload** it instead. |
 | Visitors see "not set up yet" | Enquiry emails were switched on before setup was finished. Finish step 3, or switch it off and publish. |
 
 PHP 8.0 or newer is required (hPanel → Advanced → PHP Configuration). Hostinger's default is fine.

@@ -21,6 +21,17 @@ A static website for Oora Media, a local digital advertising network starting in
 
 The first time you publish on a new device, the **Publishing** tab asks for a GitHub fine-grained access token. The token must cover this repository only, with **Contents: Read and write** permission. It is stored only in that browser.
 
+## Screen IDs
+
+Each screen has one `screenId`, such as `OORA-ADL-A01`. The format is `OORA-ADL-`, then one capital letter and two digits. It is stored on the screen record in `data/site-data.json` and is the only Screen ID field. Everything else uses it:
+
+- the map popups, details panel, list cards and search
+- Screen Management
+- the optional **Screen ID** field on the advertiser campaign enquiry form, where advertisers can add as many IDs as they need (**+ Add Another Screen ID**). Each ID is checked against the published screens, both on the website and on the server (`api/`), and duplicates aren't allowed.
+- the saved enquiry (`screenIds` plus `requestedScreens`) and its notification email. The first ID is also kept in the older single fields (`screenId` / `requestedScreen`), so enquiries saved before multiple IDs existed still display and email correctly.
+
+Screen IDs must be unique, and are required for every screen that isn't Inactive. **Assign missing IDs** in Screen Management fills empty ones in order and never changes an existing ID.
+
 ## Opening hours format
 
 Each screen stores its hours as a structured `schedule`: one key per day (`mon` to `sun`), each holding a list of `[open, close]` periods in 24-hour `HH:MM`. An empty list means closed, and `24:00` means midnight at the end of the day.

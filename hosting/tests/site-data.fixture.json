@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "updated": "2026-10-20T00:00:00.000Z",
+  "settings": {},
+  "screens": [
+    { "id": "t1", "screenId": "OORA-ADL-A01", "name": "Test Screen One", "venue": "Test Venue One", "suburb": "Glenelg", "status": "Available" },
+    { "id": "t2", "screenId": "OORA-ADL-A02", "name": "Test Screen Two", "venue": "Test Venue Two", "suburb": "Norwood", "status": "Inactive" },
+    { "id": "t3", "name": "Test Screen Three", "venue": "Test Venue Three", "suburb": "Unley", "status": "Coming Soon" },
+    { "id": "t4", "screenId": "OORA-ADL-A03", "name": "Test Screen Four", "venue": "Test Venue Four", "suburb": "Prospect", "status": "Coming Soon" }
+  ]
+}
