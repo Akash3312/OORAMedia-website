@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-21T02:45:49.499Z",
+  "updated": "2026-10-21T09:59:13.311Z",
   "settings": {
     "adminPasswordHash": "7c2cf745fd9c5fdc4a0469c58cb802db79d02e5c82c1f81ffc27e4cf58ad2fdb",
     "enquiryService": true
@@ -12,7 +12,7 @@
       "image": "",
       "id": "s1",
       "name": "Front Counter Display",
-      "venue": "Ivy & Oak Café",
+      "venue": "North Adelaide",
       "type": "Café",
       "address": "O'Connell Street, North Adelaide SA 5006",
       "suburb": "North Adelaide",
@@ -36,12 +36,12 @@
       "image": "",
       "id": "s2",
       "name": "Main Floor Screen",
-      "venue": "Rundle Fitness Studio",
+      "venue": "Rundle Mall",
       "type": "Gym",
-      "address": "Grenfell Street, Adelaide SA 5000",
+      "address": "Rundle mall, Adelaide SA 5000",
       "suburb": "Adelaide CBD",
-      "lat": -34.9236,
-      "lng": 138.6078,
+      "lat": -34.923044,
+      "lng": 138.602593,
       "size": 65,
       "orientation": "Landscape",
       "audLow": 600,
@@ -49,7 +49,7 @@
       "days": "Mon–Sun",
       "hours": "5:30am – 9:00pm",
       "visibility": 4,
-      "status": "Available",
+      "status": "Coming Soon",
       "added": "2026-08-19T10:36:45.793Z",
       "description": "Large screen facing the cardio area — members typically spend 30–60 minutes in view.",
       "screenId": "OORA-ADL-A02"
@@ -60,7 +60,7 @@
       "image": "",
       "id": "s3",
       "name": "Dining Room Display",
-      "venue": "Bayside Brunch House",
+      "venue": "Glenelg",
       "type": "Restaurant",
       "address": "Jetty Road, Glenelg SA 5045",
       "suburb": "Glenelg",
@@ -68,8 +68,8 @@
       "lng": 138.516,
       "size": 50,
       "orientation": "Landscape",
-      "audLow": 500,
-      "audHigh": 800,
+      "audLow": 400,
+      "audHigh": 600,
       "days": "Mon–Sun",
       "hours": "7:00am – 9:00pm",
       "visibility": 5,
@@ -84,7 +84,7 @@
       "image": "",
       "id": "s4",
       "name": "Styling Station Screen",
-      "venue": "Parade Hair Studio",
+      "venue": "The Parade",
       "type": "Salon",
       "address": "The Parade, Norwood SA 5067",
       "suburb": "Norwood",
@@ -92,8 +92,8 @@
       "lng": 138.6335,
       "size": 43,
       "orientation": "Portrait",
-      "audLow": 80,
-      "audHigh": 150,
+      "audLow": 150,
+      "audHigh": 200,
       "days": "Tue–Sat",
       "hours": "9:00am – 6:00pm",
       "visibility": 4,
@@ -132,7 +132,7 @@
       "image": "",
       "id": "s6",
       "name": "Reception Screen",
-      "venue": "Unley Family Medical",
+      "venue": "Unley",
       "type": "Medical Centre",
       "address": "Unley Road, Unley SA 5061",
       "suburb": "Unley",
@@ -140,12 +140,12 @@
       "lng": 138.606,
       "size": 50,
       "orientation": "Landscape",
-      "audLow": 150,
-      "audHigh": 250,
+      "audLow": 350,
+      "audHigh": 400,
       "days": "Mon–Sat",
       "hours": "8:00am – 6:00pm",
       "visibility": 5,
-      "status": "Available",
+      "status": "Coming Soon",
       "added": "2026-09-10T10:36:45.793Z",
       "description": "Waiting-room screen with high dwell time. Suited to health, family and local service messages.",
       "screenId": "OORA-ADL-A06"
@@ -156,7 +156,7 @@
       "image": "",
       "id": "s7",
       "name": "Lounge Display",
-      "venue": "Burnside Wellness Clinic",
+      "venue": "Burnside",
       "type": "Waiting Room",
       "address": "Greenhill Road, Burnside SA 5066",
       "suburb": "Burnside",
@@ -164,15 +164,59 @@
       "lng": 138.6455,
       "size": 43,
       "orientation": "Landscape",
-      "audLow": 90,
-      "audHigh": 160,
-      "days": "Mon–Fri",
-      "hours": "8:30am – 5:30pm",
+      "audLow": 200,
+      "audHigh": 300,
+      "days": "Mon–Sun",
+      "hours": "Varies by day",
       "visibility": 4,
-      "status": "Temporarily Unavailable",
+      "status": "Coming Soon",
       "added": "2026-09-15T10:36:45.793Z",
       "description": "Calm waiting lounge for a physio and wellness clinic. Temporarily unavailable during renovation.",
-      "screenId": "OORA-ADL-A07"
+      "screenId": "OORA-ADL-A07",
+      "schedule": {
+        "mon": [
+          [
+            "08:30",
+            "17:30"
+          ]
+        ],
+        "tue": [
+          [
+            "08:30",
+            "17:30"
+          ]
+        ],
+        "wed": [
+          [
+            "08:30",
+            "17:30"
+          ]
+        ],
+        "thu": [
+          [
+            "08:30",
+            "17:30"
+          ]
+        ],
+        "fri": [
+          [
+            "08:30",
+            "17:30"
+          ]
+        ],
+        "sat": [
+          [
+            "09:00",
+            "17:00"
+          ]
+        ],
+        "sun": [
+          [
+            "09:00",
+            "17:00"
+          ]
+        ]
+      }
     },
     {
       "region": "adelaide",
@@ -180,7 +224,7 @@
       "image": "",
       "id": "s8",
       "name": "Window-Facing Screen",
-      "venue": "Seaside Gelato Bar",
+      "venue": "Henley Beach",
       "type": "Café",
       "address": "Henley Square, Henley Beach SA 5022",
       "suburb": "Henley Beach",
@@ -189,11 +233,11 @@
       "size": 55,
       "orientation": "Portrait",
       "audLow": 400,
-      "audHigh": 700,
+      "audHigh": 500,
       "days": "Mon–Sun",
       "hours": "11:00am – 10:00pm",
       "visibility": 4,
-      "status": "Available",
+      "status": "Coming Soon",
       "added": "2026-09-20T10:36:45.793Z",
       "description": "Portrait screen visible from inside the store and from the square outside. Busy on summer evenings.",
       "screenId": "OORA-ADL-A08"
@@ -204,7 +248,7 @@
       "image": "",
       "id": "s9",
       "name": "Bar Screen",
-      "venue": "Harbourside Kitchen",
+      "venue": "Port Adelaide",
       "type": "Restaurant",
       "address": "Commercial Road, Port Adelaide SA 5015",
       "suburb": "Port Adelaide",
@@ -217,7 +261,7 @@
       "days": "Wed–Sun",
       "hours": "11:30am – 10:00pm",
       "visibility": 4,
-      "status": "Available",
+      "status": "Coming Soon",
       "added": "2026-09-26T10:36:45.793Z",
       "description": "Screen above the bar in a popular dining venue near the historic Port precinct.",
       "screenId": "OORA-ADL-A09"
@@ -228,7 +272,7 @@
       "image": "",
       "id": "s10",
       "name": "Checkout Display",
-      "venue": "Hills Provisions Store",
+      "venue": "Mount Barker",
       "type": "Retail Store",
       "address": "Mount Barker Road, Stirling SA 5152",
       "suburb": "Stirling",
@@ -240,7 +284,7 @@
       "audHigh": 350,
       "days": "Mon–Sun",
       "hours": "8:00am – 6:00pm",
-      "visibility": 3,
+      "visibility": 4,
       "status": "Coming Soon",
       "added": "2026-10-02T10:36:45.793Z",
       "description": "Local providore in the Adelaide Hills. Portrait screen near the checkout queue.",
@@ -252,7 +296,7 @@
       "image": "",
       "id": "s11",
       "name": "Entry Screen",
-      "venue": "Lakes Fitness Hub",
+      "venue": "Mawson Lakes",
       "type": "Gym",
       "address": "Main Street, Mawson Lakes SA 5095",
       "suburb": "Mawson Lakes",
@@ -286,13 +330,57 @@
       "orientation": "Landscape",
       "audLow": 1200,
       "audHigh": 2000,
-      "days": "Mon–Fri",
-      "hours": "7:30am – 9:00pm",
+      "days": "Mon–Sun",
+      "hours": "Varies by day",
       "visibility": 5,
-      "status": "Available",
+      "status": "Coming Soon",
       "added": "2026-10-13T10:36:45.793Z",
       "description": "Large atrium screen in a busy student hub. High foot traffic during semester.",
-      "screenId": "OORA-ADL-A12"
+      "screenId": "OORA-ADL-A12",
+      "schedule": {
+        "mon": [
+          [
+            "07:30",
+            "21:00"
+          ]
+        ],
+        "tue": [
+          [
+            "07:30",
+            "21:00"
+          ]
+        ],
+        "wed": [
+          [
+            "07:30",
+            "21:00"
+          ]
+        ],
+        "thu": [
+          [
+            "07:30",
+            "21:00"
+          ]
+        ],
+        "fri": [
+          [
+            "07:30",
+            "21:00"
+          ]
+        ],
+        "sat": [
+          [
+            "09:00",
+            "17:00"
+          ]
+        ],
+        "sun": [
+          [
+            "09:00",
+            "17:00"
+          ]
+        ]
+      }
     },
     {
       "region": "adelaide",
@@ -303,7 +391,7 @@
       "name": "lights view",
       "venue": "Lights view",
       "type": "Café",
-      "status": "Coming Soon",
+      "status": "Available",
       "address": "Lights view",
       "suburb": "lightsview",
       "lat": -34.862694,
@@ -361,6 +449,74 @@
       "days": "Mon–Sun",
       "hours": "Varies by day",
       "screenId": "OORA-ADL-A13"
+    },
+    {
+      "region": "adelaide",
+      "demo": false,
+      "image": "",
+      "id": "smvhxwtozsr2m",
+      "added": "2026-10-21T09:59:06.323Z",
+      "screenId": "OORA-ADL-A14",
+      "name": "Dannig Area",
+      "venue": "Newton",
+      "type": "Café",
+      "status": "Available",
+      "address": "montacute Rd, Newton SA 5074",
+      "suburb": "Newton",
+      "lat": -34.888202,
+      "lng": 138.674605,
+      "size": 60,
+      "orientation": "Landscape",
+      "audLow": 250,
+      "audHigh": 350,
+      "visibility": 4,
+      "description": "",
+      "schedule": {
+        "mon": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "tue": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "wed": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "thu": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "fri": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "sat": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "sun": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ]
+      },
+      "days": "Mon–Sun",
+      "hours": "11:00 am–10:00 pm"
     }
   ]
 }
