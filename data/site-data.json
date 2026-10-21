@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-21T10:10:47.506Z",
+  "updated": "2026-10-21T10:17:58.191Z",
   "settings": {
     "adminPasswordHash": "7c2cf745fd9c5fdc4a0469c58cb802db79d02e5c82c1f81ffc27e4cf58ad2fdb",
     "enquiryService": true
@@ -391,7 +391,7 @@
       "name": "lights view",
       "venue": "Lights view",
       "type": "Café",
-      "status": "Available",
+      "status": "Inactive",
       "address": "Lights view",
       "suburb": "lightsview",
       "lat": -34.862694,
