@@ -956,7 +956,6 @@ td .link-btn{display:block;margin-top:6px;font-size:13.5px}
         <h1>Interactive Screen Map</h1>
         <p>Explore digital screens in local venues. Tap a location to see details.</p>
       </div>
-      <span class="demo-tag" id="mapDemoTag"><i data-i="info"></i> Includes demo listings</span>
     </div>
   </div>
   <div class="container">
@@ -3031,8 +3030,6 @@ async function changePassword(){
 /* ---------- Refresh everything that depends on data ---------- */
 function refreshAll(){
   syncDraft();
-  const demoCount = publicScreens().filter(s => s.demo).length;
-  $('#mapDemoTag').classList.toggle('hidden', !demoCount);
   renderFilterOptions();
   applyFilters(false);
   refreshAdvChips(); renderSelScreens();
