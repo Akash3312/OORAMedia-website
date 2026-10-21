@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-21T09:59:13.311Z",
+  "updated": "2026-10-21T10:10:47.506Z",
   "settings": {
     "adminPasswordHash": "7c2cf745fd9c5fdc4a0469c58cb802db79d02e5c82c1f81ffc27e4cf58ad2fdb",
     "enquiryService": true
@@ -517,6 +517,537 @@
       },
       "days": "Mon–Sun",
       "hours": "11:00 am–10:00 pm"
+    },
+    {
+      "region": "adelaide",
+      "demo": true,
+      "image": "",
+      "id": "ssthmvhybuq8",
+      "added": "2026-10-21T10:10:47.504Z",
+      "screenId": "OORA-ADL-A15",
+      "name": "Dining Room Screen",
+      "venue": "Vale Street Kitchen",
+      "type": "Restaurant",
+      "status": "Available",
+      "address": "Main South Road, Morphett Vale SA 5162",
+      "suburb": "Morphett Vale",
+      "lat": -35.1268,
+      "lng": 138.5262,
+      "size": 55,
+      "orientation": "Landscape",
+      "audLow": 250,
+      "audHigh": 400,
+      "visibility": 4,
+      "description": "Family restaurant on Main South Road. Screen faces the main dining area and waiting bench.",
+      "schedule": {
+        "mon": [],
+        "tue": [
+          [
+            "11:30",
+            "21:30"
+          ]
+        ],
+        "wed": [
+          [
+            "11:30",
+            "21:30"
+          ]
+        ],
+        "thu": [
+          [
+            "11:30",
+            "21:30"
+          ]
+        ],
+        "fri": [
+          [
+            "11:30",
+            "22:00"
+          ]
+        ],
+        "sat": [
+          [
+            "11:30",
+            "22:00"
+          ]
+        ],
+        "sun": [
+          [
+            "11:30",
+            "20:30"
+          ]
+        ]
+      },
+      "days": "Tue–Sun",
+      "hours": "Varies by day"
+    },
+    {
+      "region": "adelaide",
+      "demo": true,
+      "image": "",
+      "id": "ssthmvhybuq9",
+      "added": "2026-10-21T10:10:48.504Z",
+      "screenId": "OORA-ADL-A16",
+      "name": "Bar Display",
+      "venue": "Old Reynella Trattoria",
+      "type": "Restaurant",
+      "status": "Available",
+      "address": "Old South Road, Old Reynella SA 5161",
+      "suburb": "Old Reynella",
+      "lat": -35.0948,
+      "lng": 138.5372,
+      "size": 50,
+      "orientation": "Landscape",
+      "audLow": 180,
+      "audHigh": 300,
+      "visibility": 4,
+      "description": "Italian trattoria in the historic Old Reynella village. Screen above the bar, visible from most tables.",
+      "schedule": {
+        "mon": [],
+        "tue": [],
+        "wed": [
+          [
+            "17:00",
+            "22:00"
+          ]
+        ],
+        "thu": [
+          [
+            "17:00",
+            "22:00"
+          ]
+        ],
+        "fri": [
+          [
+            "12:00",
+            "14:30"
+          ],
+          [
+            "17:00",
+            "22:30"
+          ]
+        ],
+        "sat": [
+          [
+            "12:00",
+            "14:30"
+          ],
+          [
+            "17:00",
+            "22:30"
+          ]
+        ],
+        "sun": [
+          [
+            "12:00",
+            "14:30"
+          ],
+          [
+            "17:00",
+            "21:00"
+          ]
+        ]
+      },
+      "days": "Wed–Sun",
+      "hours": "Varies by day"
+    },
+    {
+      "region": "adelaide",
+      "demo": true,
+      "image": "",
+      "id": "ssthmvhybuqa",
+      "added": "2026-10-21T10:10:49.504Z",
+      "screenId": "OORA-ADL-A17",
+      "name": "Entry Screen",
+      "venue": "Christie's Grill House",
+      "type": "Restaurant",
+      "status": "Available",
+      "address": "Beach Road, Christie Downs SA 5164",
+      "suburb": "Christie Downs",
+      "lat": -35.1335,
+      "lng": 138.5072,
+      "size": 65,
+      "orientation": "Landscape",
+      "audLow": 300,
+      "audHigh": 500,
+      "visibility": 5,
+      "description": "Busy grill and burger restaurant near Christie Downs station. Large screen at the entry and order counter.",
+      "schedule": {
+        "mon": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "tue": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "wed": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "thu": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "fri": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "sat": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ],
+        "sun": [
+          [
+            "11:00",
+            "22:00"
+          ]
+        ]
+      },
+      "days": "Mon–Sun",
+      "hours": "11:00 am–10:00 pm"
+    },
+    {
+      "region": "adelaide",
+      "demo": true,
+      "image": "",
+      "id": "ssthmvhybuqb",
+      "added": "2026-10-21T10:10:50.504Z",
+      "screenId": "OORA-ADL-A18",
+      "name": "Counter Screen",
+      "venue": "Sea Breeze Fish Kitchen",
+      "type": "Restaurant",
+      "status": "Coming Soon",
+      "address": "Galloway Road, O’Sullivan Beach SA 5166",
+      "suburb": "O'Sullivan Beach",
+      "lat": -35.1192,
+      "lng": 138.4795,
+      "size": 43,
+      "orientation": "Portrait",
+      "audLow": 120,
+      "audHigh": 220,
+      "visibility": 3,
+      "description": "Local fish and chips kitchen near the beach. Portrait screen beside the order counter.",
+      "schedule": {
+        "mon": [],
+        "tue": [
+          [
+            "11:30",
+            "20:00"
+          ]
+        ],
+        "wed": [
+          [
+            "11:30",
+            "20:00"
+          ]
+        ],
+        "thu": [
+          [
+            "11:30",
+            "20:00"
+          ]
+        ],
+        "fri": [
+          [
+            "11:30",
+            "20:30"
+          ]
+        ],
+        "sat": [
+          [
+            "11:30",
+            "20:30"
+          ]
+        ],
+        "sun": [
+          [
+            "11:30",
+            "20:00"
+          ]
+        ]
+      },
+      "days": "Tue–Sun",
+      "hours": "Varies by day"
+    },
+    {
+      "region": "adelaide",
+      "demo": true,
+      "image": "",
+      "id": "ssthmvhybuqc",
+      "added": "2026-10-21T10:10:51.504Z",
+      "screenId": "OORA-ADL-A19",
+      "name": "Front Counter Screen",
+      "venue": "Reynella Bean Co.",
+      "type": "Café",
+      "status": "Available",
+      "address": "Sherriffs Road, Reynella SA 5161",
+      "suburb": "Reynella",
+      "lat": -35.0918,
+      "lng": 138.5296,
+      "size": 43,
+      "orientation": "Portrait",
+      "audLow": 200,
+      "audHigh": 350,
+      "visibility": 4,
+      "description": "Neighbourhood café with a strong morning coffee crowd. Screen next to the ordering counter.",
+      "schedule": {
+        "mon": [
+          [
+            "06:30",
+            "15:00"
+          ]
+        ],
+        "tue": [
+          [
+            "06:30",
+            "15:00"
+          ]
+        ],
+        "wed": [
+          [
+            "06:30",
+            "15:00"
+          ]
+        ],
+        "thu": [
+          [
+            "06:30",
+            "15:00"
+          ]
+        ],
+        "fri": [
+          [
+            "06:30",
+            "15:00"
+          ]
+        ],
+        "sat": [
+          [
+            "07:30",
+            "14:00"
+          ]
+        ],
+        "sun": [
+          [
+            "07:30",
+            "14:00"
+          ]
+        ]
+      },
+      "days": "Mon–Sun",
+      "hours": "Varies by day"
+    },
+    {
+      "region": "adelaide",
+      "demo": true,
+      "image": "",
+      "id": "ssthmvhybuqd",
+      "added": "2026-10-21T10:10:52.504Z",
+      "screenId": "OORA-ADL-A20",
+      "name": "Wall Display",
+      "venue": "Lonsdale Depot Café",
+      "type": "Café",
+      "status": "Available",
+      "address": "Lonsdale Road, Lonsdale SA 5160",
+      "suburb": "Lonsdale",
+      "lat": -35.1045,
+      "lng": 138.5005,
+      "size": 50,
+      "orientation": "Landscape",
+      "audLow": 150,
+      "audHigh": 250,
+      "visibility": 4,
+      "description": "Café serving the Lonsdale business and trade area. Busy weekday breakfasts and lunches.",
+      "schedule": {
+        "mon": [
+          [
+            "06:00",
+            "14:00"
+          ]
+        ],
+        "tue": [
+          [
+            "06:00",
+            "14:00"
+          ]
+        ],
+        "wed": [
+          [
+            "06:00",
+            "14:00"
+          ]
+        ],
+        "thu": [
+          [
+            "06:00",
+            "14:00"
+          ]
+        ],
+        "fri": [
+          [
+            "06:00",
+            "14:00"
+          ]
+        ],
+        "sat": [
+          [
+            "07:00",
+            "12:00"
+          ]
+        ],
+        "sun": []
+      },
+      "days": "Mon–Sat",
+      "hours": "Varies by day"
+    },
+    {
+      "region": "adelaide",
+      "demo": true,
+      "image": "",
+      "id": "ssthmvhybuqe",
+      "added": "2026-10-21T10:10:53.504Z",
+      "screenId": "OORA-ADL-A21",
+      "name": "Window Screen",
+      "venue": "Eastside Espresso",
+      "type": "Café",
+      "status": "Available",
+      "address": "Hillier Road, Reynella East SA 5161",
+      "suburb": "Reynella East",
+      "lat": -35.0882,
+      "lng": 138.5508,
+      "size": 43,
+      "orientation": "Portrait",
+      "audLow": 150,
+      "audHigh": 280,
+      "visibility": 3,
+      "description": "Suburban café popular with local families. Portrait screen visible from inside and the front window.",
+      "schedule": {
+        "mon": [
+          [
+            "07:00",
+            "15:00"
+          ]
+        ],
+        "tue": [
+          [
+            "07:00",
+            "15:00"
+          ]
+        ],
+        "wed": [
+          [
+            "07:00",
+            "15:00"
+          ]
+        ],
+        "thu": [
+          [
+            "07:00",
+            "15:00"
+          ]
+        ],
+        "fri": [
+          [
+            "07:00",
+            "15:00"
+          ]
+        ],
+        "sat": [
+          [
+            "07:00",
+            "15:00"
+          ]
+        ],
+        "sun": [
+          [
+            "07:00",
+            "15:00"
+          ]
+        ]
+      },
+      "days": "Mon–Sun",
+      "hours": "7:00 am–3:00 pm"
+    },
+    {
+      "region": "adelaide",
+      "demo": true,
+      "image": "",
+      "id": "ssthmvhybuqf",
+      "added": "2026-10-21T10:10:54.504Z",
+      "screenId": "OORA-ADL-A22",
+      "name": "Cardio Zone Screen",
+      "venue": "Southern Vale Fitness",
+      "type": "Gym",
+      "status": "Available",
+      "address": "Beach Road, Morphett Vale SA 5162",
+      "suburb": "Morphett Vale",
+      "lat": -35.1302,
+      "lng": 138.5195,
+      "size": 65,
+      "orientation": "Landscape",
+      "audLow": 400,
+      "audHigh": 700,
+      "visibility": 5,
+      "description": "24-station gym with a large screen facing the cardio floor. Members typically train 45–60 minutes.",
+      "schedule": {
+        "mon": [
+          [
+            "05:00",
+            "22:00"
+          ]
+        ],
+        "tue": [
+          [
+            "05:00",
+            "22:00"
+          ]
+        ],
+        "wed": [
+          [
+            "05:00",
+            "22:00"
+          ]
+        ],
+        "thu": [
+          [
+            "05:00",
+            "22:00"
+          ]
+        ],
+        "fri": [
+          [
+            "05:00",
+            "22:00"
+          ]
+        ],
+        "sat": [
+          [
+            "05:00",
+            "22:00"
+          ]
+        ],
+        "sun": [
+          [
+            "05:00",
+            "22:00"
+          ]
+        ]
+      },
+      "days": "Mon–Sun",
+      "hours": "5:00 am–10:00 pm"
     }
   ]
 }
